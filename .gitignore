@@ -1,0 +1,10 @@
+.DS_Store
+**/.DS_Store
+
+# large screenshot/photo dumps and zip archives (not site source, iCloud-only, 100MB+)
+# these stay in iCloud but are not tracked by git
+미국/
+중국/
+노니/노니 30일 챌린지 인증 (Page 1)/
+노니/노니 30일 챌린지 인증 (Page 2)/
+*.zip

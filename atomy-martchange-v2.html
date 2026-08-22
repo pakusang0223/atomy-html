@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Atomy Mart Change Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&family=Noto+Sans+Thai:wght@400;700;800&family=Noto+Sans+JP:wght@400;700;800&family=Noto+Sans+SC:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo',system-ui,sans-serif;background:#eef2f7;color:#1e293b;line-height:1.5;padding-bottom:88px;}
+body.lang-th{font-family:'Noto Sans Thai',system-ui,sans-serif;}
+body.lang-ja{font-family:'Noto Sans JP',system-ui,sans-serif;}
+body.lang-zh{font-family:'Noto Sans SC',system-ui,sans-serif;}
+body.lang-en{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;}
+.lang-bar{background:#0f2d7e;padding:8px 16px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;position:sticky;top:0;z-index:300;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.lang-btn{padding:5px 13px;border:1.5px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.72);border-radius:20px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;}
+.lang-btn:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.6);}
+.lang-btn.active{background:#fff;color:#0f2d7e;border-color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.header{background:linear-gradient(145deg,#1341a8 0%,#2563eb 55%,#3b82f6 100%);color:#fff;padding:28px 20px 24px;text-align:center;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,.06);border-radius:50%;}
+.header::after{content:'';position:absolute;bottom:-60px;left:-30px;width:220px;height:220px;background:rgba(255,255,255,.04);border-radius:50%;}
+.header-badge{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);padding:4px 14px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:1px;margin-bottom:12px;}
+.header h1{font-size:17px;font-weight:800;line-height:1.55;margin-bottom:10px;position:relative;z-index:1;}
+.header h1 em{font-style:normal;background:rgba(255,255,255,.2);padding:0 4px;border-radius:4px;color:#ffe033;text-shadow:0 1px 4px rgba(0,0,0,.18);}
+.header-desc{font-size:12.5px;opacity:.88;line-height:1.7;margin-bottom:12px;position:relative;z-index:1;}
+.header-pv-note{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:20px;font-size:11.5px;position:relative;z-index:1;}
+.container{max-width:600px;margin:0 auto;padding:16px 14px;}
+.steps{display:flex;gap:6px;background:#fff;border-radius:14px;padding:12px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.step-item{flex:1;text-align:center;padding:8px 4px;border-radius:9px;font-size:11.5px;font-weight:700;color:#94a3b8;background:#f8fafc;transition:all .3s;}
+.step-item.active{background:#2563eb;color:#fff;box-shadow:0 3px 10px rgba(37,99,235,.35);}
+.step-item.done{background:#dbeafe;color:#1d4ed8;}
+.step-num{display:block;font-size:17px;margin-bottom:2px;}
+.card{background:#fff;border-radius:14px;padding:18px 16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.card-title{font-size:15px;font-weight:800;color:#1341a8;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.card-title .dot{width:6px;height:6px;background:#2563eb;border-radius:50%;flex-shrink:0;}
+.info-banner{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-left:3.5px solid #2563eb;padding:10px 14px;border-radius:0 8px 8px 0;font-size:12.5px;color:#1e40af;margin-bottom:14px;line-height:1.7;}
+.info-banner strong{color:#1341a8;}
+.family-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.family-btn{padding:16px 10px;border:2px solid #e2e8f0;border-radius:12px;background:#fff;cursor:pointer;text-align:center;transition:all .2s;font-size:13.5px;font-weight:700;color:#475569;}
+.family-btn:hover{border-color:#3b82f6;background:#eff6ff;}
+.family-btn.selected{border-color:#2563eb;background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.3);}
+.family-btn .emoji{font-size:26px;display:block;margin-bottom:6px;}
+.family-btn .months{font-size:11px;font-weight:500;margin-top:4px;opacity:.8;background:rgba(0,0,0,.06);padding:2px 8px;border-radius:10px;display:inline-block;}
+.family-btn.selected .months{background:rgba(255,255,255,.2);}
+.btn-primary{width:100%;padding:15px;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;margin-top:14px;transition:all .2s;box-shadow:0 4px 14px rgba(37,99,235,.3);}
+.btn-primary:hover{background:linear-gradient(135deg,#1341a8,#1d4ed8);transform:translateY(-1px);}
+.btn-primary:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed;transform:none;}
+.btn-secondary{width:100%;padding:13px;background:#fff;color:#2563eb;border:2px solid #2563eb;border-radius:11px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all .2s;}
+.btn-secondary:hover{background:#eff6ff;}
+.progress-info{display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:10px;padding:0 2px;}
+.progress-info strong{color:#1d4ed8;font-weight:700;}
+.accordion{background:#fff;margin-bottom:10px;border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;}
+.accordion-header{padding:13px 14px;background:#f8fafc;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px;color:#334155;transition:background .2s;user-select:none;}
+.accordion-header:hover{background:#eff6ff;}
+.accordion-header.open{background:#dbeafe;color:#1341a8;}
+.accordion-arrow{font-size:11px;transition:transform .25s;color:#94a3b8;}
+.accordion-header.open .accordion-arrow{transform:rotate(180deg);color:#2563eb;}
+.cat-checked-badge{font-size:10px;font-weight:600;background:#dbeafe;color:#1d4ed8;padding:2px 7px;border-radius:10px;display:none;margin-left:6px;}
+.cat-checked-badge.show{display:inline-block;}
+.accordion-body{display:none;padding:4px 0;}
+.accordion-body.open{display:block;}
+.item-row{padding:11px 14px;display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid #f1f5f9;min-height:50px;transition:background .15s;}
+.item-row:last-child{border-bottom:none;}
+.item-row.checked{background:#f0f7ff;}
+.item-checkbox{width:22px;height:22px;min-width:22px;cursor:pointer;accent-color:#2563eb;margin-top:1px;}
+.item-name{flex:1;font-size:13.5px;color:#334155;line-height:1.45;cursor:pointer;}
+.item-pv-badge{font-size:12px;font-weight:700;color:#2563eb;white-space:nowrap;padding:3px 8px;background:#eff6ff;border-radius:8px;align-self:flex-start;margin-top:1px;flex-shrink:0;}
+.item-name-wrap{flex:1;display:flex;flex-direction:column;gap:5px;}
+.item-select{font-size:12px;padding:5px 8px;border:1.5px solid #bfdbfe;border-radius:7px;color:#1e40af;background:#eff6ff;font-weight:600;width:100%;max-width:240px;}
+.item-select:disabled{opacity:.38;background:#f8fafc;border-color:#e2e8f0;color:#94a3b8;}
+.sticky-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2.5px solid #2563eb;padding:10px 18px;display:none;align-items:center;box-shadow:0 -3px 12px rgba(0,0,0,.1);z-index:200;gap:12px;}
+.sticky-bar.show{display:flex;}
+.sticky-info{flex:1;}
+.sticky-label{font-size:11px;color:#64748b;margin-bottom:1px;}
+.sticky-pv{font-size:17px;font-weight:800;color:#1341a8;}
+.sticky-count{font-size:11px;color:#64748b;}
+.sticky-btn{padding:10px 16px;white-space:nowrap;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,.3);flex-shrink:0;}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.result-item{background:#f8fafc;border-radius:11px;padding:14px 12px;text-align:center;border:1px solid #e2e8f0;}
+.result-label{font-size:11.5px;color:#64748b;margin-bottom:6px;font-weight:600;}
+.result-value{font-size:17px;font-weight:800;color:#1e293b;}
+.result-cashback{background:linear-gradient(135deg,#1341a8 0%,#2563eb 60%,#3b82f6 100%);color:#fff;border-radius:14px;padding:22px 18px;text-align:center;margin-bottom:14px;box-shadow:0 6px 20px rgba(37,99,235,.35);position:relative;overflow:hidden;}
+.result-cashback::before{content:'💰';position:absolute;top:-10px;right:-10px;font-size:70px;opacity:.12;}
+.cashback-label{font-size:13px;opacity:.9;margin-bottom:8px;font-weight:600;}
+.cashback-amount{font-size:38px;font-weight:900;letter-spacing:-1.5px;text-shadow:0 2px 8px rgba(0,0,0,.2);}
+.cashback-sub{font-size:12px;opacity:.85;margin-top:8px;background:rgba(255,255,255,.15);padding:5px 14px;border-radius:12px;display:inline-block;}
+.disclaimer{background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:12px 14px;font-size:11.5px;color:#78350f;line-height:1.7;margin-top:14px;}
+.disclaimer p::before{content:'📌 ';}
+.disclaimer p{margin-bottom:3px;}
+.disclaimer p:last-child{margin-bottom:0;}
+.section{display:none;}
+.section.active{display:block;}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:11px 22px;border-radius:22px;font-size:13.5px;font-weight:600;z-index:1000;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.25);}
+.toast.show{opacity:1;}
+.section-divider{text-align:center;font-size:11px;color:#94a3b8;padding:4px 0 10px;font-weight:600;letter-spacing:1px;}
+.select-all-row{padding:8px 14px;display:flex;align-items:center;gap:8px;background:#f0f7ff;border-bottom:1.5px solid #bfdbfe;}
+.select-all-row label{font-size:12px;font-weight:700;color:#1d4ed8;cursor:pointer;}
+.select-all-chk{width:18px;height:18px;min-width:18px;cursor:pointer;accent-color:#1d4ed8;}
+</style>
+</head>
+<body class="lang-ko">
+
+<div class="lang-bar">
+  <button class="lang-btn active" data-lang="ko" onclick="setLang('ko')">🇰🇷 한국어</button>
+  <button class="lang-btn" data-lang="en" onclick="setLang('en')">🇺🇸 English</button>
+  <button class="lang-btn" data-lang="th" onclick="setLang('th')">🇹🇭 ภาษาไทย</button>
+  <button class="lang-btn" data-lang="ja" onclick="setLang('ja')">🇯🇵 日本語</button>
+  <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">🇨🇳 中文</button>
+</div>
+
+<div class="header">
+  <div class="header-badge" id="header-badge">atom美 AZA · 마트체인지</div>
+  <h1 id="header-title">우리 가족 소비를 <em>애터미 마트</em>로 바꾸면<br>예상 캐시백은 얼마일까요? 💰</h1>
+  <p class="header-desc" id="header-desc">평소 사용하는 생활 필수품을 체크해보세요.<br>선택한 항목의 PV를 기준으로 예상 캐시백을 간편하게 확인할 수 있습니다.</p>
+  <span class="header-pv-note" id="header-pv-note">💡 PV는 애터미 제품 구매 시 누적되는 포인트 기준입니다</span>
+</div>
+
+<div class="container">
+  <div class="steps">
+    <div class="step-item active" id="step-ind-1"><span class="step-num">①</span><span id="step-label-1">가족 구성</span></div>
+    <div class="step-item" id="step-ind-2"><span class="step-num">②</span><span id="step-label-2">항목 선택</span></div>
+    <div class="step-item" id="step-ind-3"><span class="step-num">③</span><span id="step-label-3">결과 보기</span></div>
+  </div>
+
+  <div class="section active" id="section-1">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span><span id="family-q">👨‍👩‍👧‍👦 우리 가족은 몇 명인가요?</span></div>
+      <div class="info-banner" id="family-info-note"></div>
+      <div class="family-grid">
+        <button class="family-btn" onclick="selectFamily(1)" id="fam-1">
+          <span class="emoji">🧍</span><span id="fam1-label">1인 가족</span><div class="months" id="fam1-months">6개월 적용</div>
+        </button>
+        <button class="family-btn" onclick="selectFamily(2)" id="fam-2">
+          <span class="emoji">👫</span><span id="fam2-label">2인 가족</span><div class="months" id="fam2-months">6개월 적용</div>
+        </button>
+        <button class="family-btn" onclick="selectFamily(3)" id="fam-3">
+          <span class="emoji">👨‍👩‍👦</span><span id="fam3-label">3인 가족</span><div class="months" id="fam3-months">12개월 적용</div>
+        </button>
+        <button class="family-btn" onclick="selectFamily(4)" id="fam-4">
+          <span class="emoji">👨‍👩‍👧‍👦</span><span id="fam4-label">4인 이상</span><div class="months" id="fam4-months">12개월 적용</div>
+        </button>
+      </div>
+      <button class="btn-primary" id="btn-next-1" onclick="goToStep2()" disabled>다음 단계 → 항목 체크하기</button>
+    </div>
+  </div>
+
+  <div class="section" id="section-2">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span><span id="check-title">🛒 평소 사용하는 생활 필수품을 체크해주세요</span></div>
+      <div class="info-banner" id="family-info-banner"></div>
+      <div class="progress-info">
+        <span id="checked-count">0개 선택됨</span>
+        <span id="pv-label-top">총합 PV: <strong id="live-pv-top">0 PV</strong></span>
+      </div>
+    </div>
+    <div class="section-divider" id="cat-hint">카테고리를 눌러 펼쳐서 체크하세요</div>
+    <div id="categories-container"></div>
+    <button class="btn-primary" onclick="goToStep3()" id="result-btn">✅ 결과 보기 →</button>
+    <button class="btn-secondary" onclick="goToStep1()" id="back-btn">← 가족 구성 다시 선택</button>
+  </div>
+
+  <div class="section" id="section-3">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span><span id="result-title">🎉 예상 캐시백 결과</span></div>
+      <div class="result-grid">
+        <div class="result-item"><div class="result-label" id="lbl-total-pv">총합 PV</div><div class="result-value" id="res-total-pv">0 PV</div></div>
+        <div class="result-item"><div class="result-label" id="lbl-months">적용 개월 수</div><div class="result-value" id="res-months">-</div></div>
+        <div class="result-item"><div class="result-label" id="lbl-cumulative">누적 PV</div><div class="result-value" id="res-cumulative">0 PV</div></div>
+        <div class="result-item"><div class="result-label" id="lbl-times">달성 횟수</div><div class="result-value" id="res-times">0</div></div>
+      </div>
+      <div class="result-cashback">
+        <div class="cashback-label" id="cashback-label">✨ 예상 캐시백</div>
+        <div class="cashback-amount" id="res-cashback">0원</div>
+        <div class="cashback-sub">
+          <div id="cashback-per-text" style="font-size:14px;font-weight:700;margin-bottom:4px;"></div>
+          <div id="cashback-slogan" style="font-size:13px;opacity:.9;"></div>
+        </div>
+      </div>
+      <div id="res-breakdown" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:11px;padding:14px;margin-bottom:14px;"></div>
+      <button class="btn-primary" onclick="copyResultLink()" id="copy-btn">🔗 결과 링크 복사</button>
+      <button class="btn-secondary" onclick="goToStep2()" id="recheck-btn">← 항목 다시 체크하기</button>
+      <button class="btn-secondary" onclick="resetAll()" style="color:#ef4444;border-color:#ef4444;" id="reset-btn">↺ 처음부터 다시</button>
+      <div class="disclaimer"><p id="disc1"></p><p id="disc2"></p><p id="disc3"></p></div>
+    </div>
+  </div>
+</div>
+
+<div class="sticky-bar" id="sticky-bar">
+  <div class="sticky-info">
+    <div class="sticky-label" id="sticky-label">현재 선택</div>
+    <div class="sticky-pv" id="sticky-pv">0 PV</div>
+    <div class="sticky-count" id="sticky-count">0개 항목</div>
+  </div>
+  <button class="sticky-btn" onclick="goToStep3()" id="sticky-btn-txt">결과 보기 →</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   LANGUAGE CONFIG
+============================================================ */
+const LANG_DATA={
+  ko:{pvLabel:'PV',currency:'원',threshold:300000,cashbackPerHit:58000,showCashback:true,
+    halfCats:['health','cosmetics','living','appliance','overseas'],
+    ui:{
+      badge:'atom美 AZA · 마트체인지',
+      headerTitle:'우리 가족 소비를 <em>애터미 마트</em>로 바꾸면<br>예상 캐시백은 얼마일까요? 💰',
+      headerDesc:'평소 사용하는 생활 필수품을 체크해보세요.<br>선택한 항목의 PV를 기준으로 예상 캐시백을 간편하게 확인할 수 있습니다.',
+      pvNote:'💡 PV는 애터미 제품 구매 시 누적되는 포인트 기준입니다',
+      steps:['가족 구성','항목 선택','결과 보기'],
+      familyQ:'👨‍👩‍👧‍👦 우리 가족은 몇 명인가요?',
+      infoNote:'📌 가족 구성에 따라 적용 기간이 달라집니다.<br><strong>2인 이하 → 6개월 기준 &nbsp;|&nbsp; 3인 이상 → 12개월 기준</strong>',
+      fam:['','1인 가족','2인 가족','3인 가족','4인 이상'],
+      famMonths:['','6개월 적용','6개월 적용','12개월 적용','12개월 적용'],
+      nextBtn:'다음 단계 → 항목 체크하기',
+      checkTitle:'🛒 평소 사용하는 생활 필수품을 체크해주세요',
+      catHint:'카테고리를 눌러 펼쳐서 체크하세요',
+      selectAll:'전체 선택 / 해제',
+      resultBtn:'✅ 결과 보기 →',backBtn:'← 가족 구성 다시 선택',
+      resultTitle:'🎉 예상 캐시백 결과',
+      lblTotalPV:'총합 PV',lblMonths:'적용 개월 수',lblCumulative:'누적 PV',lblTimes:'달성 횟수',
+      cashbackLabel:'✨ 예상 캐시백',
+      cashbackPerText:(amt,cur)=>`30만 PV 달성 1회당 <span style="font-size:17px;">${amt.toLocaleString()}${cur}</span>`,
+      cashbackSlogan:'마트 체인지로 소비가 소득이 됩니다! 🛒→💰',
+      copyBtn:'🔗 결과 링크 복사 (카카오톡 / LINE 공유)',
+      recheckBtn:'← 항목 다시 체크하기',resetBtn:'↺ 처음부터 다시 계산하기',
+      breakdownTitle:'📊 카테고리별 PV 내역',
+      halfNote:'✂️ 매달 소비되지 않는 일부 품목은 PV의 <strong>50%</strong>만 반영됩니다.',
+      disc:['본 결과는 소비 전환 기준의 예상 계산값입니다.','실제 지급 기준은 회원 자격, 시점, 운영 정책 등에 따라 달라질 수 있습니다.','본 페이지는 상담 및 안내용 참고 자료입니다.'],
+      stickyLabel:'현재 선택',stickyBtn:'결과 보기 →',pvLabelTop:'총합 PV',
+      checkedCount:n=>n+'개 선택됨',stickyCount:n=>n+'개 항목',
+      monthUnit:n=>n+'개월',timesUnit:n=>n+'회',
+      familyBanner:(f,m)=>{const l=['','1인','2인','3인','4인 이상'];return`👨‍👩‍👧‍👦 <strong>${l[f]} 가족</strong> 선택 → <strong>${m}개월</strong> 기준으로 계산됩니다.`;},
+      toastCopied:'✅ 링크 복사 완료! 카카오톡 / LINE으로 공유하세요 🎉',
+      toastSelectFamily:'먼저 가족 구성을 선택해 주세요 😊'
+    }
+  },
+  en:{pvLabel:'PV',currency:'USD',threshold:300000,cashbackPerHit:0,showCashback:false,
+    halfCats:['ehealth','ecosmetics'],
+    ui:{
+      badge:'atom美 AZA · Mart Change',
+      headerTitle:'Switch your family\'s shopping to <em>Atomy</em><br>and see your estimated cashback! 💰',
+      headerDesc:'Check the daily essentials your family uses.<br>Calculate estimated cashback based on selected PV.',
+      pvNote:'💡 PV (Point Value) is accumulated when purchasing Atomy products',
+      steps:['Family Size','Select Items','Results'],
+      familyQ:'👨‍👩‍👧‍👦 How many people are in your family?',
+      infoNote:'📌 Calculation period varies by family size.<br><strong>1–2 people → 6-month basis &nbsp;|&nbsp; 3+ people → 12-month basis</strong>',
+      fam:['','1 Person','2 People','3 People','4+ People'],
+      famMonths:['','6-month basis','6-month basis','12-month basis','12-month basis'],
+      nextBtn:'Next → Check Items',
+      checkTitle:'🛒 Check the daily essentials your family uses',
+      catHint:'Tap categories to expand and check items',
+      selectAll:'Select All / Deselect All',
+      resultBtn:'✅ See Results →',backBtn:'← Change Family Size',
+      resultTitle:'🎉 Estimated Cashback Results',
+      lblTotalPV:'Total PV',lblMonths:'Months Applied',lblCumulative:'Cumulative PV',lblTimes:'Qualifications',
+      cashbackLabel:'✨ Estimated Cashback',
+      cashbackPerText:()=>`Enter cashback per 300,000 PV (local rate)`,
+      cashbackSlogan:'Turn everyday shopping into income! 🛒→💰',
+      rateBoxTitle:'💡 Cashback per qualification',rateCurrencyLabel:'USD',
+      copyBtn:'🔗 Copy Result Link (Share via LINE)',
+      recheckBtn:'← Re-check Items',resetBtn:'↺ Start Over',
+      breakdownTitle:'📊 PV Breakdown by Category',
+      halfNote:'✂️ Some items not purchased every month are counted at <strong>50%</strong> PV.',
+      disc:['This result is an estimated calculation based on consumer spending conversion.','Actual cashback may vary by membership status, timing, and company policies.','This page is for reference and consultation purposes only.'],
+      stickyLabel:'Current Selection',stickyBtn:'See Results →',pvLabelTop:'Total PV',
+      checkedCount:n=>n+' items selected',stickyCount:n=>n+' items',
+      monthUnit:n=>n+' months',timesUnit:n=>n+'x',
+      familyBanner:(f,m)=>{const l=['','1 Person','2 People','3 People','4+ People'];return`👨‍👩‍👧‍👦 <strong>${l[f]} Family</strong> → Calculated on <strong>${m}-month</strong> basis`;},
+      toastCopied:'✅ Link copied! Share via LINE 🎉',
+      toastSelectFamily:'Please select your family size first 😊'
+    }
+  },
+  /* ===== THAILAND ===== */
+  th:{pvLabel:'PV',currency:'บาท',threshold:300000,cashbackPerHit:2000,showCashback:true,
+    halfCats:['th_health','th_cosmetics'],
+    ui:{
+      badge:'atom美 AZA · มาร์ทเชนจ์',
+      headerTitle:'เปลี่ยนการจับจ่ายของครอบครัว<br>มาที่ <em>Atomy</em> แล้วได้รับ Cashback เท่าไหร่? 💰',
+      headerDesc:'ทำเครื่องหมายสินค้าที่ใช้ในชีวิตประจำวัน<br>คำนวณ Cashback จาก PV ที่คุณเลือก',
+      pvNote:'💡 PV คือคะแนนสะสมเมื่อซื้อสินค้า Atomy',
+      steps:['ขนาดครอบครัว','เลือกสินค้า','ผลลัพธ์'],
+      familyQ:'👨‍👩‍👧‍👦 ครอบครัวของคุณมีกี่คน?',
+      infoNote:'📌 ระยะเวลาคำนวณขึ้นอยู่กับขนาดครอบครัว<br><strong>1–2 คน → ฐาน 6 เดือน &nbsp;|&nbsp; 3 คนขึ้นไป → ฐาน 12 เดือน</strong>',
+      fam:['','1 คน','2 คน','3 คน','4 คนขึ้นไป'],
+      famMonths:['','ฐาน 6 เดือน','ฐาน 6 เดือน','ฐาน 12 เดือน','ฐาน 12 เดือน'],
+      nextBtn:'ถัดไป → เลือกสินค้า',
+      checkTitle:'🛒 เลือกสินค้าที่ใช้ในชีวิตประจำวัน',
+      catHint:'แตะหมวดหมู่เพื่อขยายและทำเครื่องหมาย',
+      selectAll:'เลือกทั้งหมด / ยกเลิกทั้งหมด',
+      resultBtn:'✅ ดูผลลัพธ์ →',backBtn:'← เปลี่ยนขนาดครอบครัว',
+      resultTitle:'🎉 ผลลัพธ์ Cashback ที่คาดว่าจะได้รับ',
+      lblTotalPV:'PV รวม',lblMonths:'จำนวนเดือน',lblCumulative:'PV สะสม',lblTimes:'จำนวนรอบ',
+      cashbackLabel:'✨ Cashback โดยประมาณ',
+      cashbackPerText:(amt,cur)=>`1 รอบ (300,000 PV) = <span style="font-size:17px;">${amt.toLocaleString()} ${cur}</span>`,
+      cashbackSlogan:'เปลี่ยนการซื้อของให้กลายเป็นรายได้! 🛒→💰',
+      copyBtn:'🔗 คัดลอกลิงก์ผลลัพธ์ (แชร์ผ่าน LINE)',
+      recheckBtn:'← เลือกสินค้าใหม่',resetBtn:'↺ เริ่มต้นใหม่',
+      breakdownTitle:'📊 สรุป PV แยกตามหมวดหมู่',
+      halfNote:'✂️ สินค้าบางชนิดที่ไม่ได้ซื้อทุกเดือนจะนับ PV เพียง <strong>50%</strong>',
+      disc:['ผลลัพธ์นี้เป็นการประมาณการตามการเปลี่ยนพฤติกรรมการซื้อสินค้า','Cashback จริงอาจแตกต่างกันตามสถานะสมาชิก เวลา และนโยบายบริษัท','หน้านี้มีไว้เพื่อการอ้างอิงและให้คำปรึกษาเท่านั้น'],
+      stickyLabel:'ที่เลือกไว้',stickyBtn:'ดูผลลัพธ์ →',pvLabelTop:'PV รวม',
+      checkedCount:n=>'เลือกไว้ '+n+' รายการ',stickyCount:n=>n+' รายการ',
+      monthUnit:n=>n+' เดือน',timesUnit:n=>n+' รอบ',
+      familyBanner:(f,m)=>{const l=['','1 คน','2 คน','3 คน','4 คนขึ้นไป'];return`👨‍👩‍👧‍👦 เลือก <strong>ครอบครัว ${l[f]}</strong> → คำนวณบนฐาน <strong>${m} เดือน</strong>`;},
+      toastCopied:'✅ คัดลอกลิงก์แล้ว! แชร์ผ่าน LINE 🎉',
+      toastSelectFamily:'กรุณาเลือกขนาดครอบครัวก่อน 😊'
+    }
+  },
+  /* ===== JAPAN ===== */
+  ja:{pvLabel:'PV',currency:'円',threshold:300000,cashbackPerHit:6000,showCashback:true,
+    halfCats:['ja_health','ja_cosmetics'],
+    ui:{
+      badge:'atom美 AZA · マートチェンジ',
+      headerTitle:'家族の日用品を<em>アトミー</em>に切り替えたら<br>キャッシュバックはいくら？💰',
+      headerDesc:'普段使っている生活必需品にチェックしてください。<br>選択した項目のPVをもとに予想キャッシュバックを計算します。',
+      pvNote:'💡 PVはアトミー製品購入時に積み立てられるポイントです',
+      steps:['家族構成','項目選択','結果'],
+      familyQ:'👨‍👩‍👧‍👦 家族は何人ですか？',
+      infoNote:'📌 家族構成によって計算期間が変わります。<br><strong>1〜2人 → 6ヶ月換算 &nbsp;|&nbsp; 3人以上 → 12ヶ月換算</strong>',
+      fam:['','1人家族','2人家族','3人家族','4人以上'],
+      famMonths:['','6ヶ月換算','6ヶ月換算','12ヶ月換算','12ヶ月換算'],
+      nextBtn:'次へ → 項目をチェック',
+      checkTitle:'🛒 普段使っている生活必需品をチェックしてください',
+      catHint:'カテゴリをタップして展開しチェックしてください',
+      selectAll:'全選択 / 全解除',
+      resultBtn:'✅ 結果を見る →',backBtn:'← 家族構成を変更',
+      resultTitle:'🎉 予想キャッシュバック結果',
+      lblTotalPV:'合計PV',lblMonths:'計算期間',lblCumulative:'累計PV',lblTimes:'達成回数',
+      cashbackLabel:'✨ 予想キャッシュバック',
+      cashbackPerText:(amt,cur)=>`30万PV達成 1回あたり <span style="font-size:17px;">${amt.toLocaleString()}${cur}</span>`,
+      cashbackSlogan:'マートチェンジで消費が収入に！ 🛒→💰',
+      copyBtn:'🔗 結果リンクをコピー（LINEで共有）',
+      recheckBtn:'← 項目をチェックし直す',resetBtn:'↺ 最初からやり直す',
+      breakdownTitle:'📊 カテゴリ別PV内訳',
+      halfNote:'✂️ 毎月消費されない一部の商品はPVの <strong>50%</strong> のみ反映されます。',
+      disc:['この結果は消費転換を基準とした予想計算値です。','実際の支払い基準は会員資格・時期・運営方針等により異なる場合があります。','このページは相談・案内用の参考資料です。'],
+      stickyLabel:'現在の選択',stickyBtn:'結果を見る →',pvLabelTop:'合計PV',
+      checkedCount:n=>n+'件選択中',stickyCount:n=>n+'件',
+      monthUnit:n=>n+'ヶ月',timesUnit:n=>n+'回',
+      familyBanner:(f,m)=>{const l=['','1人','2人','3人','4人以上'];return`👨‍👩‍👧‍👦 <strong>${l[f]}家族</strong>を選択 → <strong>${m}ヶ月</strong>換算で計算します`;},
+      toastCopied:'✅ リンクをコピーしました！LINEで共有してください 🎉',
+      toastSelectFamily:'最初に家族構成を選択してください 😊'
+    }
+  },
+  /* ===== CHINA — threshold 3,000艾分, cashback 315元 ===== */
+  zh:{pvLabel:'艾分',currency:'元',threshold:3000,cashbackPerHit:315,showCashback:true,
+    halfCats:['zh_health','zh_beauty','zh_appliance'],
+    ui:{
+      badge:'atom美 AZA · 换购计划',
+      headerTitle:'将家庭日常消费切换到<em>艾多美</em><br>预计可获得多少返利？💰',
+      headerDesc:'勾选您日常使用的生活必需品，<br>我们将根据您选择的艾分计算预计返利金额。',
+      pvNote:'💡 艾分（Àifēn）是购买艾多美产品时累积的积分标准',
+      steps:['家庭人数','选择商品','查看结果'],
+      familyQ:'👨‍👩‍👧‍👦 您家有几口人？',
+      infoNote:'📌 计算周期根据家庭人数有所不同。<br><strong>1–2人 → 以6个月为基准 &nbsp;|&nbsp; 3人以上 → 以12个月为基准</strong>',
+      fam:['','1人','2人','3人','4人以上'],
+      famMonths:['','6个月基准','6个月基准','12个月基准','12个月基准'],
+      nextBtn:'下一步 → 勾选商品',
+      checkTitle:'🛒 请勾选您日常使用的生活必需品',
+      catHint:'点击分类展开并勾选商品',
+      selectAll:'全选 / 取消全选',
+      resultBtn:'✅ 查看结果 →',backBtn:'← 重新选择家庭人数',
+      resultTitle:'🎉 预计返利结果',
+      lblTotalPV:'总艾分',lblMonths:'计算月数',lblCumulative:'累计艾分',lblTimes:'达标次数',
+      cashbackLabel:'✨ 预计返利',
+      cashbackPerText:(amt,cur)=>`每达标1次（3,000艾分）= <span style="font-size:17px;">${amt.toLocaleString()} ${cur}</span>`,
+      cashbackSlogan:'换购计划，让消费变成收入！🛒→💰',
+      copyBtn:'🔗 复制结果链接（通过微信分享）',
+      recheckBtn:'← 重新勾选商品',resetBtn:'↺ 重新开始计算',
+      breakdownTitle:'📊 各分类艾分明细',
+      halfNote:'✂️ 部分非每月消费品仅计入 <strong>50%</strong> 艾分。',
+      disc:['本结果为消费转换基准的预估计算值。','实际返利标准可能因会员资格、时间及运营政策等有所不同。','本页面仅供参考和咨询使用。'],
+      stickyLabel:'当前选择',stickyBtn:'查看结果 →',pvLabelTop:'总艾分',
+      checkedCount:n=>'已选择 '+n+' 件',stickyCount:n=>n+' 件',
+      monthUnit:n=>n+'个月',timesUnit:n=>n+'次',
+      familyBanner:(f,m)=>{const l=['','1人','2人','3人','4人以上'];return`👨‍👩‍👧‍👦 已选择 <strong>${l[f]}家庭</strong> → 按 <strong>${m}个月</strong> 为基准计算`;},
+      toastCopied:'✅ 链接已复制！请通过微信分享 🎉',
+      toastSelectFamily:'请先选择家庭人数 😊'
+    }
+  }
+};
+
+/* ============================================================
+   KOREAN BASE CATEGORIES
+============================================================ */
+const KO_CATS=[
+  {id:'food',name:'🍚 식품',items:[
+    {id:'f01',name:'쌀 / 즉석밥',pv:5000},
+    {id:'f02',name:'생수 / 김치 / 채소',pv:2500},
+    {id:'f03',name:'커피 (믹스 / 블랙 / 골드블루)',pv:3000},
+    {id:'f04',name:'음료',type:'select',options:[{label:'두유',pv:7000},{label:'주스',pv:3000},{label:'녹차',pv:1500}]},
+    {id:'f05',name:'양념 (간장 / 고추장 / 된장 / 후추)',pv:1500},
+    {id:'f06',name:'계란 (구운계란 / 반숙계란)',pv:3000},
+    {id:'f07',name:'건어물 (멸치 / 미역 / 다시마)',pv:1500},
+    {id:'f08',name:'라면 / 컵라면',pv:4000},
+    {id:'f09',name:'레토르트 (카레 / 곰탕 / 갈비탕 / 삼계탕)',pv:1700},
+    {id:'f10',name:'김 (도시락 / 김전장 / 김자반)',pv:1000},
+    {id:'f11',name:'냉장 / 냉동식품 (불고기 / 만두 / 돈까스)',pv:4000},
+    {id:'f12',name:'참기름 / 들기름 / 식용유 / 아보카도 오일',pv:2000},
+    {id:'f13',name:'하루견과 / 알밤',pv:3500},
+    {id:'f14',name:'스낵 (두부 / 라이스칩 / 누룽지 / 콘칩)',pv:1000}
+  ]},
+  {id:'health',name:'💊 건강 식품',items:[
+    {id:'h01',name:'면역력 / 피로개선\n(헤모힘 / 홍삼 / 노니 / 비타민B)',pv:40000},
+    {id:'h01b',name:'활력 케어\n(헤모샷 / 활진기고 / 파워비타민)',pv:40000},
+    {id:'h02',name:'비타민 / 미네랄\n(파워비타민 / 비타민C / 스피루리나)',pv:12000},
+    {id:'h03',name:'간 건강 (밀크씨슬)',pv:11000},
+    {id:'h04',name:'위 건강\n(위건강 데일리 / 파인자임)',pv:20000},
+    {id:'h04b',name:'장 건강\n(SCI 마이크로 바이옴 / 친생 유산균)',pv:20000},
+    {id:'h05',name:'뼈 건강\n(칼슘 / MSM / 비타민)',pv:10500},
+    {id:'h06',name:'혈관 건강\n(오메가3 / 징코 & 낫또)',pv:6400},
+    {id:'h06b',name:'혈당 케어\n(혈당케어 / 바나바 홍삼 / 노니)',pv:25000},
+    {id:'h07',name:'눈 건강\n(루테인 / 루아잔틴)',pv:9500},
+    {id:'h08',name:'남성 건강\n(쏘팔메토 / 야관문)',pv:11000},
+    {id:'h09',name:'갱년기 증상\n(루바브퀸 / 소포라퀸 / 석류미인)',pv:10000},
+    {id:'h09b',name:'체지방 조절\n(보이차 / 차전자피 / 풋사과 애플페논)',pv:13000},
+    {id:'h09c',name:'식이섬유\n(차전자피 / 컬리케일)',pv:13000},
+    {id:'h10',name:'체중조절\n(밸런스 라이프 / 슬림바디 뉴핏)',pv:26000},
+    {id:'h11',name:'피부미용\n(콜라겐 / 비오틴 / 뷰티워터젤리)',pv:16000},
+    {id:'h12',name:'수면 (락티움)',pv:16000},
+    {id:'h12b',name:'프로폴리스\n(구강 스프레이 / 면역 구미)',pv:11000},
+    {id:'h12d',name:'죽염 (9번 구워만든 죽염)',pv:20000},
+    {id:'h12c',name:'데일리 건강즙\n(배도라지 / 양파즙 / ABC착즙 / 양배추즙)',pv:10000}
+  ]},
+  {id:'hairbody',name:'🧴 헤어 & 바디',items:[
+    {id:'hb01',name:'칫솔 / 치간브러시 / 혀클리너',pv:3900},
+    {id:'hb02',name:'치약 / 잇몸치약',pv:2500},
+    {id:'hb03',name:'샴푸 / 린스',pv:4000},
+    {id:'hb04',name:'생모단',pv:4000},
+    {id:'hb05',name:'트리트먼트 / 프로틴 에센스',pv:3600},
+    {id:'hb06',name:'헤어오일 / 컬링 에센스',pv:4000},
+    {id:'hb07',name:'염모제 / 새치 / 부분염색',pv:2900},
+    {id:'hb08',name:'바디클렌저 / 바디로션 / 바디스크럽',pv:2500},
+    {id:'hb09',name:'비누',pv:2500},
+    {id:'hb10',name:'핸드워시 / 핸드크림 / 풋스크럽',pv:5000},
+    {id:'hb11',name:'손소독 (겔 / 스프레이)',pv:750},
+    {id:'hb12',name:'여성 청결제',pv:5000},
+    {id:'hb13',name:'생리대 / 팬티라이너',pv:1500}
+  ]},
+  {id:'maternity',name:'🤱 임산부',items:[
+    {id:'mat01',name:'엽산',pv:9500},{id:'mat02',name:'철분',pv:6000},{id:'mat03',name:'튼살 크림 / 튼살 오일',pv:8500}
+  ]},
+  {id:'kids',name:'👶 키즈',items:[
+    {id:'k01',name:'면역 (키즈홍삼 / 키즈구미)',pv:8500},
+    {id:'k02',name:'유산균 (아연, 비타민D 포함)',pv:15000},
+    {id:'k03',name:'뼈건강 (츄어블 칼슘)',pv:7500},
+    {id:'k04',name:'두뇌건강 (키즈 오메가3)',pv:7500},
+    {id:'k05',name:'스킨 (바스 / 로션 / 크림 / 키즈치약 / 키즈칫솔)',pv:14300}
+  ]},
+  {id:'pet',name:'🐾 반려동물',items:[
+    {id:'p01',name:'반려견 사료 / 발포껌 / 소세지',type:'select',options:[{label:'사료/발포껌',pv:6000},{label:'소세지',pv:5000}]},
+    {id:'p02',name:'반려묘 사료',pv:5000}
+  ]},
+  {id:'cosmetics',name:'💄 화장품',items:[
+    {id:'c01',name:'토너 / 스킨 / 미스트',pv:16000},
+    {id:'c02',name:'에센스 / 세럼 / 앰플',pv:18000},
+    {id:'c03',name:'로션 / 에멀젼',pv:11000},
+    {id:'c04',name:'영양크림 / 수분크림',pv:16000},
+    {id:'c05',name:'아이크림',pv:18000},
+    {id:'c06',name:'스페셜 케어 (앰플 / 부스터)',pv:50000,note:'★ 피부샵 이용 고객은 체크'},
+    {id:'c07',name:'클렌징 (폼 / 크림 / 비누타입)',pv:3000},
+    {id:'c07b',name:'각질케어 (필링젤 / 필링패드)',pv:4000},
+    {id:'c08',name:'팩 (고무 / 겔 / 시트)',pv:2500},
+    {id:'c08b',name:'워시 마스크 (클레이 / 허니)',pv:8000},
+    {id:'c09',name:'선 (크림 / 스틱 / 쿠션)',pv:7400},
+    {id:'c10',name:'메이크업 (페이스 / 립 / 섀도우)',pv:10000},
+    {id:'c11',name:'파운데이션 (BB / 쿠션 / 팩트 / 파우더)',pv:10000},
+    {id:'c12',name:'유기농 케어 (호호바 오일)',pv:30000}
+  ]},
+  {id:'living',name:'🏠 리빙 & 생활용품',items:[
+    {id:'l01',name:'화장지 / 휴지',pv:4400},{id:'l02',name:'물티슈 / 비데 물티슈',pv:3300},
+    {id:'l03',name:'주방세제',pv:2400},{id:'l04',name:'다목적 세정제',pv:3500},
+    {id:'l05',name:'세탁세제 / 유연제 / 한장세제',pv:3400},{id:'l06',name:'고무장갑',pv:1000},
+    {id:'l07',name:'수세미 (스폰지 / 스텐레스)',pv:760},{id:'l08',name:'위생백 / 위생장갑',pv:600},
+    {id:'l09a',name:'키친타올',pv:3500},{id:'l09b',name:'종이호일',pv:650},
+    {id:'l10',name:'냄비 / 후라이팬',pv:38000},{id:'l11',name:'테이프크리너',pv:1200},
+    {id:'l12',name:'황사마스크 (KF80/94)',pv:2000},{id:'l13',name:'방향제 (디퓨저)',pv:10000},
+    {id:'l15',name:'수건',pv:2500}
+  ]},
+  {id:'appliance',name:'🏷️ 가전',items:[
+    {id:'a01',name:'정수기 / (필터)',pv:40000},{id:'a02',name:'공기청정기 / (필터)',pv:25000},
+    {id:'a03',name:'가습기 / 비데',pv:35000},{id:'a04',name:'전동 칫솔 / (칫솔헤드)',pv:5200}
+  ]},
+  {id:'overseas',name:'🌏 해외직구',items:[
+    {id:'o01',name:'마누카 꿀 MGO830+ (호주산)',pv:100000},
+    {id:'o02',name:'초롱혼합오일 (뉴질랜드산)',pv:100000},
+    {id:'o03',name:'호랑이 우유 버섯 (말레이시아)',pv:60000}
+  ]}
+];
+
+/* ============================================================
+   JAPAN CATEGORIES — PDF 2026 기준
+============================================================ */
+const JA_CATS=[
+  {id:'ja_food',name:'🍚 食品',items:[
+    {id:'ja_f01',name:'じゃがいもラーメン（辛ラーメン風）',pv:660},
+    {id:'ja_f02',name:'スパム（ハム類）',pv:1300},
+    {id:'ja_f03',name:'カフェアラビカ ブラックコーヒー',pv:3000},
+    {id:'ja_f04',name:'カフェアラビカ ミックスコーヒー',pv:1000},
+    {id:'ja_f05',name:'砂糖 / オーガニックココナッツシュガー',pv:2200},
+    {id:'ja_f06',name:'ハチミツ / マヌカハニー（MGO830+）',pv:28600},
+    {id:'ja_f07',name:'アトミ海苔',pv:3300},
+    {id:'ja_f08',name:'ABCジュース',pv:13200},
+    {id:'ja_f09',name:'梨キキョウエキス',pv:11100}
+  ]},
+  {id:'ja_health',name:'💊 サプリメント',items:[
+    {id:'ja_h01',name:'フコイダンエキス（免疫健康食品）',pv:64000},
+    {id:'ja_h02',name:'フコイダンカプセル（免疫健康食品）',pv:40000},
+    {id:'ja_h03',name:'紅参丹（高麗人参）',pv:44000},
+    {id:'ja_h04',name:'ビタミンC / カラーフード',pv:6000},
+    {id:'ja_h05',name:'乳酸菌（腸環境）',pv:10000},
+    {id:'ja_h06',name:'プレミアムルテイン30（目の健康）',pv:20000},
+    {id:'ja_h07',name:'オメガ3（DHA / EPA）',pv:20000},
+    {id:'ja_h08',name:'カルシウム（歯と骨形成）',pv:15000},
+    {id:'ja_h09',name:'パインザイム（酵素）',pv:9700},
+    {id:'ja_h10',name:'プーアール茶（中性脂肪）',pv:13000},
+    {id:'ja_h11',name:'スピルリナ（基礎栄養素）',pv:9000},
+    {id:'ja_h12',name:'ミルクシスル（肝機能）',pv:9700},
+    {id:'ja_h13',name:'イソフラボン（更年期）',pv:21000},
+    {id:'ja_h14',name:'プラズマα（記憶維持）',pv:20000},
+    {id:'ja_h15',name:'オーソーパルメット（男性前立腺）',pv:8300},
+    {id:'ja_h16',name:'グリーンプロポリス スプレー',pv:9100},
+    {id:'ja_h17',name:'サイリウムハスク（植物繊維）',pv:20000},
+    {id:'ja_h18',name:'鉄分',pv:11400},
+    {id:'ja_h19',name:'GMZ（黒ニンニク / マカ / 亜鉛）',pv:20000},
+    {id:'ja_h20',name:'ノニジュース',type:'select',options:[{label:'レギュラー',pv:30000},{label:'大容量',pv:33000}]},
+    {id:'ja_h21',name:'コラーゲンパウダー',pv:30000}
+  ]},
+  {id:'ja_cosmetics',name:'💄 化粧品',items:[
+    {id:'ja_c01',name:'美容液 / プレステージ',pv:65000},
+    {id:'ja_c02',name:'A-化粧水 / 乳液',pv:20800},
+    {id:'ja_c03',name:'A-エッセンス / セーラム',pv:23400},
+    {id:'ja_c04',name:'A-アイクリーム / 保湿クリーム',type:'select',options:[{label:'アイクリーム',pv:20000},{label:'保湿クリーム',pv:18000}]},
+    {id:'ja_c05',name:'化粧水 / 乳液 / アイクリーム / クリーム（セット）',pv:9900},
+    {id:'ja_c06',name:'エッセンス / 美白エッセンス',type:'select',options:[{label:'エッセンス',pv:10600},{label:'美白エッセンス',pv:23400}]},
+    {id:'ja_c07',name:'メイク落し / 洗顔 / 角質 / パック',pv:3300},
+    {id:'ja_c08',name:'クレンジングウォーター / ティッシュ',type:'select',options:[{label:'クレンジングウォーター',pv:5300},{label:'ティッシュ',pv:800}]},
+    {id:'ja_c09',name:'デイリーマスク / ゲルマスク',type:'select',options:[{label:'デイリーマスク',pv:4480},{label:'ゲルマスク',pv:18000}]},
+    {id:'ja_c10',name:'ミスト（オイル / ローズ / クリーム）',type:'select',options:[{label:'オイルミスト',pv:11700},{label:'ローズミスト',pv:3250},{label:'クリームミスト',pv:7980}]},
+    {id:'ja_c11',name:'リフレッシュバーム',pv:8200},
+    {id:'ja_c12',name:'日焼け止め',type:'select',options:[{label:'クリームタイプ',pv:4900},{label:'スティックタイプ',pv:3500}]},
+    {id:'ja_c13',name:'メン・オールインワン',pv:14000},
+    {id:'ja_c14',name:'メイクアップベース',pv:4200},
+    {id:'ja_c15',name:'BBクリーム（液体ファンデーション）',pv:5000},
+    {id:'ja_c16',name:'リップグロウ',pv:4100},
+    {id:'ja_c17',name:'クッションファンデーション',pv:15000},
+    {id:'ja_c18',name:'エアーパクト（パウダーコンパクト）',pv:8800},
+    {id:'ja_c19',name:'ルースパウダー',pv:14300}
+  ]},
+  {id:'ja_hairbody',name:'🧴 ヘア & ボディ',items:[
+    {id:'ja_hb01',name:'歯ブラシ / 歯磨き',pv:3900},
+    {id:'ja_hb02',name:'植物シャンプー / リンス',pv:5000},
+    {id:'ja_hb03',name:'スカルプシャンプー / コンディショナー',pv:5500},
+    {id:'ja_hb04',name:'プロテインヘアケアセット（ダメージケア）',pv:20000},
+    {id:'ja_hb05',name:'ヘアオイル / 脱毛トニック',type:'select',options:[{label:'ヘアオイル',pv:4000},{label:'脱毛トニック',pv:5000}]},
+    {id:'ja_hb06',name:'ヘアカーリング・リペア / エッセンス',type:'select',options:[{label:'カーリングリペア',pv:5200},{label:'エッセンス',pv:6400}]},
+    {id:'ja_hb07',name:'A-ヘアトリートメント',pv:4600},
+    {id:'ja_hb08',name:'ボディークレンザー / ローション',type:'select',options:[{label:'ボディクレンザー',pv:3000},{label:'ローション',pv:2500}]},
+    {id:'ja_hb09',name:'アダムクレンザー（デリケートゾーン）',pv:1500},
+    {id:'ja_hb10',name:'ハンドソープ / ハンドジェル',type:'select',options:[{label:'ハンドソープ',pv:3400},{label:'ハンドジェル',pv:750}]},
+    {id:'ja_hb11',name:'ハンドクリーム',pv:5000},
+    {id:'ja_hb12',name:'キッズ歯ブラシ',pv:4000},
+    {id:'ja_hb13',name:'キッズボディセット / セラベベ',pv:14300},
+    {id:'ja_hb14',name:'RVヘアケアセット（頭皮ケア専用）',pv:35000},
+    {id:'ja_hb15',name:'シルキーリペアトリートメント',pv:6400}
+  ]},
+  {id:'ja_home',name:'🏠 ホームケア',items:[
+    {id:'ja_l01',name:'洗剤（液体 / 粉 / カプセルタイプ）',type:'select',options:[{label:'液体',pv:3400},{label:'粉',pv:2800},{label:'カプセル',pv:4200}]},
+    {id:'ja_l02',name:'柔軟剤',pv:2600},
+    {id:'ja_l03',name:'台所洗剤',pv:2400},
+    {id:'ja_l04',name:'キッチン用洗剤',pv:4900},
+    {id:'ja_l05',name:'浴室用洗剤',pv:4900},
+    {id:'ja_l06',name:'ゴム手袋',pv:1000},
+    {id:'ja_l07',name:'ウエットティッシュ',pv:500},
+    {id:'ja_l08',name:'PTFTマスク',pv:3000}
+  ]}
+];
+
+/* ============================================================
+   THAILAND CATEGORIES — PDF 2026 기준
+============================================================ */
+const TH_CATS=[
+  {id:'th_food',name:'🍚 อาหาร',items:[
+    {id:'th_f01',name:'กาแฟ (มิกซ์ / ดำ / โคลบลู)',pv:3000},
+    {id:'th_f02',name:'บะหมี่กึ่งสำเร็จรูป / บะหมี่ถ้วย',pv:4000}
+  ]},
+  {id:'th_health',name:'💊 อาหารเสริมสุขภาพ',items:[
+    {id:'th_h01',name:'ภูมิคุ้มกัน / ดูแลความเหนื่อยล้า\n(เฮโมฮิม / โสมแดง / โนนิ / วิตามินบี)',pv:40000},
+    {id:'th_h02',name:'วิตามิน / แร่ธาตุ\n(วิตามินรวม / สาหร่ายสไปรูลินา)',pv:7000},
+    {id:'th_h03',name:'สุขภาพตับ (มิลค์ทิสเซิล)',pv:11000},
+    {id:'th_h04',name:'สุขภาพทางเดินอาหาร\n(โปรไบโอติก / ฟาย ไซม์ / น้ำกะหล่ำปลี)',pv:20000},
+    {id:'th_h05',name:'สุขภาพกระดูก\n(แคลเซียม / ทอมาซีน)',pv:10500},
+    {id:'th_h06',name:'สุขภาพหลอดเลือด\n(โอเมก้า 3 / แป๊ะก๋วย&ถั่วหมัก)',pv:6400},
+    {id:'th_h07',name:'สุขภาพดวงตา\n(ลูทีน / ลูซานทีน)',pv:9500},
+    {id:'th_h08',name:'สุขภาพของคุณผู้ชาย\n(ซอว์ปาล์มเมตโต้ / กระเทียมดำ)',pv:11000},
+    {id:'th_h09',name:'บรรเทาอาการวัยหมดประจำเดือน\n(โซโฟรา ควีน / ทับทิม)',pv:10000},
+    {id:'th_h10',name:'ควบคุมน้ำหนัก\n(ชาผู่เอ๋อร์ / เช็ค / ไซเลียมฮัสก์)',pv:9500},
+    {id:'th_h11',name:'สุขภาพของคุณแม่\n(กรดโฟลิก / ธาตุเหล็ก)',pv:17000},
+    {id:'th_h12',name:'ดูแลผิว\n(วิตามินซี / คอลลาเจน)',pv:16000}
+  ]},
+  {id:'th_cosmetics',name:'💄 เครื่องสำอาง',items:[
+    {id:'th_c01',name:'โทนเนอร์ / สกิน / มิสท์',pv:16000},
+    {id:'th_c02',name:'เอสเซนส์ / เซรั่ม / แอมพูล',pv:18000},
+    {id:'th_c03',name:'โลชั่น / อิมัลชั่น',pv:11000},
+    {id:'th_c04',name:'ครีมบำรุง / ครีมเพิ่มความชุ่มชื้น',pv:16000},
+    {id:'th_c05',name:'ครีมบำรุงรอบดวงตา',pv:18000},
+    {id:'th_c06',name:'ดูแลเป็นพิเศษ (แอมพูล / บูสเตอร์)',type:'select',
+      options:[{label:'50,000 PV',pv:50000},{label:'70,000 PV',pv:70000}],
+      note:'★ สำหรับลูกค้าที่ใช้บริการสปา'},
+    {id:'th_c07',name:'คลีนซิ่ง (ดีฟ / โฟม / พีลลิ่ง)',pv:2500},
+    {id:'th_c08',name:'มาร์ก (ฟิลออฟ / เจล / เดลลี่)',pv:2500},
+    {id:'th_c09',name:'ซัน (ครีม / สติ๊ก / คุชั่น)',pv:2500},
+    {id:'th_c10',name:'แต่งหน้า (ใบหน้า / ริมฝีปาก / ตา)',pv:10000},
+    {id:'th_c11',name:'รองพื้น (บีบี / คุชั่น / ตลับ)',pv:10000}
+  ]},
+  {id:'th_hairbody',name:'🧴 เส้นผมและผิวกาย',items:[
+    {id:'th_hb01',name:'แปรงสีฟัน / แปรงขัดฟัน',pv:3900},
+    {id:'th_hb02',name:'ยาสีฟัน',pv:2500},
+    {id:'th_hb03',name:'แชมพู / ครีมนวด',pv:4000},
+    {id:'th_hb04',name:'แซงโมดัน แฮร์โทนิค',pv:4000},
+    {id:'th_hb05',name:'ทรีทเมนต์ / โปรตีน เอสเซนส์',pv:3600},
+    {id:'th_hb06',name:'น้ำมันบำรุงเส้นผม / เอสเซ็นท์บำรุงผมดัด',pv:4000},
+    {id:'th_hb07',name:'น้ำยาย้อมผม',pv:2900},
+    {id:'th_hb08',name:'ผลิตภัณฑ์ทำความสะอาดผิวกาย / โลชั่นบำรุงผิว',pv:2500},
+    {id:'th_hb09',name:'สบู่',pv:2500},
+    {id:'th_hb10',name:'ผลิตภัณฑ์ทำความสะอาดมือ / ครีมทามือ',pv:5000},
+    {id:'th_hb11',name:'ผลิตภัณฑ์ช่วยฆ่าเชื้อที่มือ (เจล / สเปรย์)',type:'select',
+      options:[{label:'เจล',pv:750},{label:'สเปรย์',pv:5000}]},
+    {id:'th_hb12',name:'ผลิตภัณฑ์ทำความสะอาดจุดซ่อนเร้น',pv:1500},
+    {id:'th_hb13',name:'ผ้าอนามัย / แคร์ฟรี',pv:3000}
+  ]},
+  {id:'th_kids',name:'👶 สำหรับเด็ก',items:[
+    {id:'th_k01',name:'ผิว (อาบน้ำ / โลชั่น / ครีม)',pv:14300},
+    {id:'th_k02',name:'ครีมกันแดด',pv:3400},
+    {id:'th_k03',name:'วิตามิน (Kids Gummy)',pv:8500},
+    {id:'th_k04',name:'สุขภาพกระดูก (แคลเซียมเคี้ยวได้)',pv:7500},
+    {id:'th_k05',name:'สุขภาพสมอง (Omega 3 สำหรับเด็ก)',pv:7500}
+  ]},
+  {id:'th_home',name:'🏠 ของใช้ทั่วไปและของใช้ในบ้าน',items:[
+    {id:'th_l01',name:'ทิชชู่เปียก',pv:3300},
+    {id:'th_l02',name:'น้ำยาล้างจาน',pv:2400},
+    {id:'th_l03',name:'น้ำยาซักผ้า (น้ำยาปรับผ้านุ่ม / แผ่นฟิล์มซักผ้า)',pv:3400},
+    {id:'th_l04',name:'ฟองน้ำล้างจาน (ฟองน้ำ / สแตนเลส)',pv:760},
+    {id:'th_l05',name:'ผ้าเช็ดครัว',pv:650},
+    {id:'th_l06',name:'หม้อ / กระทะ',pv:38000},
+    {id:'th_l07',name:'หน้ากากกันฝุ่น pm 2.5 (KF80 / 94 / Kids)',pv:2000},
+    {id:'th_l08',name:'เครื่องกรองอากาศ / แผ่นกรอง',pv:20000},
+    {id:'th_l09',name:'น้ำหอมปรับอากาศ (ดิฟฟิวเซอร์)',pv:10000},
+    {id:'th_l10',name:'ฝักบัวอาบน้ำ (ไร้กลิ่น / กลิ่นเลมอน)',pv:40000},
+    {id:'th_l11',name:'ผ้าขนหนู',pv:2500},
+    {id:'th_l12',name:'เสื้อผ้า (ชุดชั้นใน / เสื้อ / เข็มขัด / ถุงเท้า)',pv:6000},
+    {id:'th_l13',name:'อาหารสุนัข / ขนมสุนัขขัดฟัน / ไส้กรอก',pv:6000},
+    {id:'th_l14',name:'ไดร์เป่าผม / เครื่องชุดโรลม้วนผมไฟฟ้า',pv:4500}
+  ]}
+];
+
+/* ============================================================
+   ENGLISH CATEGORIES
+============================================================ */
+const EN_CATS=[
+  {id:'ehealth',name:'💊 Health Supplements',items:[
+    {id:'eh01',name:'Immune & Energy Support\n(HemoHIM / Red Ginseng / Noni)',pv:40000},
+    {id:'eh02',name:'Vitality Care (Heemo Shot / Power Vitamins)',pv:40000},
+    {id:'eh03',name:'Vitamins & Minerals\n(Vit C / Multivitamin / Spirulina)',pv:12000},
+    {id:'eh04',name:'Liver Health (Milk Thistle / Rhodiola)',pv:11000},
+    {id:'eh05',name:'Digestive Health (Finezyme)',pv:6400},
+    {id:'eh06',name:'Gut Health (Probiotics 10+)',pv:13000},
+    {id:'eh07',name:'Bone & Joint Health\n(Plant Calcium / Turmacin MSM)',pv:20000},
+    {id:'eh08',name:'Omega-3 / Cardiovascular',pv:6400},
+    {id:'eh09',name:'Blood Sugar Support\n(Turmacin / Banaba)',pv:20000},
+    {id:'eh10',name:'Eye Health (Lutein)',pv:9500},
+    {id:'eh11',name:"Men's Health (Saw Palmetto)",pv:11000},
+    {id:'eh12',name:"Women's Health\n(Sophora Queen / Pomegranate Beauty)",pv:15000},
+    {id:'eh13',name:'Weight Management (Slim Body Shake 2.0)',pv:12000},
+    {id:'eh14',name:'Skin & Hair Beauty\n(Apple Phenon / Collagen / Biotin)',pv:17000},
+    {id:'eh15',name:'Manuka Honey MGO830+',pv:20000},
+    {id:'eh16',name:'Red Ginseng Complex (Hongsamdan)',pv:40000},
+    {id:'eh17',name:'Organic Fermented Noni',pv:20000}
+  ]},
+  {id:'ecosmetics',name:'💄 Beauty & Skincare',items:[
+    {id:'ec01',name:'Toner / Skin / Mist',pv:15000},
+    {id:'ec02',name:'Essence / Serum / Ampoule',pv:18000},
+    {id:'ec03',name:'Lotion / Emulsion',pv:11000},
+    {id:'ec04',name:'Moisturizer / Cream',pv:15000},
+    {id:'ec05',name:'Eye Cream',pv:16000},
+    {id:'ec06',name:'Cleanser (Foam / Deep)',pv:3300},
+    {id:'ec07',name:'Exfoliation Care\n(Peeling Gel / Pad / Peel-off Mask)',pv:2400},
+    {id:'ec08',name:'Face Mask (Sheet / Moisturizing)',pv:2400},
+    {id:'ec09',name:'Sun Care\n(Sunscreen White/Beige / BB Cream)',pv:3000},
+    {id:'ec10',name:'Makeup (Air Glow Cushion / Lip Glow)',pv:10000}
+  ]},
+  {id:'epersonal',name:'🧴 Personal Care',items:[
+    {id:'ep01',name:'Toothbrush (8 pcs)',pv:3900},
+    {id:'ep02',name:'Toothpaste',pv:3000},
+    {id:'ep03',name:'Shampoo (Herbal / Scalp Care)',pv:4000},
+    {id:'ep04',name:'Conditioner',pv:4000},
+    {id:'ep05',name:'Hair Treatment / Hair Oil',pv:2900},
+    {id:'ep06',name:'Body Wash / Body Lotion',pv:2500},
+    {id:'ep07',name:'Hand Wash / Hand Therapy Set',pv:4000},
+    {id:'ep08',name:'Sanitary Pads (Large / Medium)',pv:3000}
+  ]},
+  {id:'efood',name:'🏠 Home & Food',items:[
+    {id:'ef01',name:'Dish Detergent',pv:2500},
+    {id:'ef02',name:'Laundry Detergent (Liquid)',pv:4400},
+    {id:'ef03',name:'Fabric Softener',pv:3300},
+    {id:'ef04',name:'Coffee (Arabica Mix / Black)',pv:3300},
+    {id:'ef05',name:"Pu'er Tea",pv:10000}
+  ]},
+  {id:'ekids',name:'👶 Kids & Pet',items:[
+    {id:'ek01',name:'Kids Multivitamin (Color Food)',pv:8500},
+    {id:'ek02',name:'Kids Omega-3',pv:7500},
+    {id:'ek03',name:'Kids Probiotics',pv:15000},
+    {id:'ek04',name:'Pet Food (Dog / Cat)',pv:6000}
+  ]}
+];
+
+/* ============================================================
+   CHINESE CATEGORIES
+============================================================ */
+const ZH_CATS=[
+  {id:'zh_health',name:'💊 健康食品',items:[
+    {id:'zh01',name:'免疫力调节\n（有机发酵诺丽 / 红参丹 / 焕力饮）',pv:335},
+    {id:'zh02',name:'维生素矿物质\n（维生素C / B族 / 全能综合维生素）',pv:110},
+    {id:'zh03',name:'肝脏健康（红景天奶蓟草）',pv:130},
+    {id:'zh04',name:'肠道健康\n（益生菌 / 女性益生菌）',pv:175},
+    {id:'zh05',name:'骨骼健康（钙片 / 咀嚼钙）',pv:126},
+    {id:'zh06',name:'心血管健康\n（鱼油 / 绿唇贻贝油）',pv:210},
+    {id:'zh07',name:'血糖管理（姜黄片 / 阻糖苦瓜）',pv:187},
+    {id:'zh08',name:'眼睛健康\n（叶黄素 / 虾青素叶黄素）',pv:216},
+    {id:'zh09',name:'男性健康（锯棕榈）',pv:142},
+    {id:'zh10',name:'女性健康（大黄女王 / 沙棘籽油）',pv:185},
+    {id:'zh11',name:'体重管理（轻享代餐粉）',pv:180},
+    {id:'zh12',name:'皮肤美容\n（胶原蛋白肽饮料 / 活力生物素）',pv:195},
+    {id:'zh13',name:'睡眠支持（晚安片）',pv:196},
+    {id:'zh14',name:'麦卢卡蜂蜜 MGO830+',pv:380},
+    {id:'zh15',name:'儿童健康\n（儿童DHA / 儿童益生菌 / 儿童红参）',pv:167}
+  ]},
+  {id:'zh_beauty',name:'💄 美容护肤',items:[
+    {id:'zh21',name:'化妆水 / 乳液（菲颜水润系列）',pv:106},
+    {id:'zh22',name:'精华液 / 安瓶\n（臻颜浓缩精华 / 雪颜精华）',pv:217},
+    {id:'zh23',name:'营养霜 / 眼霜（润亮系列）',pv:190},
+    {id:'zh24',name:'洁面产品（洁面慕斯 / 洁面护肤乳）',pv:47},
+    {id:'zh25',name:'防晒产品',pv:35},
+    {id:'zh26',name:'面膜（保湿 / 滋颜 / 水凝胶）',pv:100},
+    {id:'zh27',name:'彩妆（气垫粉底 / 口红 / 腮红）',pv:155}
+  ]},
+  {id:'zh_personal',name:'🧴 美发个护',items:[
+    {id:'zh31',name:'洗发护发（舒爽洗发 / 发根强韧洗发）',pv:42},
+    {id:'zh32',name:'头皮护理（护发素 / 发膜）',pv:70},
+    {id:'zh33',name:'口腔护理（牙膏 / 牙刷）',pv:47},
+    {id:'zh34',name:'身体护理（沐浴乳 / 润体乳）',pv:33},
+    {id:'zh35',name:'护手护足（护手霜）',pv:23},
+    {id:'zh36',name:'女性卫生（卫生巾 / 卫生护垫）',pv:55}
+  ]},
+  {id:'zh_home',name:'🏠 家居清洁',items:[
+    {id:'zh41',name:'洗洁精',pv:29},
+    {id:'zh42',name:'浓缩洗衣液',pv:53},
+    {id:'zh43',name:'浓缩柔顺剂',pv:43},
+    {id:'zh44',name:'天然乳胶手套',pv:12}
+  ]},
+  {id:'zh_food',name:'🍽 食品饮料',items:[
+    {id:'zh51',name:'速溶阿拉比卡咖啡（原味 / 黑咖啡）',pv:50},
+    {id:'zh52',name:'普洱茶固体饮料',pv:130},
+    {id:'zh53',name:'每日坚果棒',pv:50},
+    {id:'zh54',name:'土豆蔬菜拉面',pv:38}
+  ]},
+  {id:'zh_appliance',name:'🏷️ 厨具家电',items:[
+    {id:'zh61',name:'不锈钢炒锅 / 汤锅',pv:1070},
+    {id:'zh62',name:'净水器（台式反渗透）',pv:2300},
+    {id:'zh63',name:'空气净化器',pv:1580},
+    {id:'zh64',name:'高速吹风机',pv:1290}
+  ]}
+];
+
+/* ============================================================
+   ROUTING
+============================================================ */
+function getCategories(){
+  switch(currentLang){
+    case 'ja': return JA_CATS;
+    case 'th': return TH_CATS;
+    case 'en': return EN_CATS;
+    case 'zh': return ZH_CATS;
+    default:   return KO_CATS;
+  }
+}
+
+/* ============================================================
+   APP STATE
+============================================================ */
+let currentLang='ko';
+let selectedFamily=null;
+let checkedItems={};
+let selectedOpts={};
+let currentStep=1;
+const L=()=>LANG_DATA[currentLang];
+
+/* ============================================================
+   SET LANGUAGE
+============================================================ */
+function setLang(lang){
+  if(currentLang===lang) return;
+  currentLang=lang;
+  document.documentElement.lang=lang;
+  document.body.className='lang-'+lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  selectedFamily=null;checkedItems={};selectedOpts={};currentStep=1;
+  const url=new URL(window.location);url.searchParams.set('lang',lang);
+  history.replaceState(null,'',url.toString());
+  renderLangUI();goToStep1(true);
+}
+
+/* ============================================================
+   RENDER LANG UI
+============================================================ */
+function renderLangUI(){
+  const ui=L().ui;const pvL=L().pvLabel;
+  document.getElementById('header-badge').textContent=ui.badge;
+  document.getElementById('header-title').innerHTML=ui.headerTitle;
+  document.getElementById('header-desc').innerHTML=ui.headerDesc;
+  document.getElementById('header-pv-note').textContent=ui.pvNote;
+  document.getElementById('step-label-1').textContent=ui.steps[0];
+  document.getElementById('step-label-2').textContent=ui.steps[1];
+  document.getElementById('step-label-3').textContent=ui.steps[2];
+  document.getElementById('family-q').textContent=ui.familyQ;
+  document.getElementById('family-info-note').innerHTML=ui.infoNote;
+  for(let i=1;i<=4;i++){
+    document.getElementById('fam'+i+'-label').textContent=ui.fam[i];
+    document.getElementById('fam'+i+'-months').textContent=ui.famMonths[i];
+  }
+  document.getElementById('btn-next-1').textContent=ui.nextBtn;
+  document.getElementById('check-title').textContent=ui.checkTitle;
+  document.getElementById('cat-hint').textContent=ui.catHint;
+  document.getElementById('result-btn').textContent=ui.resultBtn;
+  document.getElementById('back-btn').textContent=ui.backBtn;
+  document.getElementById('result-title').textContent=ui.resultTitle;
+  document.getElementById('lbl-total-pv').textContent=ui.lblTotalPV;
+  document.getElementById('lbl-months').textContent=ui.lblMonths;
+  document.getElementById('lbl-cumulative').textContent=ui.lblCumulative;
+  document.getElementById('lbl-times').textContent=ui.lblTimes;
+  document.getElementById('cashback-label').textContent=ui.cashbackLabel;
+  document.getElementById('cashback-slogan').textContent=ui.cashbackSlogan;
+  document.getElementById('copy-btn').textContent=ui.copyBtn;
+  document.getElementById('recheck-btn').textContent=ui.recheckBtn;
+  document.getElementById('reset-btn').textContent=ui.resetBtn;
+  document.getElementById('sticky-label').textContent=ui.stickyLabel;
+  document.getElementById('sticky-btn-txt').textContent=ui.stickyBtn;
+  document.getElementById('pv-label-top').innerHTML=ui.pvLabelTop+': <strong id="live-pv-top">0 '+pvL+'</strong>';
+  document.getElementById('disc1').textContent=ui.disc[0];
+  document.getElementById('disc2').textContent=ui.disc[1];
+  document.getElementById('disc3').textContent=ui.disc[2];
+  // cashback per-text
+  if(L().showCashback){
+    document.getElementById('cashback-per-text').innerHTML=ui.cashbackPerText(L().cashbackPerHit,L().currency);
+  } else {
+    document.getElementById('cashback-per-text').textContent=ui.cashbackPerText?ui.cashbackPerText():'';
+  }
+  buildCategories();refreshLive();
+}
+
+/* ============================================================
+   BUILD CATEGORIES
+============================================================ */
+function buildCategories(){
+  const container=document.getElementById('categories-container');
+  container.innerHTML='';
+  const CATS=getCategories();const ui=L().ui;const pvL=L().pvLabel;
+  CATS.forEach(cat=>{
+    cat.items.forEach(item=>{
+      if(item.type==='select'&&item.options&&!selectedOpts[item.id])
+        selectedOpts[item.id]=item.options[0].pv;
+    });
+    const acc=document.createElement('div');
+    acc.className='accordion';acc.id='acc-'+cat.id;
+    const hdr=document.createElement('div');
+    hdr.className='accordion-header';
+    hdr.setAttribute('role','button');hdr.setAttribute('aria-expanded','false');
+    hdr.innerHTML=`<span>${cat.name} <span class="cat-checked-badge" id="badge-${cat.id}"></span></span><span class="accordion-arrow">▼</span>`;
+    hdr.onclick=()=>toggleAccordion(cat.id,hdr);
+    const body=document.createElement('div');
+    body.className='accordion-body';body.id='body-'+cat.id;
+    const sar=document.createElement('div');
+    sar.className='select-all-row';
+    sar.innerHTML=`<input type="checkbox" class="select-all-chk" id="selall-${cat.id}" onchange="toggleAllInCat('${cat.id}',this.checked)"><label for="selall-${cat.id}">${ui.selectAll}</label>`;
+    body.appendChild(sar);
+    cat.items.forEach(item=>{
+      const row=document.createElement('div');
+      row.className='item-row';row.id='row-'+item.id;
+      if(checkedItems[item.id]) row.classList.add('checked');
+      const nameHtml=(item.name||'').replace(/\n/g,'<br>');
+      const noteHtml=item.note?`<span style="display:block;font-size:11.5px;font-weight:700;color:#2563eb;margin-top:3px;">${item.note}</span>`:'';
+      if(item.type==='select'&&item.options){
+        const defPv=selectedOpts[item.id]||item.options[0].pv;
+        const optsHtml=item.options.map(o=>`<option value="${o.pv}"${o.pv===defPv?' selected':''}>${o.label} (${o.pv.toLocaleString()} ${pvL})</option>`).join('');
+        row.innerHTML=`<input type="checkbox" class="item-checkbox" id="chk-${item.id}" onchange="toggleItem('${item.id}',this.checked)"${checkedItems[item.id]?' checked':''}><div class="item-name-wrap"><label for="chk-${item.id}" class="item-name">${nameHtml}${noteHtml}</label><select class="item-select" id="sel-${item.id}" onchange="changeOpt('${item.id}',parseInt(this.value))"${checkedItems[item.id]?'':' disabled'}>${optsHtml}</select></div><span class="item-pv-badge" id="pv-${item.id}">${defPv.toLocaleString()} ${pvL}</span>`;
+      } else {
+        row.innerHTML=`<input type="checkbox" class="item-checkbox" id="chk-${item.id}" onchange="toggleItem('${item.id}',this.checked)"${checkedItems[item.id]?' checked':''}><div class="item-name-wrap" style="flex:1;"><label for="chk-${item.id}" class="item-name">${nameHtml}${noteHtml}</label></div><span class="item-pv-badge">${item.pv.toLocaleString()} ${pvL}</span>`;
+      }
+      body.appendChild(row);
+    });
+    acc.appendChild(hdr);acc.appendChild(body);
+    container.appendChild(acc);
+  });
+  getCategories().forEach(cat=>updateCatBadge2(cat.id));
+}
+
+/* ============================================================
+   PV CALC
+============================================================ */
+function isHalfCat(id){return L().halfCats.includes(id);}
+function calcTotalPV(){
+  let grand=0;
+  getCategories().forEach(cat=>{
+    let pv=0;
+    cat.items.forEach(item=>{
+      if(!checkedItems[item.id]) return;
+      pv+=item.type==='select'?(selectedOpts[item.id]||item.options[0].pv):item.pv;
+    });
+    grand+=isHalfCat(cat.id)?Math.floor(pv/2):pv;
+  });
+  return grand;
+}
+function calcCatBreakdown(){
+  return getCategories().map(cat=>{
+    let pv=0;
+    cat.items.forEach(item=>{
+      if(!checkedItems[item.id]) return;
+      pv+=item.type==='select'?(selectedOpts[item.id]||item.options[0].pv):item.pv;
+    });
+    if(!pv) return null;
+    const half=isHalfCat(cat.id);
+    return{name:cat.name,raw:pv,applied:half?Math.floor(pv/2):pv,isHalf:half};
+  }).filter(Boolean);
+}
+
+/* ============================================================
+   REFRESH LIVE
+============================================================ */
+function refreshLive(){
+  const total=calcTotalPV();const count=Object.keys(checkedItems).length;
+  const f=n=>n.toLocaleString();const ui=L().ui;const pvL=L().pvLabel;
+  const pvEl=document.getElementById('live-pv-top');
+  if(pvEl) pvEl.textContent=f(total)+' '+pvL;
+  const cntEl=document.getElementById('checked-count');
+  if(cntEl) cntEl.textContent=ui.checkedCount(count);
+  document.getElementById('sticky-pv').textContent=f(total)+' '+pvL;
+  document.getElementById('sticky-count').textContent=ui.stickyCount(count);
+}
+
+/* ============================================================
+   RENDER RESULTS
+============================================================ */
+function renderResults(){
+  const totalPV=calcTotalPV();const months=getMonths();
+  const cumPV=totalPV*months;const threshold=L().threshold;
+  const times=Math.floor(cumPV/threshold);
+  const f=n=>n.toLocaleString();const ui=L().ui;const pvL=L().pvLabel;
+  document.getElementById('res-total-pv').textContent=f(totalPV)+' '+pvL;
+  document.getElementById('res-months').textContent=ui.monthUnit(months);
+  document.getElementById('res-cumulative').textContent=f(cumPV)+' '+pvL;
+  document.getElementById('res-times').textContent=ui.timesUnit(times);
+  if(L().showCashback){
+    const cashback=times*L().cashbackPerHit;
+    document.getElementById('res-cashback').textContent=f(cashback)+' '+L().currency;
+  } else {
+    document.getElementById('res-cashback').textContent=ui.timesUnit(times);
+  }
+  // breakdown
+  const breakdown=calcCatBreakdown();
+  const box=document.getElementById('res-breakdown');
+  if(!breakdown.length){box.innerHTML='';return;}
+  box.innerHTML=`<div style="font-size:12px;font-weight:700;color:#1341a8;margin-bottom:8px;">${ui.breakdownTitle}</div>${breakdown.map(b=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;"><span style="color:#334155;flex:1;">${b.name.replace(/^[^\s]+\s/,'')}</span>${b.isHalf?`<span style="color:#94a3b8;text-decoration:line-through;margin-right:6px;">${f(b.raw)} ${pvL}</span><span style="color:#2563eb;font-weight:700;">${f(b.applied)} ${pvL} <span style="font-size:10px;background:#dbeafe;padding:1px 5px;border-radius:8px;">×½</span></span>`:`<span style="color:#2563eb;font-weight:700;">${f(b.applied)} ${pvL}</span>`}</div>`).join('')}<div style="margin-top:8px;font-size:11px;color:#64748b;background:#f8fafc;padding:7px 10px;border-radius:8px;line-height:1.6;">${ui.halfNote}</div>`;
+}
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
+function goToStep1(){
+  currentStep=1;showSection(1);updateSteps();
+  document.getElementById('sticky-bar').classList.remove('show');
+  document.querySelectorAll('.family-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('btn-next-1').disabled=true;
+  if(selectedFamily) document.getElementById('fam-'+selectedFamily).classList.add('selected');
+}
+function goToStep2(){
+  if(!selectedFamily){showToast(L().ui.toastSelectFamily);return;}
+  currentStep=2;showSection(2);updateSteps();updateFamilyBanner();refreshLive();
+  document.getElementById('sticky-bar').classList.add('show');
+}
+function goToStep3(){
+  currentStep=3;showSection(3);updateSteps();
+  document.getElementById('sticky-bar').classList.remove('show');renderResults();
+}
+function showSection(n){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateSteps(){
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById('step-ind-'+i);
+    el.classList.remove('active','done');
+    if(i<currentStep) el.classList.add('done');
+    else if(i===currentStep) el.classList.add('active');
+  }
+}
+function selectFamily(n){
+  selectedFamily=n;
+  document.querySelectorAll('.family-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('fam-'+n).classList.add('selected');
+  document.getElementById('btn-next-1').disabled=false;
+}
+function getMonths(){return selectedFamily>=3?12:6;}
+function updateFamilyBanner(){
+  document.getElementById('family-info-banner').innerHTML=L().ui.familyBanner(selectedFamily,getMonths());
+}
+
+/* ============================================================
+   ITEM INTERACTIONS
+============================================================ */
+function toggleItem(id,checked){
+  if(checked){
+    checkedItems[id]=true;
+    const sel=document.getElementById('sel-'+id);
+    if(sel){sel.disabled=false;selectedOpts[id]=parseInt(sel.value);}
+  } else {
+    delete checkedItems[id];
+    const sel=document.getElementById('sel-'+id);
+    if(sel) sel.disabled=true;
+  }
+  const row=document.getElementById('row-'+id);
+  if(row) row.classList.toggle('checked',checked);
+  refreshLive();
+  const cat=getCategories().find(c=>c.items.some(i=>i.id===id));
+  if(cat){updateCatBadge2(cat.id);syncSelectAll(cat.id);}
+}
+function changeOpt(id,pv){
+  selectedOpts[id]=pv;
+  const badge=document.getElementById('pv-'+id);
+  if(badge) badge.textContent=pv.toLocaleString()+' '+L().pvLabel;
+  refreshLive();
+}
+function toggleAllInCat(catId,checked){
+  const cat=getCategories().find(c=>c.id===catId);if(!cat) return;
+  cat.items.forEach(item=>{
+    const chk=document.getElementById('chk-'+item.id);
+    if(!chk) return;
+    if(chk.checked!==checked){chk.checked=checked;toggleItem(item.id,checked);}
+  });
+  const sa=document.getElementById('selall-'+catId);if(sa) sa.checked=checked;
+}
+function syncSelectAll(catId){
+  const cat=getCategories().find(c=>c.id===catId);if(!cat) return;
+  const allChecked=cat.items.every(item=>checkedItems[item.id]);
+  const sa=document.getElementById('selall-'+catId);if(sa) sa.checked=allChecked;
+}
+function updateCatBadge2(catId){
+  const cat=getCategories().find(c=>c.id===catId);if(!cat) return;
+  const cnt=cat.items.filter(i=>checkedItems[i.id]).length;
+  const badge=document.getElementById('badge-'+catId);if(!badge) return;
+  if(cnt>0){badge.textContent=cnt+'✓';badge.classList.add('show');}
+  else badge.classList.remove('show');
+}
+function toggleAccordion(catId,hdr){
+  hdr=hdr||document.querySelector('#acc-'+catId+' .accordion-header');
+  const body=document.getElementById('body-'+catId);
+  const isOpen=hdr.classList.toggle('open');
+  body.classList.toggle('open',isOpen);hdr.setAttribute('aria-expanded',isOpen);
+}
+
+/* ============================================================
+   RESET
+============================================================ */
+function resetAll(){
+  selectedFamily=null;checkedItems={};selectedOpts={};
+  document.querySelectorAll('.item-checkbox').forEach(c=>c.checked=false);
+  document.querySelectorAll('.item-select').forEach(s=>{s.disabled=true;s.selectedIndex=0;});
+  document.querySelectorAll('.item-row').forEach(r=>r.classList.remove('checked'));
+  document.querySelectorAll('.cat-checked-badge').forEach(b=>{b.textContent='';b.classList.remove('show');});
+  document.querySelectorAll('.select-all-chk').forEach(c=>c.checked=false);
+  history.replaceState(null,'',window.location.pathname+'?lang='+currentLang);
+  goToStep1();refreshLive();
+}
+
+/* ============================================================
+   URL STATE
+============================================================ */
+function buildStateParams(){
+  const p=new URLSearchParams();p.set('lang',currentLang);
+  if(selectedFamily) p.set('fam',selectedFamily);
+  const ids=Object.keys(checkedItems);if(ids.length) p.set('items',ids.join(','));
+  const opts=Object.entries(selectedOpts).map(([k,v])=>k+':'+v).join(',');
+  if(opts) p.set('opts',opts);
+  return p.toString();
+}
+function copyResultLink(){
+  const state=buildStateParams();
+  const url=window.location.origin+window.location.pathname+(state?'?'+state:'');
+  if(navigator.clipboard?.writeText)
+    navigator.clipboard.writeText(url).then(()=>showToast(L().ui.toastCopied)).catch(()=>fallbackCopy(url));
+  else fallbackCopy(url);
+}
+function fallbackCopy(text){
+  const ta=document.createElement('textarea');ta.value=text;
+  ta.style.cssText='position:fixed;opacity:0;';document.body.appendChild(ta);
+  ta.focus();ta.select();
+  try{document.execCommand('copy');showToast(L().ui.toastCopied);}
+  catch(e){showToast(text);}
+  document.body.removeChild(ta);
+}
+function loadFromURL(){
+  const p=new URLSearchParams(window.location.search);
+  const opts=p.get('opts');
+  if(opts) opts.split(',').forEach(pair=>{
+    const [k,v]=pair.split(':');if(k&&v) selectedOpts[k]=parseInt(v);
+  });
+  const fam=parseInt(p.get('fam'));if(fam>=1&&fam<=4) selectFamily(fam);
+  const items=p.get('items');
+  if(items&&items.trim()){
+    items.split(',').forEach(id=>{
+      if(!id) return;checkedItems[id]=true;
+      const chk=document.getElementById('chk-'+id);
+      if(chk){
+        chk.checked=true;
+        const sel=document.getElementById('sel-'+id);
+        if(sel){sel.disabled=false;if(selectedOpts[id]) sel.value=selectedOpts[id];
+          const badge=document.getElementById('pv-'+id);
+          if(badge&&selectedOpts[id]) badge.textContent=selectedOpts[id].toLocaleString()+' '+L().pvLabel;
+        }
+        const row=document.getElementById('row-'+id);if(row) row.classList.add('checked');
+      }
+    });
+    getCategories().forEach(cat=>updateCatBadge2(cat.id));
+    if(fam>=1){goToStep3();return;}
+  }
+  refreshLive();
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+function init(){
+  const p=new URLSearchParams(window.location.search);
+  const lang=p.get('lang');
+  if(['ko','en','th','ja','zh'].includes(lang)){
+    currentLang=lang;document.documentElement.lang=lang;
+    document.body.className='lang-'+lang;
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  }
+  renderLangUI();loadFromURL();
+}
+init();
+</script>
+</body>
+</html>

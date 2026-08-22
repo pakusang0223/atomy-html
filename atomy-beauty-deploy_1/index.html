@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atomy Beauty 体験 Program</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR','Noto Sans Thai','Noto Sans JP',sans-serif;background:linear-gradient(135deg,#E6F8FE 0%,#FDF0F8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{background:#fff;border-radius:28px;padding:40px 28px;text-align:center;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,181,239,.15)}
+.logo-txt{font-size:32px;font-weight:700;color:#00B5EF;letter-spacing:-1px;margin-bottom:2px}
+.logo-sub{font-size:12px;font-weight:700;letter-spacing:4px;color:#00B5EF;margin-bottom:24px}
+h1{font-size:20px;font-weight:700;color:#1A1A2E;margin-bottom:6px}
+.sub{font-size:13px;color:#6B7280;margin-bottom:28px;line-height:1.6}
+.lang-bar{display:flex;gap:8px;justify-content:center;margin-bottom:28px;flex-wrap:wrap}
+.lang-btn{padding:7px 14px;border-radius:20px;border:2px solid #E5E7EB;background:#fff;font-size:13px;cursor:pointer;transition:all .2s;font-family:inherit}
+.lang-btn.active{border-color:#00B5EF;background:#E6F8FE;color:#00B5EF;font-weight:700}
+.survey-btn{display:block;margin:10px 0;padding:18px 20px;border-radius:16px;text-decoration:none;font-weight:700;font-size:15px;transition:all .2s;cursor:pointer;border:none;width:100%;font-family:inherit}
+.btn-before{background:linear-gradient(135deg,#00B5EF,#0090C0);color:#fff}
+.btn-after{background:linear-gradient(135deg,#E91E8C,#C2185B);color:#fff}
+.btn-icon{font-size:18px;margin-right:8px}
+.btn-sub{font-size:11px;font-weight:400;opacity:.85;display:block;margin-top:3px}
+.footer{margin-top:24px;font-size:11px;color:#9CA3AF}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo-txt">atomy<span style="color:#E91E8C">美</span></div>
+  <div class="logo-sub">ATOMY</div>
+  <div class="lang-bar">
+    <button class="lang-btn" onclick="setLang('ko')">🇰🇷 한국어</button>
+    <button class="lang-btn" onclick="setLang('en')">🇺🇸 English</button>
+    <button class="lang-btn" onclick="setLang('th')">🇹🇭 ภาษาไทย</button>
+    <button class="lang-btn" onclick="setLang('ja')">🇯🇵 日本語</button>
+  </div>
+  <h1 id="title"></h1>
+  <p class="sub" id="sub"></p>
+  <button class="survey-btn btn-before" onclick="goPage('skin-before.html')">
+    <span class="btn-icon">🌿</span><span id="btn1"></span>
+    <span class="btn-sub" id="btn1sub"></span>
+  </button>
+  <button class="survey-btn btn-after" onclick="goPage('skin-after.html')">
+    <span class="btn-icon">✨</span><span id="btn2"></span>
+    <span class="btn-sub" id="btn2sub"></span>
+  </button>
+  <div class="footer" id="footer"></div>
+</div>
+<script>
+const T = {
+  ko:{title:'뷰티 체험 프로그램',sub:'체험 전 피부 분석부터 1주 후 변화 기록까지',btn1:'체험 전 사전 조사',btn1sub:'피부 타입 분석 · 맞춤 제품 추천',btn2:'1주 체험 후기',btn2sub:'피부 변화 기록 · 만족도 평가',footer:'atomy美 체험 프로그램 · 애터미 코리아'},
+  en:{title:'Beauty Experience Program',sub:'Skin analysis before & skin change record after 1 week',btn1:'Pre-Experience Survey',btn1sub:'Skin type analysis · Product recommendation',btn2:'1-Week Review',btn2sub:'Skin change record · Satisfaction rating',footer:'atomy美 Experience Program · Atomy'},
+  th:{title:'โปรแกรมทดลองใช้ผลิตภัณฑ์ความงาม',sub:'วิเคราะห์ผิวก่อนใช้ และบันทึกการเปลี่ยนแปลงหลัง 1 สัปดาห์',btn1:'แบบสอบถามก่อนทดลองใช้',btn1sub:'วิเคราะห์ประเภทผิว · แนะนำผลิตภัณฑ์',btn2:'รีวิวหลัง 1 สัปดาห์',btn2sub:'บันทึกการเปลี่ยนแปลงของผิว · ประเมินความพึงพอใจ',footer:'atomy美 โปรแกรมทดลองใช้ · Atomy Thailand'},
+  ja:{title:'ビューティー体験プログラム',sub:'体験前のスキン分析から1週間後の変化記録まで',btn1:'体験前 事前アンケート',btn1sub:'肌タイプ分析 · 商品おすすめ',btn2:'1週間 体験レビュー',btn2sub:'肌の変化記録 · 満足度評価',footer:'atomy美 体験プログラム · アトミ ジャパン'}
+};
+let curLang = 'ko';
+function setLang(l){
+  curLang = l;
+  localStorage.setItem('atomyLang', l);
+  const t = T[l];
+  document.getElementById('title').textContent = t.title;
+  document.getElementById('sub').textContent = t.sub;
+  document.getElementById('btn1').textContent = t.btn1;
+  document.getElementById('btn1sub').textContent = t.btn1sub;
+  document.getElementById('btn2').textContent = t.btn2;
+  document.getElementById('btn2sub').textContent = t.btn2sub;
+  document.getElementById('footer').textContent = t.footer;
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['ko','en','th','ja'][i]===l);
+  });
+  document.documentElement.lang = l;
+}
+function goPage(page){
+  window.location.href = page + '?lang=' + curLang;
+}
+window.onload = function(){
+  const urlLang = new URLSearchParams(window.location.search).get('lang');
+  if(urlLang) localStorage.setItem('atomyLang', urlLang);
+  const saved = urlLang || localStorage.getItem('atomyLang') || 'ko';
+  setLang(saved);
+};
+</script>
+</body>
+</html>

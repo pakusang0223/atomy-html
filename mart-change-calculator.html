@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>애터미 마트체인지 캐시백 계산기</title>
+<style>
+/* ===== 기본 리셋 ===== */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+  background:#eef2f7;
+  color:#1e293b;
+  line-height:1.5;
+  padding-bottom:88px;
+}
+
+/* ===== 헤더 ===== */
+.header{
+  background:linear-gradient(145deg,#1341a8 0%,#2563eb 55%,#3b82f6 100%);
+  color:#fff;
+  padding:28px 20px 24px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:180px;height:180px;
+  background:rgba(255,255,255,0.06);
+  border-radius:50%;
+}
+.header::after{
+  content:'';position:absolute;bottom:-60px;left:-30px;
+  width:220px;height:220px;
+  background:rgba(255,255,255,0.04);
+  border-radius:50%;
+}
+.header-badge{
+  display:inline-block;
+  background:rgba(255,255,255,0.18);
+  border:1px solid rgba(255,255,255,0.3);
+  padding:4px 14px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:1px;
+  margin-bottom:12px;
+}
+.header h1{
+  font-size:17px;
+  font-weight:800;
+  line-height:1.55;
+  margin-bottom:10px;
+  position:relative;z-index:1;
+}
+.header h1 em{
+  font-style:normal;
+  background:rgba(255,255,255,0.2);
+  padding:0 4px;
+  border-radius:4px;
+  color:#ffe033;
+  text-shadow:0 1px 4px rgba(0,0,0,0.18);
+}
+.header-desc{
+  font-size:12.5px;
+  opacity:0.88;
+  line-height:1.7;
+  margin-bottom:12px;
+  position:relative;z-index:1;
+}
+.header-pv-note{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.25);
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:11.5px;
+  position:relative;z-index:1;
+}
+
+/* ===== 컨테이너 ===== */
+.container{max-width:600px;margin:0 auto;padding:16px 14px;}
+
+/* ===== 스텝 인디케이터 ===== */
+.steps{
+  display:flex;gap:6px;
+  background:#fff;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.07);
+}
+.step-item{
+  flex:1;text-align:center;padding:8px 4px;
+  border-radius:9px;font-size:11.5px;font-weight:700;
+  color:#94a3b8;background:#f8fafc;
+  transition:all .3s ease;cursor:default;
+}
+.step-item.active{background:#2563eb;color:#fff;box-shadow:0 3px 10px rgba(37,99,235,.35);}
+.step-item.done{background:#dbeafe;color:#1d4ed8;}
+.step-num{display:block;font-size:17px;margin-bottom:2px;}
+
+/* ===== 공통 카드 ===== */
+.card{
+  background:#fff;border-radius:14px;
+  padding:18px 16px;margin-bottom:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.07);
+}
+.card-title{
+  font-size:15px;font-weight:800;color:#1341a8;
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.card-title .dot{
+  width:6px;height:6px;background:#2563eb;border-radius:50%;
+  flex-shrink:0;
+}
+
+/* ===== 안내 배너 ===== */
+.info-banner{
+  background:linear-gradient(135deg,#eff6ff,#dbeafe);
+  border-left:3.5px solid #2563eb;
+  padding:10px 14px;border-radius:0 8px 8px 0;
+  font-size:12.5px;color:#1e40af;
+  margin-bottom:14px;line-height:1.7;
+}
+.info-banner strong{color:#1341a8;}
+
+/* ===== 가족 선택 ===== */
+.family-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.family-btn{
+  padding:16px 10px;
+  border:2px solid #e2e8f0;border-radius:12px;
+  background:#fff;cursor:pointer;text-align:center;
+  transition:all .2s ease;font-size:13.5px;
+  font-weight:700;color:#475569;
+}
+.family-btn:hover{border-color:#3b82f6;background:#eff6ff;}
+.family-btn.selected{
+  border-color:#2563eb;background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.3);
+}
+.family-btn .emoji{font-size:26px;display:block;margin-bottom:6px;}
+.family-btn .months{
+  font-size:11px;font-weight:500;margin-top:4px;opacity:0.8;
+  background:rgba(0,0,0,0.06);padding:2px 8px;border-radius:10px;
+  display:inline-block;
+}
+.family-btn.selected .months{background:rgba(255,255,255,0.2);}
+
+/* ===== 버튼 ===== */
+.btn-primary{
+  width:100%;padding:15px;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  color:#fff;border:none;border-radius:11px;
+  font-size:15px;font-weight:800;cursor:pointer;
+  margin-top:14px;
+  transition:all .2s;letter-spacing:.3px;
+  box-shadow:0 4px 14px rgba(37,99,235,.3);
+}
+.btn-primary:hover{background:linear-gradient(135deg,#1341a8,#1d4ed8);transform:translateY(-1px);}
+.btn-primary:disabled{
+  background:#cbd5e1;box-shadow:none;cursor:not-allowed;transform:none;
+}
+.btn-secondary{
+  width:100%;padding:13px;
+  background:#fff;color:#2563eb;
+  border:2px solid #2563eb;border-radius:11px;
+  font-size:14px;font-weight:700;cursor:pointer;
+  margin-bottom:10px;transition:all .2s;
+}
+.btn-secondary:hover{background:#eff6ff;}
+
+/* ===== 진행 정보 ===== */
+.progress-info{
+  display:flex;justify-content:space-between;
+  font-size:12px;color:#64748b;
+  margin-bottom:10px;padding:0 2px;
+}
+.progress-info strong{color:#1d4ed8;font-weight:700;}
+
+/* ===== 아코디언 ===== */
+.accordion{
+  background:#fff;
+  margin-bottom:10px;
+  border:1.5px solid #e2e8f0;
+  border-radius:12px;overflow:hidden;
+}
+.accordion-header{
+  padding:13px 14px;
+  background:#f8fafc;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  font-weight:700;font-size:14px;color:#334155;
+  transition:background .2s;
+  user-select:none;
+}
+.accordion-header:hover{background:#eff6ff;}
+.accordion-header.open{background:#dbeafe;color:#1341a8;}
+.accordion-arrow{font-size:11px;transition:transform .25s;color:#94a3b8;}
+.accordion-header.open .accordion-arrow{transform:rotate(180deg);color:#2563eb;}
+.cat-meta{display:flex;align-items:center;gap:10px;}
+.cat-checked-badge{
+  font-size:10px;font-weight:600;
+  background:#dbeafe;color:#1d4ed8;
+  padding:2px 7px;border-radius:10px;
+  display:none;
+}
+.cat-checked-badge.show{display:inline-block;}
+
+/* ===== 항목 행 ===== */
+.accordion-body{display:none;padding:4px 0;}
+.accordion-body.open{display:block;}
+.item-row{
+  padding:11px 14px;
+  display:flex;align-items:flex-start;gap:10px;
+  border-bottom:1px solid #f1f5f9;
+  min-height:50px;transition:background .15s;
+}
+.item-row:last-child{border-bottom:none;}
+.item-row.checked{background:#f0f7ff;}
+.item-checkbox{
+  width:22px;height:22px;min-width:22px;
+  cursor:pointer;accent-color:#2563eb;
+  margin-top:1px;
+}
+.item-name{
+  flex:1;font-size:13.5px;color:#334155;
+  line-height:1.45;cursor:pointer;
+}
+.item-pv-badge{
+  font-size:12px;font-weight:700;color:#2563eb;
+  white-space:nowrap;padding:3px 8px;
+  background:#eff6ff;border-radius:8px;
+  align-self:flex-start;margin-top:1px;
+  flex-shrink:0;
+}
+.item-name-wrap{flex:1;display:flex;flex-direction:column;gap:5px;}
+.item-select{
+  font-size:12px;padding:5px 8px;
+  border:1.5px solid #bfdbfe;border-radius:7px;
+  color:#1e40af;background:#eff6ff;
+  font-weight:600;width:100%;max-width:240px;
+}
+.item-select:disabled{opacity:0.38;background:#f8fafc;border-color:#e2e8f0;color:#94a3b8;}
+
+/* ===== 하단 고정 바 ===== */
+.sticky-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:#fff;
+  border-top:2.5px solid #2563eb;
+  padding:10px 18px;
+  display:none;
+  align-items:center;
+  box-shadow:0 -3px 12px rgba(0,0,0,0.1);
+  z-index:200;gap:12px;
+}
+.sticky-bar.show{display:flex;}
+.sticky-info{flex:1;}
+.sticky-label{font-size:11px;color:#64748b;margin-bottom:1px;}
+.sticky-pv{font-size:17px;font-weight:800;color:#1341a8;}
+.sticky-count{font-size:11px;color:#64748b;}
+.sticky-btn{
+  padding:10px 16px;white-space:nowrap;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  color:#fff;border:none;border-radius:9px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  box-shadow:0 3px 10px rgba(37,99,235,.3);flex-shrink:0;
+}
+
+/* ===== 결과 ===== */
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.result-item{
+  background:#f8fafc;border-radius:11px;
+  padding:14px 12px;text-align:center;
+  border:1px solid #e2e8f0;
+}
+.result-label{font-size:11.5px;color:#64748b;margin-bottom:6px;font-weight:600;}
+.result-value{font-size:17px;font-weight:800;color:#1e293b;}
+.result-cashback{
+  background:linear-gradient(135deg,#1341a8 0%,#2563eb 60%,#3b82f6 100%);
+  color:#fff;border-radius:14px;padding:22px 18px;
+  text-align:center;margin-bottom:14px;
+  box-shadow:0 6px 20px rgba(37,99,235,.35);
+  position:relative;overflow:hidden;
+}
+.result-cashback::before{
+  content:'💰';position:absolute;
+  top:-10px;right:-10px;font-size:70px;opacity:0.12;
+}
+.cashback-label{font-size:13px;opacity:0.9;margin-bottom:8px;font-weight:600;}
+.cashback-amount{
+  font-size:38px;font-weight:900;
+  letter-spacing:-1.5px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+.cashback-sub{
+  font-size:12px;opacity:0.85;margin-top:8px;
+  background:rgba(255,255,255,0.15);
+  padding:5px 14px;border-radius:12px;
+  display:inline-block;
+}
+
+/* ===== 면책 문구 ===== */
+.disclaimer{
+  background:#fffbeb;border:1px solid #fcd34d;
+  border-radius:10px;padding:12px 14px;
+  font-size:11.5px;color:#78350f;
+  line-height:1.7;margin-top:14px;
+}
+.disclaimer p::before{content:'📌 ';}
+.disclaimer p{margin-bottom:3px;}
+.disclaimer p:last-child{margin-bottom:0;}
+
+/* ===== 섹션 전환 ===== */
+.section{display:none;}
+.section.active{display:block;}
+
+/* ===== 토스트 ===== */
+.toast{
+  position:fixed;bottom:100px;left:50%;
+  transform:translateX(-50%);
+  background:#1e293b;color:#fff;
+  padding:11px 22px;border-radius:22px;
+  font-size:13.5px;font-weight:600;
+  z-index:1000;opacity:0;
+  transition:opacity .3s;pointer-events:none;
+  white-space:nowrap;max-width:90vw;text-align:center;
+  box-shadow:0 4px 16px rgba(0,0,0,0.25);
+}
+.toast.show{opacity:1;}
+
+/* ===== 섹션 구분선 ===== */
+.section-divider{
+  text-align:center;font-size:11px;color:#94a3b8;
+  padding:4px 0 10px;font-weight:600;letter-spacing:1px;
+}
+
+/* ===== 빈 상태 ===== */
+.empty-result{
+  text-align:center;padding:20px 0;
+  color:#94a3b8;font-size:14px;
+}
+
+/* ===== 전체 선택 행 ===== */
+.select-all-row{
+  padding:8px 14px;
+  display:flex;align-items:center;gap:8px;
+  background:#f0f7ff;
+  border-bottom:1.5px solid #bfdbfe;
+}
+.select-all-row label{
+  font-size:12px;font-weight:700;color:#1d4ed8;cursor:pointer;
+}
+.select-all-chk{
+  width:18px;height:18px;min-width:18px;
+  cursor:pointer;accent-color:#1d4ed8;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 헤더 ===== -->
+<div class="header">
+  <div class="header-badge">atom美 AZA · 마트체인지</div>
+  <h1>우리 가족 소비를 <em>애터미 마트</em>로 바꾸면<br>예상 캐시백은 얼마일까요? 💰</h1>
+  <p class="header-desc">
+    평소 사용하는 생활 필수품을 체크해보세요.<br>
+    선택한 항목의 PV를 기준으로 예상 캐시백을 간편하게 확인할 수 있습니다.
+  </p>
+  <span class="header-pv-note">💡 PV는 애터미 제품 구매 시 누적되는 포인트 기준입니다</span>
+</div>
+
+<!-- ===== 메인 컨테이너 ===== -->
+<div class="container">
+
+  <!-- 스텝 인디케이터 -->
+  <div class="steps">
+    <div class="step-item active" id="step-ind-1"><span class="step-num">①</span>가족 구성</div>
+    <div class="step-item" id="step-ind-2"><span class="step-num">②</span>항목 선택</div>
+    <div class="step-item" id="step-ind-3"><span class="step-num">③</span>결과 보기</div>
+  </div>
+
+  <!-- ============ STEP 1: 가족 구성 ============ -->
+  <div class="section active" id="section-1">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>👨‍👩‍👧‍👦 우리 가족은 몇 명인가요?</div>
+      <div class="info-banner">
+        📌 가족 구성에 따라 적용 기간이 달라집니다.<br>
+        <strong>2인 이하 → 6개월 기준 &nbsp;|&nbsp; 3인 이상 → 12개월 기준</strong>
+      </div>
+      <div class="family-grid">
+        <button class="family-btn" onclick="selectFamily(1)" id="fam-1">
+          <span class="emoji">🧍</span>1인 가족<div class="months">6개월 적용</div>
+        </button>
+        <button class="family-btn" onclick="selectFamily(2)" id="fam-2">
+          <span class="emoji">👫</span>2인 가족<div class="months">6개월 적용</div>
+        </button>
+        <button class="family-btn" onclick="selectFamily(3)" id="fam-3">
+          <span class="emoji">👨‍👩‍👦</span>3인 가족<div class="months">12개월 적용</div>
+        </button>
+        <button class="family-btn" onclick="selectFamily(4)" id="fam-4">
+          <span class="emoji">👨‍👩‍👧‍👦</span>4인 이상 가족<div class="months">12개월 적용</div>
+        </button>
+      </div>
+      <button class="btn-primary" id="btn-next-1" onclick="goToStep2()" disabled>
+        다음 단계 → 항목 체크하기
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ STEP 2: 항목 선택 ============ -->
+  <div class="section" id="section-2">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>🛒 평소 사용하는 생활 필수품을 체크해주세요</div>
+      <div class="info-banner" id="family-info-banner"></div>
+      <div class="progress-info">
+        <span id="checked-count">0개 선택됨</span>
+        <span>총합 PV: <strong id="live-pv-top">0 PV</strong></span>
+      </div>
+    </div>
+
+    <div class="section-divider">카테고리를 눌러 펼쳐서 체크하세요</div>
+
+    <!-- 아코디언 카테고리 렌더링 영역 -->
+    <div id="categories-container"></div>
+
+    <button class="btn-primary" onclick="goToStep3()" style="margin-top:4px;">
+      ✅ 결과 보기 →
+    </button>
+    <button class="btn-secondary" onclick="goToStep1()" style="margin-top:8px;">
+      ← 가족 구성 다시 선택
+    </button>
+  </div>
+
+  <!-- ============ STEP 3: 결과 ============ -->
+  <div class="section" id="section-3">
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>🎉 예상 캐시백 결과</div>
+
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-label">총합 PV</div>
+          <div class="result-value" id="res-total-pv">0 PV</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">적용 개월 수</div>
+          <div class="result-value" id="res-months">-</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">누적 PV</div>
+          <div class="result-value" id="res-cumulative">0 PV</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">30만 PV 인정 횟수</div>
+          <div class="result-value" id="res-times">0회</div>
+        </div>
+      </div>
+
+      <div class="result-cashback">
+        <div class="cashback-label">✨ 예상 캐시백</div>
+        <div class="cashback-amount" id="res-cashback">0원</div>
+        <div class="cashback-sub">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px;">30만 PV 달성 1회당 <span style="font-size:17px;">58,000원</span></div>
+          <div style="font-size:13px;opacity:0.9;">마트 체인지로 소비가 소득이 됩니다! 🛒→💰</div>
+        </div>
+      </div>
+
+      <!-- 카테고리별 PV 내역 -->
+      <div id="res-breakdown" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:11px;padding:14px;margin-bottom:14px;"></div>
+
+      <button class="btn-primary" onclick="copyResultLink()" style="margin-top:0;">
+        🔗 결과 링크 복사 (카카오톡 / LINE 공유)
+      </button>
+      <button class="btn-secondary" onclick="goToStep2()">← 항목 다시 체크하기</button>
+      <button class="btn-secondary" onclick="resetAll()" style="color:#ef4444;border-color:#ef4444;">
+        ↺ 처음부터 다시 계산하기
+      </button>
+
+      <div class="disclaimer">
+        <p>본 결과는 소비 전환 기준의 예상 계산값입니다.</p>
+        <p>실제 지급 기준은 회원 자격, 시점, 운영 정책 등에 따라 달라질 수 있습니다.</p>
+        <p>본 페이지는 상담 및 안내용 참고 자료입니다.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ===== 하단 고정 바 ===== -->
+<div class="sticky-bar" id="sticky-bar">
+  <div class="sticky-info">
+    <div class="sticky-label">현재 선택</div>
+    <div class="sticky-pv" id="sticky-pv">0 PV</div>
+    <div class="sticky-count" id="sticky-count">0개 항목</div>
+  </div>
+  <button class="sticky-btn" onclick="goToStep3()">결과 보기 →</button>
+</div>
+
+<!-- ===== 토스트 ===== -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   데이터 정의 - 카테고리 / 항목 / PV
+   type:'fixed' → 고정 PV
+   type:'select' → 드롭다운으로 PV 선택
+============================================================ */
+const CATEGORIES = [
+  {
+    id:'food', name:'🍚 식품',
+    items:[
+      {id:'f01', name:'쌀 / 즉석밥',pv:5000},
+      {id:'f02', name:'생수 / 김치 / 채소',pv:2500},
+      {id:'f03', name:'커피 (믹스 / 블랙 / 골드블루)',pv:3000},
+      {id:'f04', name:'음료 (두유 / 주스 / 녹차)',type:'select',
+        options:[{label:'두유',pv:7000},{label:'주스',pv:3000},{label:'녹차',pv:1500}]},
+      /* ▼ 21번: 양념 간장/고추장/된장/후추로 변경 */
+      {id:'f05', name:'양념 (간장 / 고추장 / 된장 / 후추)',pv:1500},
+      /* ▼ 20번: 계란 만교자/귤 삭제 → 구운계란/반숙계란 추가 */
+      {id:'f06', name:'계란 (구운계란 / 반숙계란)',pv:3000},
+      {id:'f07', name:'건어물 (멸치 / 미역 / 다시마)',pv:1500},
+      {id:'f08', name:'라면 / 컵라면',pv:4000},
+      {id:'f09', name:'레토르트 (카레 / 곰탕 / 갈비탕 / 삼계탕 / 황태탕 / 미역국)',pv:1700},
+      {id:'f10', name:'김 (도시락 김 / 김전장 / 김자반)',pv:1000},
+      {id:'f11', name:'냉장 / 냉동식품 (불고기 / 만두 / 돈까스 / 소세지 / 치즈)',pv:4000},
+      /* ▼ 22번: 참기름/들기름/식용유/아보카도 오일, 2,000PV */
+      {id:'f12', name:'참기름 / 들기름 / 식용유 / 아보카도 오일',pv:2000},
+      {id:'f13', name:'하루견과 / 알밤',pv:3500},
+      {id:'f14', name:'스낵 (두부 / 라이스칩 / 누룽지 / 콘칩 / 목캔디 / 껌)',pv:1000}
+    ]
+  },
+  {
+    id:'health', name:'💊 건강 식품',
+    items:[
+      /* 면역력 */
+      {id:'h01',  name:'면역력 / 피로개선 (헤모힘 / 홍삼 / 노니 / 비타민B)',pv:40000},
+      /* ▼ 8번: 활력 케어에 파워비타민 추가 */
+      {id:'h01b', name:'활력 케어 (헤모샷 / 활진기고 / 파워비타민)',pv:40000},
+      /* ▼ 14번: 비타민/미네랄 멀티비타민→파워비타민 */
+      {id:'h02',  name:'비타민 / 미네랄 (파워비타민 / 비타민C / 스피루리나)',pv:12000},
+      {id:'h03',  name:'간 건강 (밀크씨슬)',pv:11000},
+      /* ▼ 15번: 위장건강→위건강, 유산균/양배추즙 삭제 */
+      {id:'h04',  name:'위 건강 (위건강 데일리 / 파인자임)',pv:20000},
+      /* ▼ 16번: 위건강 다음 장건강 추가 */
+      {id:'h04b', name:'장 건강 (SCI 마이크로 바이옴 / 친생 유산균 / 포스트바이오틱스)',pv:20000},
+      {id:'h05',  name:'뼈 건강 (칼슘 / MSM / 비타민)',pv:10500},
+      /* ▼ 4번: 혈관건강 양파즙 삭제 */
+      {id:'h06',  name:'혈관 건강 (오메가3 / 징코 & 낫또)',pv:6400},
+      /* ▼ 5번: 혈당케어에 노니 추가 */
+      {id:'h06b', name:'혈당 케어 (혈당케어 / 바나바 홍삼 / 노니)',pv:25000},
+      {id:'h07',  name:'눈 건강 (루테인 / 루아잔틴)',pv:9500},
+      /* ▼ 3번: 남성건강 홍마늘→흙마늘/야관문 (이미 반영됨) */
+      {id:'h08',  name:'남성 건강 (쏘팔메토 / 야관문(비수리킹))',pv:11000},
+      /* ▼ 1번(상단 목록): 갱년기에 질유산균 추가 */
+      {id:'h09',  name:'갱년기 증상 (루바브퀸 / 소포라퀸 / 석류미인 / 질유산균)',pv:10000},
+      /* ▼ 1번(하단 목록): 갱년기 다음 체지방 조절 */
+      {id:'h09b', name:'체지방 조절 (보이차 / 차전자피 / 풋사과 애플페논)',pv:13000},
+      /* ▼ 2번: 체지방 다음 식이섬유 */
+      {id:'h09c', name:'식이섬유 (차전자피 / 컬리케일)',pv:13000},
+      /* ▼ 2번(상단 목록): 체중조절 교체 */
+      {id:'h10',  name:'체중조절 (밸런스 라이프 / 슬림바디 뉴핏)',pv:26000},
+      /* ▼ 6번: 피부미용 비타민C 삭제, 뷰티워터젤리 알로에 유지 */
+      {id:'h11',  name:'피부미용 (콜라겐 / 비오틴 / 뷰티워터젤리 알로에)',pv:16000},
+      /* ▼ 7번: 수면 타트체리 삭제 */
+      {id:'h12',  name:'수면 (락티움)',pv:16000},
+      /* ▼ 프로폴리스 (구강 스프레이/면역 구미) */
+      {id:'h12b', name:'프로폴리스 (구강 스프레이 / 면역 구미)',pv:11000},
+      /* ▼ 죽염 - 프로폴리스 다음 순서로 이동 */
+      {id:'h12d', name:'죽염 (9번 구워만든 죽염)',pv:20000},
+      /* ▼ 18번: 구강케어 다음 데일리 건강즙 추가 */
+      {id:'h12c', name:'데일리 건강즙 (배도라지&모과즙 / 양파즙 / ABC착즙 / 양배추즙 / 흙마늘진액 / 양파&비트즙)',pv:10000}
+    ]
+  },
+  {
+    id:'hairbody', name:'🧴 헤어 & 바디',
+    items:[
+      {id:'hb01',name:'칫솔 / 치간브러시 / 혀클리너',pv:3900},
+      {id:'hb02',name:'치약 / 잇몸치약',pv:2500},
+      {id:'hb03',name:'샴푸 / 린스',pv:4000},
+      {id:'hb04',name:'생모단',pv:4000},
+      {id:'hb05',name:'트리트먼트 / 프로틴 에센스',pv:3600},
+      {id:'hb06',name:'헤어오일 / 컬링 에센스',pv:4000},
+      {id:'hb07',name:'염모제(멋내기) / 새치 / 부분염색',pv:2900},
+      {id:'hb08',name:'바디클렌저 / 바디로션 / 바디스크럽',pv:2500},
+      {id:'hb09',name:'비누',pv:2500},
+      {id:'hb10',name:'핸드워시 / 핸드크림 / 풋스크럽',pv:5000},
+      {id:'hb11',name:'손소독 (겔 / 스프레이)',pv:750},
+      {id:'hb12',name:'여성 청결제',pv:5000},
+      {id:'hb13',name:'생리대 / 팬티라이너',pv:1500}
+    ]
+  },
+  {
+    id:'maternity', name:'🤱 임산부',
+    items:[
+      {id:'mat01',name:'엽산',pv:9500},
+      {id:'mat02',name:'철분',pv:6000},
+      {id:'mat03',name:'튼살 크림 / 튼살 오일',pv:8500}
+    ]
+  },
+  {
+    id:'kids', name:'👶 키즈',
+    items:[
+      {id:'k01',name:'면역 (키즈홍삼 / 키즈구미)',pv:8500},
+      {id:'k02',name:'유산균 (아연, 비타민D 포함)',pv:15000},
+      {id:'k03',name:'뼈건강 (츄어블 칼슘)',pv:7500},
+      {id:'k04',name:'두뇌건강 (키즈 오메가3)',pv:7500},
+      {id:'k05',name:'스킨 (바스 / 로션 / 크림 / 키즈치약 / 키즈칫솔)',pv:14300}
+    ]
+  },
+  {
+    id:'pet', name:'🐾 반려동물',
+    items:[
+      {id:'p01',name:'반려견사료 / 발포껌 / 소세지',type:'select',
+        options:[{label:'사료 / 발포껌',pv:6000},{label:'소세지',pv:5000}]},
+      {id:'p02',name:'반려묘 사료',pv:5000}
+    ]
+  },
+  {
+    id:'cosmetics', name:'💄 화장품',
+    items:[
+      /* ▼ 토너 각질케어 삭제 */
+      {id:'c01',name:'토너 / 스킨 / 미스트 (크림 / 오일 타입)',pv:16000},
+      {id:'c02',name:'에센스 / 세럼 / 앰플',pv:18000},
+      {id:'c03',name:'로션 / 에멀젼',pv:11000},
+      {id:'c04',name:'영양크림 / 수분크림',pv:16000},
+      {id:'c05',name:'아이크림',pv:18000},
+      {id:'c06',name:'스페셜 케어 (앰플 / 부스터)',pv:50000,note:'★ 피부샵 이용 고객은 체크'},
+      /* ▼ 클렌징 폼/크림/비누타입으로 변경, 3,000PV */
+      {id:'c07',name:'클렌징 (폼타입 / 크림타입 / 비누타입)',pv:3000},
+      /* ▼ 클렌징 다음 각질케어 신규 추가 */
+      {id:'c07b',name:'각질케어 (필링젤 / 필링패드)',pv:4000},
+      /* ▼ 팩 고무/겔/시트로 변경 */
+      {id:'c08',name:'팩 (고무 / 겔 / 시트)',pv:2500},
+      /* ▼ 워시 마스크 신규 추가 */
+      {id:'c08b',name:'워시 마스크 (클레이 / 허니 / 리얼장미꽃잎 젤)',pv:8000},
+      {id:'c09',name:'선 (크림 / 스틱 / 쿠션)',pv:7400},
+      {id:'c10',name:'메이크업 (페이스 / 립 / 섀도우)',pv:10000},
+      {id:'c11',name:'파운데이션 (BB / 쿠션 / 팩트 / 파우더)',pv:10000},
+      {id:'c12',name:'유기농 케어 (호호바 오일)',pv:30000}
+    ]
+  },
+  {
+    id:'living', name:'🏠 리빙 & 생활용품',
+    items:[
+      {id:'l01',name:'화장지 / 휴지',pv:4400},
+      {id:'l02',name:'물티슈 / 비데 물티슈',pv:3300},
+      {id:'l03',name:'주방세제',pv:2400},
+      {id:'l04',name:'다목적 세정제 (욕실용 / 주방용 / 탈취제)',pv:3500},
+      {id:'l05',name:'세탁세제 (유연제 / 한장세제)',pv:3400},
+      {id:'l06',name:'고무장갑',pv:1000},
+      {id:'l07',name:'수세미 (스폰지 / 스텐레스)',pv:760},
+      {id:'l08',name:'위생백 / 위생장갑',pv:600},
+      {id:'l09a',name:'키친타올',pv:3500},
+      {id:'l09b',name:'종이호일',pv:650},
+      {id:'l10',name:'냄비 / 후라이팬',pv:38000},
+      {id:'l11',name:'테이프크리너',pv:1200},
+      {id:'l12',name:'황사마스크 (KF80 / 94 / 키즈)',pv:2000},
+      {id:'l13',name:'방향제 (디퓨저)',pv:10000},
+      {id:'l15',name:'수건',pv:2500}
+    ]
+  },
+  {
+    id:'appliance', name:'🏷️ 가전',
+    items:[
+      {id:'a01',name:'정수기 / (필터)',pv:40000},
+      {id:'a02',name:'공기청정기 / (필터)',pv:25000},
+      {id:'a03',name:'가습기 / 비데',pv:35000},
+      {id:'a04',name:'전동 칫솔 / (칫솔헤드)',pv:5200}
+    ]
+  },
+  {
+    id:'overseas', name:'🌏 해외직구',
+    items:[
+      {id:'o01',name:'마누카 꿀 MGO830+ (호주산)',pv:100000},
+      {id:'o02',name:'초롱혼합오일 (뉴질랜드산)',pv:100000},
+      {id:'o03',name:'호랑이 우유 버섯 (말레이시아)',pv:60000}
+    ]
+  }
+];
+
+/* ============================================================
+   앱 상태
+============================================================ */
+let selectedFamily = null; // 1,2,3,4
+let checkedItems  = {};    // {itemId: true}
+let selectedOpts  = {};    // {itemId: pvValue} (select형 항목)
+let currentStep   = 1;
+
+/* ============================================================
+   초기화
+============================================================ */
+function init(){
+  buildCategories();
+  loadFromURL();
+}
+
+/* ============================================================
+   카테고리 + 항목 UI 동적 생성
+============================================================ */
+function buildCategories(){
+  const container = document.getElementById('categories-container');
+  container.innerHTML = '';
+
+  CATEGORIES.forEach(cat => {
+    // select형 항목 기본값 초기화
+    cat.items.forEach(item => {
+      if(item.type === 'select' && !selectedOpts[item.id]){
+        selectedOpts[item.id] = item.options[0].pv;
+      }
+    });
+
+    const acc = document.createElement('div');
+    acc.className = 'accordion';
+    acc.id = 'acc-' + cat.id;
+
+    // 헤더
+    const hdr = document.createElement('div');
+    hdr.className = 'accordion-header';
+    hdr.setAttribute('role','button');
+    hdr.setAttribute('aria-expanded','false');
+    hdr.innerHTML = `
+      <span>${cat.name}
+        <span class="cat-checked-badge" id="badge-${cat.id}">0</span>
+      </span>
+      <span class="accordion-arrow">▼</span>
+    `;
+    hdr.onclick = () => toggleAccordion(cat.id, hdr);
+
+    // 바디
+    const body = document.createElement('div');
+    body.className = 'accordion-body';
+    body.id = 'body-' + cat.id;
+
+    // 전체 선택/해제 행
+    const selAllRow = document.createElement('div');
+    selAllRow.className = 'select-all-row';
+    selAllRow.id = 'selall-row-' + cat.id;
+    selAllRow.innerHTML = `
+      <input type="checkbox" class="select-all-chk" id="selall-${cat.id}"
+        onchange="toggleAllInCat('${cat.id}', this.checked)">
+      <label for="selall-${cat.id}">전체 선택 / 해제</label>
+    `;
+    body.appendChild(selAllRow);
+
+    cat.items.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      row.id = 'row-' + item.id;
+
+      if(item.type === 'select'){
+        const defPv = selectedOpts[item.id] || item.options[0].pv;
+        const optsHtml = item.options.map(o =>
+          `<option value="${o.pv}"${o.pv===defPv?' selected':''}>${o.label} (${o.pv.toLocaleString()} PV)</option>`
+        ).join('');
+        row.innerHTML = `
+          <input type="checkbox" class="item-checkbox" id="chk-${item.id}"
+            onchange="toggleItem('${item.id}',this.checked)">
+          <div class="item-name-wrap">
+            <label for="chk-${item.id}" class="item-name">${item.name}</label>
+            <select class="item-select" id="sel-${item.id}"
+              onchange="changeOpt('${item.id}',parseInt(this.value))" disabled>
+              ${optsHtml}
+            </select>
+          </div>
+          <span class="item-pv-badge" id="pv-${item.id}">${defPv.toLocaleString()} PV</span>
+        `;
+      } else {
+        /* note 속성이 있으면 파란색 부가 문구로 표시 */
+        const noteHtml = item.note
+          ? `<span style="display:block;font-size:11.5px;font-weight:700;color:#2563eb;margin-top:3px;">${item.note}</span>`
+          : '';
+        row.innerHTML = `
+          <input type="checkbox" class="item-checkbox" id="chk-${item.id}"
+            onchange="toggleItem('${item.id}',this.checked)">
+          <div class="item-name-wrap" style="flex:1;">
+            <label for="chk-${item.id}" class="item-name">${item.name}${noteHtml}</label>
+          </div>
+          <span class="item-pv-badge">${item.pv.toLocaleString()} PV</span>
+        `;
+      }
+      body.appendChild(row);
+    });
+
+    acc.appendChild(hdr);
+    acc.appendChild(body);
+    container.appendChild(acc);
+  });
+}
+
+/* ============================================================
+   카테고리 전체 선택 / 해제
+============================================================ */
+function toggleAllInCat(catId, checked){
+  const cat = CATEGORIES.find(c => c.id === catId);
+  if(!cat) return;
+  cat.items.forEach(item => {
+    const chk = document.getElementById('chk-'+item.id);
+    if(!chk) return;
+    if(chk.checked !== checked){
+      chk.checked = checked;
+      toggleItem(item.id, checked);
+    }
+  });
+  // 전체 선택 체크박스 상태 동기화
+  const selAll = document.getElementById('selall-'+catId);
+  if(selAll) selAll.checked = checked;
+}
+
+/* 전체 선택 체크박스를 항목 개별 변경에 따라 동기화 */
+function syncSelectAll(catId){
+  const cat = CATEGORIES.find(c => c.id === catId);
+  if(!cat) return;
+  const allChecked = cat.items.every(item => checkedItems[item.id]);
+  const selAll = document.getElementById('selall-'+catId);
+  if(selAll) selAll.checked = allChecked;
+}
+
+/* ============================================================
+   아코디언 토글
+============================================================ */
+function toggleAccordion(catId, hdr){
+  hdr = hdr || document.querySelector('#acc-'+catId+' .accordion-header');
+  const body = document.getElementById('body-'+catId);
+  const isOpen = hdr.classList.toggle('open');
+  body.classList.toggle('open', isOpen);
+  hdr.setAttribute('aria-expanded', isOpen);
+}
+
+/* ============================================================
+   가족 구성 선택
+============================================================ */
+function selectFamily(n){
+  selectedFamily = n;
+  document.querySelectorAll('.family-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('fam-'+n).classList.add('selected');
+  document.getElementById('btn-next-1').disabled = false;
+}
+
+/* ============================================================
+   단계 전환
+============================================================ */
+function goToStep1(){
+  currentStep = 1;
+  showSection(1);
+  updateSteps();
+  document.getElementById('sticky-bar').classList.remove('show');
+}
+function goToStep2(){
+  if(!selectedFamily){ showToast('먼저 가족 구성을 선택해 주세요 😊'); return; }
+  currentStep = 2;
+  showSection(2);
+  updateSteps();
+  updateFamilyBanner();
+  refreshLive();
+  document.getElementById('sticky-bar').classList.add('show');
+}
+function goToStep3(){
+  currentStep = 3;
+  showSection(3);
+  updateSteps();
+  document.getElementById('sticky-bar').classList.remove('show');
+  renderResults();
+}
+function showSection(n){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-'+n).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateSteps(){
+  for(let i=1;i<=3;i++){
+    const el = document.getElementById('step-ind-'+i);
+    el.classList.remove('active','done');
+    if(i < currentStep) el.classList.add('done');
+    else if(i === currentStep) el.classList.add('active');
+  }
+}
+
+/* ============================================================
+   가족 안내 배너
+============================================================ */
+function updateFamilyBanner(){
+  const months = getMonths();
+  const labels = {1:'1인',2:'2인',3:'3인',4:'4인 이상'};
+  document.getElementById('family-info-banner').innerHTML =
+    `👨‍👩‍👧‍👦 <strong>${labels[selectedFamily]} 가족</strong> 선택 → <strong>${months}개월</strong> 기준으로 계산됩니다.`;
+}
+
+/* ============================================================
+   항목 체크 토글
+============================================================ */
+function toggleItem(id, checked){
+  if(checked){
+    checkedItems[id] = true;
+    const sel = document.getElementById('sel-'+id);
+    if(sel){
+      sel.disabled = false;
+      selectedOpts[id] = parseInt(sel.value);
+    }
+  } else {
+    delete checkedItems[id];
+    const sel = document.getElementById('sel-'+id);
+    if(sel) sel.disabled = true;
+  }
+  const row = document.getElementById('row-'+id);
+  if(row) row.classList.toggle('checked', checked);
+  refreshLive();
+  updateCatBadge(id);
+  // 전체 선택 체크박스 동기화
+  const cat = CATEGORIES.find(c => c.items.some(i => i.id === id));
+  if(cat) syncSelectAll(cat.id);
+}
+
+/* ============================================================
+   옵션 변경 (select형)
+============================================================ */
+function changeOpt(id, pv){
+  selectedOpts[id] = pv;
+  const badge = document.getElementById('pv-'+id);
+  if(badge) badge.textContent = pv.toLocaleString() + ' PV';
+  refreshLive();
+}
+
+/* ============================================================
+   카테고리 체크 배지 업데이트
+============================================================ */
+function updateCatBadge(itemId){
+  // 어떤 카테고리에 속하는지 찾기
+  const cat = CATEGORIES.find(c => c.items.some(i => i.id === itemId));
+  if(!cat) return;
+  const checked = cat.items.filter(i => checkedItems[i.id]).length;
+  const badge = document.getElementById('badge-'+cat.id);
+  if(!badge) return;
+  if(checked > 0){
+    badge.textContent = checked + '개 ✓';
+    badge.classList.add('show');
+  } else {
+    badge.classList.remove('show');
+  }
+}
+
+/* ============================================================
+   카테고리별 PV 계산 규칙
+   HALF_PV: 해당 카테고리는 체크된 합산 PV의 50%만 적용
+   (매달 전부 구매하기 어렵기 때문)
+============================================================ */
+const HALF_PV_CATEGORIES = new Set(['health','cosmetics','living','appliance','overseas']);
+
+function calcTotalPV(){
+  let grandTotal = 0;
+  CATEGORIES.forEach(cat => {
+    let catPV = 0;
+    cat.items.forEach(item => {
+      if(!checkedItems[item.id]) return;
+      if(item.type === 'select'){
+        catPV += selectedOpts[item.id] || item.options[0].pv;
+      } else {
+        catPV += item.pv;
+      }
+    });
+    /* 건강기능식품 / 화장품 / 생활용품은 50%만 반영 */
+    grandTotal += HALF_PV_CATEGORIES.has(cat.id) ? Math.floor(catPV / 2) : catPV;
+  });
+  return grandTotal;
+}
+
+/* 카테고리별 PV 내역 (결과 화면용) */
+function calcCatBreakdown(){
+  return CATEGORIES.map(cat => {
+    let catPV = 0;
+    cat.items.forEach(item => {
+      if(!checkedItems[item.id]) return;
+      catPV += item.type==='select'
+        ? (selectedOpts[item.id] || item.options[0].pv)
+        : item.pv;
+    });
+    if(catPV === 0) return null;
+    const isHalf = HALF_PV_CATEGORIES.has(cat.id);
+    const applied = isHalf ? Math.floor(catPV/2) : catPV;
+    return { name:cat.name, raw:catPV, applied, isHalf };
+  }).filter(Boolean);
+}
+function findItem(id){
+  for(const cat of CATEGORIES){
+    const item = cat.items.find(i => i.id === id);
+    if(item) return item;
+  }
+  return null;
+}
+function getMonths(){
+  return (selectedFamily >= 3) ? 12 : 6;
+}
+
+/* ============================================================
+   실시간 PV 갱신
+============================================================ */
+function refreshLive(){
+  const total = calcTotalPV();
+  const count = Object.keys(checkedItems).length;
+  const f = n => n.toLocaleString();
+  // 상단 진행 정보
+  const livePv = document.getElementById('live-pv-top');
+  const cntEl  = document.getElementById('checked-count');
+  if(livePv) livePv.textContent = f(total) + ' PV';
+  if(cntEl)  cntEl.textContent  = count + '개 선택됨';
+  // 하단 고정 바
+  document.getElementById('sticky-pv').textContent = f(total) + ' PV';
+  document.getElementById('sticky-count').textContent = count + '개 항목';
+}
+
+/* ============================================================
+   결과 렌더링
+============================================================ */
+function renderResults(){
+  const totalPV  = calcTotalPV();
+  const months   = getMonths();
+  const cumPV    = totalPV * months;
+  const times    = Math.floor(cumPV / 300000);
+  const cashback = times * 58000;
+  const f = n => n.toLocaleString();
+
+  document.getElementById('res-total-pv').textContent   = f(totalPV) + ' PV';
+  document.getElementById('res-months').textContent     = months + '개월';
+  document.getElementById('res-cumulative').textContent = f(cumPV) + ' PV';
+  document.getElementById('res-times').textContent      = times + '회';
+  document.getElementById('res-cashback').textContent   = f(cashback) + '원';
+
+  /* 카테고리 내역 렌더링 */
+  const breakdown = calcCatBreakdown();
+  const box = document.getElementById('res-breakdown');
+  if(!breakdown.length){ box.innerHTML=''; return; }
+  box.innerHTML = `
+    <div style="font-size:12px;font-weight:700;color:#1341a8;margin-bottom:8px;">
+      📊 카테고리별 PV 내역
+    </div>
+    ${breakdown.map(b=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;
+           padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;">
+        <span style="color:#334155;flex:1;">${b.name.replace(/^[^\s]+\s/,'')}</span>
+        ${b.isHalf
+          ? `<span style="color:#94a3b8;text-decoration:line-through;margin-right:6px;">${f(b.raw)} PV</span>
+             <span style="color:#2563eb;font-weight:700;">${f(b.applied)} PV <span style="font-size:10px;background:#dbeafe;padding:1px 5px;border-radius:8px;">×½</span></span>`
+          : `<span style="color:#2563eb;font-weight:700;">${f(b.applied)} PV</span>`
+        }
+      </div>`).join('')}
+    <div style="margin-top:8px;font-size:11px;color:#64748b;background:#f8fafc;padding:7px 10px;border-radius:8px;line-height:1.6;">
+      ✂️ 매달 소비되지 않는 일부 품목은 PV의 <strong>50%</strong>만 반영됩니다.
+    </div>
+  `;
+}
+
+/* ============================================================
+   URL 상태 저장 & 복원
+============================================================ */
+function buildStateParams(){
+  const p = new URLSearchParams();
+  if(selectedFamily) p.set('fam', selectedFamily);
+  const ids = Object.keys(checkedItems);
+  if(ids.length) p.set('items', ids.join(','));
+  const opts = Object.entries(selectedOpts).map(([k,v])=>k+':'+v).join(',');
+  if(opts) p.set('opts', opts);
+  return p.toString();
+}
+
+function loadFromURL(){
+  const p = new URLSearchParams(window.location.search);
+
+  // 옵션 먼저 복원 (buildCategories 이후이므로 DOM 있음)
+  const opts = p.get('opts');
+  if(opts) opts.split(',').forEach(pair=>{
+    const [k,v] = pair.split(':');
+    if(k && v){ selectedOpts[k] = parseInt(v); }
+  });
+
+  // 가족 복원
+  const fam = parseInt(p.get('fam'));
+  if(fam >= 1 && fam <= 4) selectFamily(fam);
+
+  // 체크 항목 복원
+  const items = p.get('items');
+  if(items && items.trim()){
+    items.split(',').forEach(id=>{
+      if(!id) return;
+      checkedItems[id] = true;
+      const chk = document.getElementById('chk-'+id);
+      if(chk){
+        chk.checked = true;
+        const sel = document.getElementById('sel-'+id);
+        if(sel){
+          sel.disabled = false;
+          if(selectedOpts[id]) sel.value = selectedOpts[id];
+          // PV 배지 갱신
+          const badge = document.getElementById('pv-'+id);
+          if(badge) badge.textContent = selectedOpts[id].toLocaleString() + ' PV';
+        }
+        const row = document.getElementById('row-'+id);
+        if(row) row.classList.add('checked');
+        updateCatBadge(id);
+      }
+    });
+    if(fam >= 1){
+      goToStep3(); // 공유 URL → 바로 결과 화면
+      return;
+    }
+  }
+  refreshLive();
+}
+
+/* ============================================================
+   결과 링크 복사
+============================================================ */
+function copyResultLink(){
+  const state = buildStateParams();
+  const url = window.location.origin + window.location.pathname + (state ? '?'+state : '');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url)
+      .then(()=> showToast('✅ 링크 복사 완료! 카카오톡 / LINE으로 공유하세요 🎉'))
+      .catch(()=> fallbackCopy(url));
+  } else {
+    fallbackCopy(url);
+  }
+}
+function fallbackCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try{ document.execCommand('copy'); showToast('✅ 링크 복사 완료!'); }
+  catch(e){ showToast('링크: ' + text); }
+  document.body.removeChild(ta);
+}
+
+/* ============================================================
+   전체 초기화
+============================================================ */
+function resetAll(){
+  selectedFamily = null;
+  checkedItems   = {};
+  selectedOpts   = {};
+
+  // UI 초기화
+  document.querySelectorAll('.family-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('btn-next-1').disabled = true;
+  document.querySelectorAll('.item-checkbox').forEach(c => c.checked = false);
+  document.querySelectorAll('.item-select').forEach(s => { s.disabled = true; s.selectedIndex = 0; });
+  document.querySelectorAll('.item-row').forEach(r => r.classList.remove('checked'));
+  document.querySelectorAll('.cat-checked-badge').forEach(b => b.classList.remove('show'));
+  document.querySelectorAll('.select-all-chk').forEach(c => c.checked = false);
+
+  // select형 기본값 복구
+  CATEGORIES.forEach(cat => cat.items.forEach(item => {
+    if(item.type === 'select'){
+      selectedOpts[item.id] = item.options[0].pv;
+      const badge = document.getElementById('pv-'+item.id);
+      if(badge) badge.textContent = item.options[0].pv.toLocaleString() + ' PV';
+    }
+  }));
+
+  // URL 초기화
+  history.replaceState(null,'',window.location.pathname);
+  goToStep1();
+  refreshLive();
+}
+
+/* ============================================================
+   토스트 메시지
+============================================================ */
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 2800);
+}
+
+/* ============================================================
+   앱 시작
+============================================================ */
+init();
+</script>
+</body>
+</html>

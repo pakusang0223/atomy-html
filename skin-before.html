@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>애터미 뷰티 체험 사전 조사</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --blue:#00B5EF;--blue-dk:#0090C0;--blue-lt:#E6F8FE;
+  --pink:#F2A7C3;--pink-lt:#FDF0F5;
+  --gold:#C9A84C;
+  --bg:#FAFAF8;--text:#1A1A2E;--sub:#6B7280;--bdr:#E5E7EB;
+  --shd:0 4px 20px rgba(0,181,239,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.hdr{background:#fff;padding:18px 20px 14px;text-align:center;border-bottom:3px solid var(--blue)}
+.logo{height:44px;object-fit:contain;margin:0 auto 6px;display:block}
+.hdr-t{font-size:15px;font-weight:700;margin-top:4px}
+.hdr-s{font-size:12px;color:var(--sub)}
+.prog{padding:14px 20px 0;background:#fff;box-shadow:0 1px 0 var(--bdr)}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prog-l{font-size:12px;color:var(--sub);font-weight:500}
+.prog-c{font-size:12px;color:var(--blue-dk);font-weight:700}
+.prog-bar{height:4px;background:var(--blue-lt);border-radius:2px;margin-bottom:14px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--pink));border-radius:2px;transition:width .4s}
+.step{display:none;padding:24px 20px 110px;animation:fi .3s ease}
+.step.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ico{width:52px;height:52px;background:var(--blue-lt);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px}
+.ttl{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px;line-height:1.4}
+.dsc{font-size:13px;color:var(--sub);text-align:center;margin-bottom:24px;line-height:1.6}
+.hint{font-size:11px;color:var(--sub);margin-bottom:14px;text-align:center}
+/* gender */
+.g-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:320px;margin:0 auto}
+.g-card{background:#fff;border:2px solid var(--bdr);border-radius:20px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .2s}
+.g-card.on{border-color:var(--blue);background:var(--blue-lt)}
+.g-ico{font-size:36px;margin-bottom:10px}
+.g-txt{font-size:15px;font-weight:700}
+/* input */
+.iw{margin-bottom:16px}
+.ilbl{font-size:13px;font-weight:500;color:var(--sub);margin-bottom:8px;display:block}
+.inp{width:100%;padding:14px 16px;border:2px solid var(--bdr);border-radius:12px;font-size:16px;font-family:'Noto Sans KR',sans-serif;background:#fff;outline:none;transition:border-color .2s}
+.inp:focus{border-color:var(--blue)}
+/* btn grid */
+.bg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bg2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sbtn{padding:14px 8px;border:2px solid var(--bdr);border-radius:12px;background:#fff;font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;transition:all .2s;text-align:center}
+.sbtn.on{border-color:var(--blue);background:var(--blue-lt);color:var(--blue-dk);font-weight:700}
+/* skin card */
+.sk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.sk-card{background:#fff;border:2px solid var(--bdr);border-radius:16px;padding:18px 14px;cursor:pointer;transition:all .2s}
+.sk-card.on{border-color:var(--blue);background:var(--blue-lt)}
+.sk-ico{font-size:28px;margin-bottom:8px}
+.sk-nm{font-size:14px;font-weight:700;margin-bottom:4px}
+.sk-ds{font-size:11px;color:var(--sub);line-height:1.4}
+/* divider */
+.div{height:1px;background:var(--bdr);margin:20px 0}
+/* section title */
+.stl{font-size:15px;font-weight:700;margin-bottom:6px}
+.sds{font-size:12px;color:var(--sub);margin-bottom:14px;line-height:1.5}
+/* trouble */
+.tr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.tr-btn{padding:14px 10px;border:2px solid var(--bdr);border-radius:12px;background:#fff;font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.tr-btn.on{border-color:var(--blue);background:var(--blue-lt);color:var(--blue-dk);font-weight:700}
+/* chips */
+.cw{display:flex;flex-wrap:wrap;gap:8px}
+.tc{padding:8px 14px;border:1.5px solid var(--bdr);border-radius:50px;background:#fff;font-size:12px;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s}
+.tc.on{border-color:#FF7043;background:#FFF3E0;color:#BF360C;font-weight:600}
+.memo{width:100%;padding:12px 14px;border:2px solid var(--bdr);border-radius:12px;font-size:13px;font-family:'Noto Sans KR',sans-serif;outline:none;resize:none;min-height:80px;margin-top:10px;transition:border-color .2s}
+.memo:focus{border-color:var(--blue)}
+/* concern chips */
+.cc{padding:10px 16px;border:2px solid var(--bdr);border-radius:50px;background:#fff;font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.cc.on{border-color:var(--pink);background:var(--pink-lt);color:#C2185B;font-weight:700}
+/* expect chips */
+.ec{padding:10px 16px;border:2px solid var(--bdr);border-radius:50px;background:#fff;font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.ec.on{border-color:var(--gold);background:#FFF8EC;color:#8B6914;font-weight:700}
+/* result */
+.res-hdr{background:linear-gradient(135deg,var(--blue),var(--blue-dk));padding:28px 20px;text-align:center;color:#fff}
+.res-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:50px;padding:6px 16px;font-size:11px;letter-spacing:2px;margin-bottom:10px}
+.res-nm{font-size:20px;font-weight:700;margin-bottom:4px}
+.res-sb{font-size:13px;opacity:.8}
+/* capture card */
+.cap{background:#fff;border-radius:20px;overflow:hidden;margin:14px 20px;box-shadow:0 8px 32px rgba(0,181,239,.15)}
+.cap-hd{background:linear-gradient(135deg,var(--blue),var(--blue-dk));padding:24px;text-align:center;color:#fff}
+.cap-bg{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:50px;padding:5px 16px;font-size:10px;letter-spacing:2px;margin-bottom:10px}
+.cap-nm{font-size:18px;font-weight:700;margin-bottom:4px}
+.cap-sb{font-size:12px;opacity:.85}
+.cap-bd{padding:20px}
+.cap-pn{font-size:17px;font-weight:700;color:var(--blue-dk);margin-bottom:6px}
+.cap-rs{font-size:12px;color:var(--sub);line-height:1.6;margin-bottom:12px}
+.cap-it{background:var(--blue-lt);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.cap-it-t{font-size:10px;font-weight:700;color:var(--blue-dk);margin-bottom:6px;letter-spacing:1px}
+.cap-i{font-size:12px;padding:2px 0;display:flex;align-items:center;gap:6px}
+.cap-i::before{content:"\2713";color:var(--blue);font-weight:700;font-size:11px}
+.cap-ex{background:#FFF8EC;border:1px solid #F0D080;border-radius:10px;padding:10px 12px;margin-top:8px;font-size:11px;color:#8B6914;line-height:1.5}
+.cap-cw{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.cap-ck{background:var(--blue-lt);color:var(--blue-dk);font-size:11px;padding:4px 10px;border-radius:50px;font-weight:500}
+.cap-ft{padding:12px 20px;background:#F0FAFE;text-align:center;font-size:10px;color:var(--sub);letter-spacing:1px;border-top:1px solid var(--blue-lt)}
+/* share */
+.sh-sec{margin:0 20px 14px}
+.sh-ttl{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sh-ttl::before{content:"";display:block;width:3px;height:16px;background:var(--blue);border-radius:2px}
+.btn-img{width:100%;height:52px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.btn-lnk{width:100%;height:48px;background:#fff;color:var(--blue-dk);border:2px solid var(--blue);border-radius:14px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+/* admin */
+.adm{margin:0 20px 80px;background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shd);border-left:4px solid var(--blue)}
+.adm-t{font-size:13px;font-weight:700;color:var(--blue-dk);margin-bottom:8px}
+.adm-st{font-size:12px;color:var(--sub);margin-bottom:8px;min-height:16px}
+.adm-btn{width:100%;height:46px;background:linear-gradient(135deg,var(--blue),var(--blue-dk));color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer}
+/* tip */
+.tip{margin:0 20px 14px;background:#FFF8EC;border:1px solid #F0D080;border-radius:16px;padding:14px;display:flex;gap:10px;align-items:flex-start}
+.tip-t{font-size:12px;color:#7B5E00;line-height:1.6}
+/* loading */
+.ld{position:fixed;inset:0;background:rgba(255,255,255,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:12px}
+.sp{width:40px;height:40px;border:4px solid var(--blue-lt);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sp-t{font-size:14px;color:var(--blue-dk);font-weight:600}
+/* nav */
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.08);display:flex;gap:12px}
+.n-bk{width:52px;height:52px;border:2px solid var(--bdr);border-radius:14px;background:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.n-nx{flex:1;height:52px;background:var(--blue);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.n-nx:hover{background:var(--blue-dk)}
+/* toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1A2E;color:#fff;padding:12px 24px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;white-space:nowrap;z-index:9999;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+/* lazy sub */
+.lazy-sub{margin-top:14px;padding:16px;background:var(--blue-lt);border-radius:16px;display:none}
+.lazy-sub.show{display:block}
+.lazy-sub-t{font-size:13px;font-weight:700;margin-bottom:10px}
+.logo-txt{font-size:28px;font-weight:700;color:#00B5EF;letter-spacing:-1px;margin-bottom:4px;text-align:center}
+</style>
+</head>
+<body>
+<div class="hdr"><div class="logo-txt">atom<span style="font-size:26px">美</span><div style="font-size:11px;letter-spacing:4px;margin-top:-2px">ATOMY</div></div><div class="hdr-t">체험 전 사전 조사</div><div class="hdr-s">나의 피부를 먼저 알아봐요 🌿</div></div>
+<div class="prog">
+  <div class="prog-row">
+    <span class="prog-l" id="pLbl">STEP 1 · 성별 선택</span>
+    <span class="prog-c" id="pCnt">1 / 6</span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="pFill" style="width:16%"></div></div>
+</div>
+<div class="step on" id="s1">
+  <div class="ico">👤</div>
+  <div class="ttl">성별을 선택해주세요</div>
+  <div class="dsc">맞춤 제품 추천을 위해 필요해요</div>
+  <div class="g-grid">
+    <div class="g-card" onclick="setGender('female',this)"><div class="g-ico">👩</div><div class="g-txt">여성</div></div>
+    <div class="g-card" onclick="setGender('male',this)"><div class="g-ico">👨</div><div class="g-txt">남성</div></div>
+  </div>
+</div>
+<div class="step" id="s2">
+  <div class="ico">📝</div>
+  <div class="ttl">기본 정보를 입력해주세요</div>
+  <div class="dsc">체험 결과 카드에 사용됩니다</div>
+  <div class="iw"><label class="ilbl">성함</label>
+    <input class="inp" id="inpName" type="text" placeholder="이름을 입력해주세요"></div>
+  <div class="iw"><label class="ilbl">연락처 (선택 — 관리자 관리용)</label>
+    <input class="inp" id="inpPhone" type="tel" placeholder="010-0000-0000"></div>
+  <div class="iw"><label class="ilbl">연령대</label>
+    <div class="bg3">
+      <button class="sbtn" onclick="setAge('10대',this)">10대</button>
+      <button class="sbtn" onclick="setAge('20대',this)">20대</button>
+      <button class="sbtn" onclick="setAge('30대',this)">30대</button>
+      <button class="sbtn" onclick="setAge('40대',this)">40대</button>
+      <button class="sbtn" onclick="setAge('50대',this)">50대</button>
+      <button class="sbtn" onclick="setAge('60대+',this)">60대+</button>
+    </div>
+  </div>
+</div>
+<div class="step" id="s3">
+  <!-- 여성 피부타입 -->
+  <div id="s3f">
+    <div class="ico">💧</div>
+    <div class="ttl">피부 타입을 선택해주세요</div>
+    <div class="dsc">가장 가까운 피부 상태를 골라주세요</div>
+    <div class="sk-grid">
+      <div class="sk-card" onclick="setSkin('건성',this)"><div class="sk-ico">🏜️</div><div class="sk-nm">건성</div><div class="sk-ds">당기고 건조하며 각질이 자주 생겨요</div></div>
+      <div class="sk-card" onclick="setSkin('지성',this)"><div class="sk-ico">✨</div><div class="sk-nm">지성</div><div class="sk-ds">번들거리고 모공이 눈에 띄어요</div></div>
+      <div class="sk-card" onclick="setSkin('복합성',this)"><div class="sk-ico">🌗</div><div class="sk-nm">복합성</div><div class="sk-ds">T존 번들, 볼은 건조해요</div></div>
+      <div class="sk-card" onclick="setSkin('민감성',this)"><div class="sk-ico">🌸</div><div class="sk-nm">민감성</div><div class="sk-ds">자극에 예민하고 쉽게 붉어져요</div></div>
+    </div>
+    <div class="div"></div>
+    <div class="stl">🔔 기초케어 후 트러블 경험이 있으신가요?</div>
+    <div class="sds">평소 기초케어 사용 후 트러블이나 자극을 경험하신 적 있나요?</div>
+    <div class="tr-grid">
+      <button class="tr-btn" onclick="setTrouble('자주 있어요',this)">😣 자주 있어요</button>
+      <button class="tr-btn" onclick="setTrouble('가끔 있어요',this)">😐 가끔 있어요</button>
+      <button class="tr-btn" onclick="setTrouble('거의 없어요',this)">😊 거의 없어요</button>
+      <button class="tr-btn" onclick="setTrouble('없어요',this)">😄 없어요</button>
+    </div>
+    <div id="trDetail" style="display:none">
+      <div style="font-size:12px;color:var(--sub);margin-bottom:8px;font-weight:500">어떤 증상이 있으셨나요? (복수 선택)</div>
+      <div class="cw">
+        <div class="tc" onclick="togTT('붉어짐/홍조',this)">붉어짐/홍조</div>
+        <div class="tc" onclick="togTT('여드름/뾰루지',this)">여드름/뾰루지</div>
+        <div class="tc" onclick="togTT('가려움',this)">가려움</div>
+        <div class="tc" onclick="togTT('따가움/자극',this)">따가움/자극</div>
+        <div class="tc" onclick="togTT('각질',this)">각질</div>
+        <div class="tc" onclick="togTT('번들거림',this)">번들거림</div>
+      </div>
+      <div style="font-size:12px;color:var(--sub);margin-top:12px;margin-bottom:6px;font-weight:500">증상을 직접 적어주세요 (선택)</div>
+      <textarea class="memo" id="trDesc" placeholder="예) 세럼 사용 후 볼 부위가 빨개지고 따가웠어요."></textarea>
+    </div>
+  </div>
+  <!-- 남성 피부타입 -->
+  <div id="s3m" style="display:none">
+    <div class="ico">👨</div>
+    <div class="ttl">피부 타입을 선택해주세요</div>
+    <div class="dsc">남성 맞춤 제품 추천에 사용됩니다</div>
+    <div class="sk-grid">
+      <div class="sk-card" onclick="setMaleSkin('건성',this)"><div class="sk-ico">🏜️</div><div class="sk-nm">건성</div><div class="sk-ds">세안 후 당기고 건조해요</div></div>
+      <div class="sk-card" onclick="setMaleSkin('복합·지성',this)"><div class="sk-ico">✨</div><div class="sk-nm">복합·지성</div><div class="sk-ds">T존 번들거리고 모공이 보여요</div></div>
+      <div class="sk-card" onclick="setMaleSkin('민감성',this)"><div class="sk-ico">🌸</div><div class="sk-nm">민감성</div><div class="sk-ds">면도 후 쉽게 붉어지고 자극받아요</div></div>
+      <div class="sk-card" onclick="setMaleSkin('보통',this)"><div class="sk-ico">😊</div><div class="sk-nm">보통</div><div class="sk-ds">특별한 트러블 없이 무난해요</div></div>
+    </div>
+  </div>
+</div>
+<div class="step" id="s4">
+  <div class="ico">🔍</div>
+  <div class="ttl">피부 고민을 선택해주세요</div>
+  <div class="hint">복수 선택 가능합니다</div>
+  <!-- 여성 고민 -->
+  <div id="s4f" class="cw">
+    <div class="cc" onclick="togC(this)">💧 건조함/수분부족</div>
+    <div class="cc" onclick="togC(this)">🌊 주름/탄력저하</div>
+    <div class="cc" onclick="togC(this)">☀️ 기미/잡티</div>
+    <div class="cc" onclick="togC(this)">🌿 여드름/트러블</div>
+    <div class="cc" onclick="togC(this)">🌸 예민함/자극</div>
+    <div class="cc" onclick="togC(this)">🔴 홍조</div>
+    <div class="cc" onclick="togC(this)">⏳ 노화/안티에이징</div>
+    <div class="cc" onclick="togC(this)">🔬 모공/각질</div>
+    <div class="cc" onclick="togC(this)">🌟 피부톤 개선</div>
+  </div>
+  <!-- 남성 고민 -->
+  <div id="s4m" class="cw" style="display:none">
+    <div class="cc" onclick="togC(this)">💧 건조함</div>
+    <div class="cc" onclick="togC(this)">✨ 번들거림/피지</div>
+    <div class="cc" onclick="togC(this)">☀️ 기미/잡티</div>
+    <div class="cc" onclick="togC(this)">🌿 여드름/트러블</div>
+    <div class="cc" onclick="togC(this)">🛡️ 면도 후 자극/홍조</div>
+    <div class="cc" onclick="togC(this)">⏳ 노화/안티에이징</div>
+    <div class="cc" onclick="togC(this)">🌟 피부톤 개선</div>
+    <div class="cc" onclick="togLazy(this)">😴 귀차니즘 (올인원 추천)</div>
+  </div>
+  <!-- 귀차니즘 서브질문 (남성) -->
+  <div class="lazy-sub" id="lazySub">
+    <div class="lazy-sub-t">어떤 편이신가요?</div>
+    <div class="bg2">
+      <button class="sbtn" onclick="setLazySkin('dry',this)">🏜️ 건성 피부예요</button>
+      <button class="sbtn" onclick="setLazySkin('normal',this)">😊 보통 피부예요</button>
+    </div>
+  </div>
+</div>
+<div class="step" id="s5">
+  <div class="ico">💫</div>
+  <div class="ttl">어떤 변화를 기대하세요?</div>
+  <div class="hint">복수 선택 가능합니다</div>
+  <div class="cw">
+    <div class="ec" onclick="togE(this)">💧 촉촉한 피부</div>
+    <div class="ec" onclick="togE(this)">✨ 피부톤 개선</div>
+    <div class="ec" onclick="togE(this)">🌿 주름 개선</div>
+    <div class="ec" onclick="togE(this)">🌸 트러블 진정</div>
+    <div class="ec" onclick="togE(this)">⬆️ 탄력/리프팅</div>
+    <div class="ec" onclick="togE(this)">🛡️ 자극 없는 제품</div>
+    <div class="ec" onclick="togE(this)">💝 가성비</div>
+    <div class="ec" onclick="togE(this)">🌿 전체적 피부 개선</div>
+  </div>
+</div>
+<div class="step" id="s6"><div id="resArea"></div></div>
+<div class="ld" id="ldEl" style="display:none">
+  <div class="sp"></div><div class="sp-t">이미지 생성 중...</div>
+</div>
+<div class="nav" id="nav">
+  <button class="n-bk" id="nBk" onclick="goBack()" style="display:none">←</button>
+  <button class="n-nx" onclick="goNext()">다음 단계 →</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var SU = 'https://script.google.com/macros/s/AKfycbyNkpICqV7x5tTMfyvw1Ud8idPyhG22z2TG7PnShOfoELgZWMNkn_z3vl-bddrF_4Hk/exec';
+var CUR = 1, TOT = 6;
+var D = {
+  gender:'', name:'', phone:'', age:'',
+  skin:'', maleSkin:'', trouble:'', tTypes:[], lazySkin:'',
+  concerns:[], expects:[]
+};
+var REC = null;
+var LBLS = ['성별 선택','기본 정보','피부 타입','피부 고민','기대 포인트','맞춤 추천'];
+
+function updProg() {
+  document.getElementById('pFill').style.width = (CUR/TOT*100)+'%';
+  document.getElementById('pLbl').textContent = 'STEP '+CUR+' · '+LBLS[CUR-1];
+  document.getElementById('pCnt').textContent = CUR+' / '+TOT;
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(function(el){ el.classList.remove('on'); });
+  document.getElementById('s'+n).classList.add('on');
+  CUR = n; updProg();
+  // Step 3: show male or female
+  if (n === 3) {
+    var isM = D.gender === 'male';
+    document.getElementById('s3f').style.display = isM ? 'none' : 'block';
+    document.getElementById('s3m').style.display = isM ? 'block' : 'none';
+  }
+  // Step 4: show male or female concerns
+  if (n === 4) {
+    var isM = D.gender === 'male';
+    document.getElementById('s4f').style.display = isM ? 'none' : 'flex';
+    document.getElementById('s4m').style.display = isM ? 'flex' : 'none';
+    document.getElementById('lazySub').classList.remove('show');
+  }
+  var nav = document.getElementById('nav');
+  if (n === 6) {
+    nav.innerHTML = '<button class="n-bk" onclick="goBack()">&#8592;</button><button class="n-nx" onclick="doRestart()">&#128260; 처음으로</button>';
+  } else {
+    nav.innerHTML = '<button class="n-bk" onclick="goBack()" style="'+(n===1?'display:none':'')+'">&#8592;</button><button class="n-nx" onclick="goNext()">다음 단계 &#8594;</button>';
+  }
+  window.scrollTo(0,0);
+}
+
+function goNext() {
+  if (CUR===1 && !D.gender) { showToast('성별을 선택해주세요'); return; }
+  if (CUR===2) {
+    D.name = document.getElementById('inpName').value.trim();
+    D.phone = document.getElementById('inpPhone').value.trim();
+    if (!D.name) { showToast('성함을 입력해주세요'); return; }
+    if (!D.age) { showToast('연령대를 선택해주세요'); return; }
+  }
+  if (CUR===3) {
+    if (D.gender==='female' && !D.skin) { showToast('피부 타입을 선택해주세요'); return; }
+    if (D.gender==='female' && !D.trouble) { showToast('트러블 경험 여부를 선택해주세요'); return; }
+    if (D.gender==='male' && !D.maleSkin) { showToast('피부 타입을 선택해주세요'); return; }
+  }
+  if (CUR===4 && D.concerns.length===0) { showToast('피부 고민을 하나 이상 선택해주세요'); return; }
+  if (CUR===4 && D.gender==='male' && D.concerns.indexOf('귀차니즘') >= 0 && !D.lazySkin) {
+    showToast('올인원 추천을 위해 피부 건성/보통을 선택해주세요'); return;
+  }
+  if (CUR===5 && D.expects.length===0) { showToast('기대 포인트를 하나 이상 선택해주세요'); return; }
+  if (CUR===5) { buildRes(); showStep(6); return; }
+  if (CUR < TOT) showStep(CUR+1);
+}
+
+function goBack() {
+  if (CUR>1) showStep(CUR-1);
+}
+
+// Setters
+function setGender(g, el) {
+  D.gender = g;
+  document.querySelectorAll('.g-card').forEach(function(c){ c.classList.remove('on'); });
+  el.classList.add('on');
+}
+function setAge(a, el) {
+  D.age = a;
+  document.querySelectorAll('.sbtn').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
+}
+function setSkin(s, el) {
+  D.skin = s;
+  document.querySelectorAll('#s3f .sk-card').forEach(function(c){ c.classList.remove('on'); });
+  el.classList.add('on');
+}
+function setMaleSkin(s, el) {
+  D.maleSkin = s;
+  document.querySelectorAll('#s3m .sk-card').forEach(function(c){ c.classList.remove('on'); });
+  el.classList.add('on');
+}
+function setTrouble(t, el) {
+  D.trouble = t;
+  document.querySelectorAll('.tr-btn').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
+  var det = document.getElementById('trDetail');
+  if (t==='자주 있어요'||t==='가끔 있어요') { det.style.display='block'; }
+  else { det.style.display='none'; D.tTypes=[]; document.querySelectorAll('.tc').forEach(function(c){ c.classList.remove('on'); }); }
+}
+function togTT(t, el) {
+  if (el.classList.contains('on')) { D.tTypes=D.tTypes.filter(function(x){return x!==t;}); el.classList.remove('on'); }
+  else { D.tTypes.push(t); el.classList.add('on'); }
+}
+function togC(el) {
+  var txt = el.textContent.trim();
+  if (el.classList.contains('on')) {
+    D.concerns = D.concerns.filter(function(x){return x!==txt;});
+    el.classList.remove('on');
+  } else {
+    D.concerns.push(txt);
+    el.classList.add('on');
+  }
+}
+function togLazy(el) {
+  var txt = el.textContent.trim();
+  if (el.classList.contains('on')) {
+    D.concerns = D.concerns.filter(function(x){return x!==txt;});
+    el.classList.remove('on');
+    D.lazySkin = '';
+    document.getElementById('lazySub').classList.remove('show');
+    document.querySelectorAll('.sbtn').forEach(function(b){ b.classList.remove('on'); });
+  } else {
+    D.concerns.push(txt);
+    el.classList.add('on');
+    document.getElementById('lazySub').classList.add('show');
+  }
+}
+function setLazySkin(v, el) {
+  D.lazySkin = v;
+  document.querySelectorAll('#lazySub .sbtn').forEach(function(b){ b.classList.remove('on'); });
+  el.classList.add('on');
+}
+function togE(el) {
+  var txt = el.textContent.trim();
+  if (el.classList.contains('on')) { D.expects=D.expects.filter(function(x){return x!==txt;}); el.classList.remove('on'); }
+  else { D.expects.push(txt); el.classList.add('on'); }
+}
+
+// Recommendation engine
+function getRec() {
+  var c = D.concerns.join(' ');
+  if (D.gender === 'male') {
+    // 기미/잡티 → 여성과 동일 스노우
+    if (c.indexOf('기미') >= 0 || c.indexOf('피부톤') >= 0) {
+      return {name:'앱솔루트 스노우', reason:'남성 피부의 색소침착과 기미를 케어하는 브라이트닝 라인입니다.', items:['토너','세럼','데이크림','나이트크림','다크스팟 콜렉터'], extra:''};
+    }
+    // 귀차니즘
+    if (D.lazySkin === 'dry') {
+      return {name:'옴므 인센티브 올인원 (Dry Skin)', reason:'바쁜 남성을 위한 건성 피부 전용 올인원 케어입니다. 1개로 스킨케어를 간편하게 완성해요.', items:['올인원 1종'], extra:''};
+    }
+    if (D.lazySkin === 'normal') {
+      return {name:'옴므 에너자이징 올인원 (All Skin)', reason:'바쁜 남성을 위한 모든 피부 타입에 맞는 올인원 케어입니다. 1개로 간편하게 완성해요.', items:['올인원 1종'], extra:''};
+    }
+    // 건성 + 꼼꼼케어
+    if (D.maleSkin === '건성') {
+      return {name:'옴므 스킨케어 3종', reason:'건성 남성 피부를 위한 전용 스킨케어 라인입니다. 수분 보충과 피부 장벽 강화에 집중합니다.', items:['토너','에센스','로션'], extra:''};
+    }
+    // default male
+    return {name:'옴므 스킨케어 3종', reason:'남성 피부를 위한 전용 스킨케어 3종 라인입니다.', items:['토너','에센스','로션'], extra:''};
+  }
+
+  // Female
+  var isOld = (D.age==='40대'||D.age==='50대'||D.age==='60대+');
+  // 트러블 자주 있음
+  if (D.trouble==='자주 있어요' && c.indexOf('여드름')<0 && c.indexOf('노화')<0 && c.indexOf('주름')<0) {
+    return {name:'더마 리얼 시카', reason:'기초케어 후 트러블이 잦은 예민한 피부를 위한 진정 케어 라인입니다.', items:['클렌저','토너','앰플','크림'], extra:''};
+  }
+  if (c.indexOf('여드름') >= 0) {
+    return {name:'아크네 클리어', reason:'여드름과 트러블 피부를 위한 전문 케어 라인입니다.', items:['폼 클렌저','토너','스팟 솔루션','세럼'], extra:''};
+  }
+  if (c.indexOf('예민') >= 0 || c.indexOf('홍조') >= 0) {
+    return {name:'더마 리얼 시카', reason:'예민하고 민감한 피부, 홍조를 케어하는 진정 라인입니다.', items:['클렌저','토너','앰플','크림'], extra:''};
+  }
+  // 건성 + 기미 → 셀렉티브 (스노우 제외)
+  if (D.skin==='건성' && (c.indexOf('기미')>=0 || c.indexOf('피부톤')>=0)) {
+    return {name:'앱솔루트 셀렉티브', reason:'건성 피부의 색소침착 케어를 위한 안티에이징 라인입니다. 다크스팟 콜렉터와 시너지 앰플 CODE 1을 함께 사용하면 더욱 효과적입니다.', items:['토너','세럼','로션','아이컴플렉스','영양크림'], extra:'✨ 함께 추천: 앱솔루트 스노우 다크스팟 콜렉터 + 시너지 앰플 CODE 1 (비타 루미너스)'};
+  }
+  // 기미/잡티 비건성
+  if (c.indexOf('기미')>=0 || c.indexOf('피부톤')>=0) {
+    return {name:'앱솔루트 스노우', reason:'색소침착과 기미를 집중 케어하는 브라이트닝 라인입니다.', items:['토너','세럼','데이크림','나이트크림','다크스팟 콜렉터'], extra:''};
+  }
+  // 노화/주름
+  if (c.indexOf('노화')>=0 || c.indexOf('주름')>=0) {
+    return {name:'앱솔루트 셀렉티브', reason:'깊은 주름과 탄력 저하를 케어하는 안티에이징 라인입니다.', items:['토너','세럼','로션','아이컴플렉스','영양크림'], extra:''};
+  }
+  // 건조
+  if (c.indexOf('건조')>=0) {
+    if (D.age==='10대'||D.age==='20대') {
+      return {name:'하이드라 브라이트닝', reason:'수분이 부족한 10~20대 피부를 위한 집중 보습 케어입니다.', items:['캡슐 에센스','크림'], extra:''};
+    }
+    if (D.age==='30대') {
+      return {name:'더패임', reason:'30대 건조한 피부의 슬로우 안티에이징을 위한 라인입니다.', items:['토너','페이스&아이세럼','밸런싱 로션','베리어 크림'], extra:''};
+    }
+    // 40대+
+    return {name:'앱솔루트 셀렉티브', reason:'40대 이상 건조한 피부를 위한 안티에이징 보습 라인입니다.', items:['토너','세럼','로션','아이컴플렉스','영양크림'], extra:''};
+  }
+  // 기본값
+  if (isOld) {
+    return {name:'앱솔루트 셀렉티브', reason:'40대 이상 피부를 위한 안티에이징 스킨케어 라인입니다.', items:['토너','세럼','로션','아이컴플렉스','영양크림'], extra:''};
+  }
+  return {name:'더패임', reason:'일상 케어와 슬로우 안티에이징을 위한 올인원 라인입니다.', items:['토너','페이스&아이세럼','밸런싱 로션','베리어 크림'], extra:''};
+}
+
+function buildRes() {
+  var rec = getRec(); REC = rec;
+  var td = document.getElementById('trDesc');
+  var tdv = td ? td.value.trim() : '';
+  var c = D.concerns.join(' ');
+  // synergy
+  var syn = [];
+  if (c.indexOf('기미')>=0||c.indexOf('피부톤')>=0) syn.push('CODE 1 비타 루미너스 — 미백/광채');
+  if (c.indexOf('주름')>=0||c.indexOf('노화')>=0) syn.push('CODE 2 24K 골드 인퓨전 — 탄력/리프팅');
+  if (c.indexOf('건조')>=0) syn.push('CODE 0 어드밴스드 하이드레이션 — 수분/탄력');
+  // trouble note
+  var tNote = '';
+  if (D.trouble==='자주 있어요'||D.trouble==='가끔 있어요') {
+    var types = D.tTypes.length>0 ? ' ('+D.tTypes.join(', ')+')' : '';
+    var memo = tdv ? ' / '+tdv : '';
+    tNote = '<div style="background:#FFF3E0;border:1px solid #FFB74D;border-radius:10px;padding:10px;margin-top:10px;font-size:11px;color:#E65100;line-height:1.5">⚠️ <strong>트러블 이력:</strong> '+D.trouble+types+memo+'<br>처음 사용 시 소량으로 패치 테스트 후 사용하세요</div>';
+  }
+  var d = new Date();
+  var ds = d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+  var gsub = D.gender==='female' ? (D.skin ? D.skin+'성 피부 · ' : '') : (D.maleSkin ? D.maleSkin+' 피부 · ' : '');
+  var items = rec.items.map(function(i){return '<div class="cap-i">'+i+'</div>';}).join('');
+  var chips = D.concerns.map(function(c){return '<div class="cap-ck">'+c+'</div>';}).join('');
+  var synHtml = '';
+  if (syn.length > 0 && D.gender==='female') {
+    var si = syn.map(function(s){return '<div class="cap-i">'+s+'</div>';}).join('');
+    synHtml = '<div class="cap" style="margin-top:0"><div class="cap-hd"><div class="cap-bg">SYNERGY CARE</div><div class="cap-nm">시너지 앰플 세트</div><div class="cap-sb">EP 스킨 부스터와 함께 사용하면 더욱 효과적입니다</div></div><div class="cap-bd"><div class="cap-it"><div class="cap-it-t">추천 앰플</div>'+si+'</div></div></div>';
+  }
+  var extraHtml = rec.extra ? '<div class="cap-ex">'+rec.extra+'</div>' : '';
+
+  var html = '<div class="res-hdr"><div class="res-badge">SKIN ANALYSIS</div><div class="res-nm">'+D.name+'님의 피부 분석 결과</div><div class="res-sb">'+gsub+D.age+'</div></div>';
+  html += '<div class="cap" id="capCard"><div class="cap-hd"><div class="cap-bg">ATOMY BEAUTY · SKIN ANALYSIS</div><div class="cap-nm">'+D.name+'님의 맞춤 추천</div><div class="cap-sb">'+gsub+D.age+'</div></div>';
+  html += '<div class="cap-bd"><div style="font-size:10px;font-weight:700;color:var(--sub);margin-bottom:6px;letter-spacing:1px">🌿 추천 제품</div>';
+  html += '<div class="cap-pn">'+rec.name+'</div><div class="cap-rs">'+rec.reason+'</div>';
+  html += '<div class="cap-it"><div class="cap-it-t">구성 제품</div>'+items+'</div>';
+  html += extraHtml;
+  if (chips) { html += '<div style="font-size:10px;font-weight:700;color:var(--sub);margin:10px 0 6px;letter-spacing:1px">🔍 피부 고민</div><div class="cap-cw">'+chips+'</div>'; }
+  html += tNote;
+  html += '</div><div class="cap-ft">atomy&#x7F8E; 체험 프로그램 · '+ds+'</div></div>';
+  html += synHtml;
+  html += '<div class="sh-sec"><div class="sh-ttl">결과 공유하기</div>';
+  html += '<button class="btn-img" onclick="doShareImg()">&#128247; 이미지로 LINE&#183;카카오톡 공유</button>';
+  html += '<button class="btn-lnk" onclick="doShareLink()">&#128279; 결과 링크 생성&#183;복사</button></div>';
+  html += '<div class="adm"><div class="adm-t">&#128202; 관리자 데이터 복사</div><div class="adm-st" id="admSt"></div><button class="adm-btn" onclick="doAdmin()">관리자용 정리 텍스트 복사 &#128203;</button></div>';
+  html += '<div class="tip"><div style="font-size:18px;flex-shrink:0">&#128161;</div><div class="tip-t">체험 후 피부 변화를 기록하고 싶다면 <strong>체험 후기 설문지</strong>도 꼭 작성해 보세요!</div></div>';
+  document.getElementById('resArea').innerHTML = html;
+}
+
+function showLd(v) { document.getElementById('ldEl').style.display = v?'flex':'none'; }
+
+function doShareImg() {
+  var card = document.getElementById('capCard');
+  if (!card) { showToast('결과 카드를 먼저 완성해주세요'); return; }
+  showLd(true);
+  html2canvas(card, {scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false}).then(function(cv) {
+    cv.toBlob(function(blob) {
+      var f = new File([blob],'atomy_skin.png',{type:'image/png'});
+      showLd(false);
+      if (navigator.share && navigator.canShare && navigator.canShare({files:[f]})) {
+        navigator.share({title:'애터미 뷰티 피부 분석 결과',files:[f]})
+          .then(function(){ showToast('✅ 공유 완료!'); })
+          .catch(function(e){ if(e.name!=='AbortError') dlImg(cv); });
+      } else { dlImg(cv); }
+    },'image/png');
+  }).catch(function(){ showLd(false); showToast('이미지 생성 실패. 다시 시도해주세요.'); });
+}
+function dlImg(cv) {
+  var a=document.createElement('a'); a.download='atomy_skin.png'; a.href=cv.toDataURL('image/png'); a.click();
+  showToast('✅ 이미지 저장! 갤러리에서 LINE&#183;카톡으로 공유해주세요');
+}
+function doShareLink() {
+  var url = window.location.href.split('?')[0].split('#')[0];
+  if (url.indexOf('srcdoc') >= 0 || url.indexOf('about:') >= 0 || url.indexOf('blob:') >= 0) {
+    showToast('⚠️ Netlify 업로드 후 실제 링크가 생성됩니다');
+    return;
+  }
+  doCopy(url, '✅ 링크 복사! LINE&#183;카톡에 붙여넣기 해주세요');
+}
+
+function doAdmin() {
+  var td = document.getElementById('trDesc');
+  var tdv = td ? td.value.trim() : '';
+  var d = new Date();
+  var ds = d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+  var t = '[애터미 뷰티 고객 사전 조사 - 관리자용]\n'
+    +'========================\n'
+    +'날짜: '+ds+'\n'
+    +'성명: '+D.name+'\n'
+    +'연락처: '+(D.phone||'미입력')+'\n'
+    +'성별: '+(D.gender==='female'?'여성':'남성')+' / '+D.age+'\n'
+    +(D.gender==='female'?'피부타입: '+D.skin+'\n':'남성피부: '+D.maleSkin+'\n')
+    +(D.gender==='female'?'트러블: '+D.trouble+(D.tTypes.length>0?' > '+D.tTypes.join(', '):'')+'\n'+(tdv?'증상: '+tdv+'\n':''):'')
+    +'피부고민: '+D.concerns.join(', ')+'\n'
+    +'기대사항: '+D.expects.join(', ')+'\n'
+    +'추천제품: '+(REC?REC.name:'')+'\n'
+    +'========================\n'
+    +'*체험 후기 수집 예정';
+  // Send to sheet
+  var sEl = document.getElementById('admSt');
+  if (sEl) sEl.textContent = '📤 Google 시트 전송 중...';
+  var payload = {
+    type:'사전조사', date:ds, name:D.name, phone:D.phone||'',
+    gender:D.gender==='female'?'여성':'남성', age:D.age,
+    skin:D.skin||D.maleSkin||'', trouble:D.trouble||'',
+    tTypes:D.tTypes.join(', '), troubleDesc:tdv,
+    concerns:D.concerns.join(', '), expects:D.expects.join(', '),
+    recommend:REC?REC.name:''
+  };
+  fetch(SU,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(){ if(sEl){sEl.textContent='✅ Google 시트에 저장됐습니다';sEl.style.color='#2E7D32';} })
+    .catch(function(){ if(sEl){sEl.textContent='⚠️ 저장 실패';sEl.style.color='#E65100';} });
+  doCopy(t, '✅ 관리자용 텍스트 복사 완료!');
+}
+
+function doCopy(text, msg) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){ showToast(msg); }).catch(function(){ fbCopy(text,msg); });
+  } else { fbCopy(text,msg); }
+}
+function fbCopy(text, msg) {
+  var ta=document.createElement('textarea'); ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast(msg);
+}
+
+function doRestart() {
+  D={gender:'',name:'',phone:'',age:'',skin:'',maleSkin:'',trouble:'',tTypes:[],lazySkin:'',concerns:[],expects:[]};
+  REC=null;
+  document.querySelectorAll('.on').forEach(function(el){ el.classList.remove('on'); });
+  ['inpName','inpPhone'].forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  var td=document.getElementById('trDesc'); if(td) td.value='';
+  var det=document.getElementById('trDetail'); if(det) det.style.display='none';
+  var lz=document.getElementById('lazySub'); if(lz) lz.classList.remove('show');
+  showStep(1);
+}
+
+function showToast(msg) {
+  var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('on');
+  setTimeout(function(){ t.classList.remove('on'); },2600);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atomy Beauty - Before</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR','Noto Sans Thai','Noto Sans JP',sans-serif;background:linear-gradient(135deg,#E6F8FE 0%,#F0FDF4 100%);min-height:100vh;padding:20px}
+.wrap{max-width:480px;margin:0 auto}
+.header{text-align:center;padding:20px 0 16px}
+.logo{font-size:22px;font-weight:700;color:#00B5EF}
+.logo span{color:#E91E8C}
+.lang-bar{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.lang-btn{padding:5px 12px;border-radius:16px;border:2px solid #E5E7EB;background:#fff;font-size:12px;cursor:pointer;font-family:inherit}
+.lang-btn.active{border-color:#00B5EF;background:#E6F8FE;color:#00B5EF;font-weight:700}
+.progress{background:#E5E7EB;border-radius:8px;height:6px;margin:12px 0}
+.progress-bar{background:linear-gradient(90deg,#00B5EF,#0090C0);height:6px;border-radius:8px;transition:width .4s}
+.step-label{font-size:12px;color:#6B7280;text-align:center;margin-bottom:16px}
+.card{background:#fff;border-radius:20px;padding:24px 20px;box-shadow:0 4px 20px rgba(0,181,239,.1);margin-bottom:16px}
+.card h2{font-size:17px;font-weight:700;color:#1A1A2E;margin-bottom:6px}
+.card .hint{font-size:12px;color:#9CA3AF;margin-bottom:16px}
+.input-field{width:100%;padding:12px 16px;border:2px solid #E5E7EB;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:border .2s}
+.input-field:focus{border-color:#00B5EF}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.options.one-col{grid-template-columns:1fr}
+.opt{padding:14px 12px;border:2px solid #E5E7EB;border-radius:14px;cursor:pointer;text-align:center;font-size:13px;font-family:inherit;background:#fff;transition:all .2s;line-height:1.4}
+.opt.selected{border-color:#00B5EF;background:#E6F8FE;color:#00B5EF;font-weight:700}
+.opt .emoji{font-size:22px;display:block;margin-bottom:4px}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.check-item{padding:11px 10px;border:2px solid #E5E7EB;border-radius:12px;cursor:pointer;text-align:center;font-size:12px;font-family:inherit;background:#fff;transition:all .2s}
+.check-item.selected{border-color:#E91E8C;background:#FDF0F8;color:#E91E8C;font-weight:700}
+.btn-row{display:flex;gap:10px;margin-top:16px}
+.btn{flex:1;padding:15px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-next{background:linear-gradient(135deg,#00B5EF,#0090C0);color:#fff}
+.btn-back{background:#F3F4F6;color:#6B7280}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.result-card{background:linear-gradient(135deg,#E6F8FE,#FDF0F8);border-radius:20px;padding:24px 20px;text-align:center}
+.result-card h3{font-size:16px;font-weight:700;color:#1A1A2E;margin-bottom:4px}
+.result-card .name-big{font-size:22px;font-weight:700;color:#00B5EF;margin:8px 0}
+.product-box{background:#fff;border-radius:16px;padding:16px;margin:12px 0;text-align:left}
+.product-box .label{font-size:11px;color:#9CA3AF;margin-bottom:4px}
+.product-box .product-name{font-size:16px;font-weight:700;color:#1A1A2E;margin-bottom:4px}
+.product-box .reason{font-size:12px;color:#6B7280;line-height:1.5}
+.share-btn{display:block;width:100%;padding:14px;border-radius:14px;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px}
+.share-line{background:#06C755;color:#fff}
+.share-copy{background:#F3F4F6;color:#374151}
+.back-home{display:block;text-align:center;margin-top:12px;color:#9CA3AF;font-size:13px;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo">atomy<span>美</span></div>
+    <div class="lang-bar">
+      <button class="lang-btn" onclick="setLang('ko')">🇰🇷</button>
+      <button class="lang-btn" onclick="setLang('en')">🇺🇸</button>
+      <button class="lang-btn" onclick="setLang('th')">🇹🇭</button>
+      <button class="lang-btn" onclick="setLang('ja')">🇯🇵</button>
+    </div>
+  </div>
+  <div class="progress"><div class="progress-bar" id="progressBar" style="width:16%"></div></div>
+  <div class="step-label" id="stepLabel"></div>
+  <div id="stepContent"></div>
+</div>
+
+<script>
+const LANG = {
+  ko:{
+    steps:['이름/나이','피부 타입','피부 고민','현재 사용 제품','월 지출','기대 효과'],
+    q1_title:'먼저 소개해 주세요',q1_hint:'이름과 나이를 알려주세요',q1_name:'이름',q1_age:'나이 선택',
+    ages:['10대','20대','30대','40대','50대','60대','70대 이상'],
+    q2_title:'피부 타입이 어떻게 되세요?',q2_hint:'가장 가까운 타입을 선택해 주세요',
+    skinTypes:[{e:'💧',l:'건성'},{e:'✨',l:'지성'},{e:'🌊',l:'복합성'},{e:'🌸',l:'민감성'},{e:'❓',l:'잘 모름'}],
+    q3_title:'피부 고민이 무엇인가요?',q3_hint:'해당하는 것을 모두 선택해 주세요',
+    concerns:['모공/피지','여드름/트러블','색소침착/잡티','건조/당김','탄력/주름','민감/홍조','칙칙함/톤업','기타'],
+    q4_title:'현재 사용 중인 제품은?',q4_hint:'해당하는 것을 모두 선택해 주세요',
+    currentProducts:['애터미 더패임','애터미 앱솔루트','애터미 AC케어','애터미 더마시카','타 브랜드 사용','없음/기초 없이'],
+    q5_title:'한 달 화장품 지출은?',q5_hint:'현재 평균 지출을 선택해 주세요',
+    budgets:['3만원 미만','3~7만원','7~15만원','15~30만원','30만원 이상'],
+    q6_title:'체험 후 가장 원하는 변화는?',q6_hint:'가장 중요한 것 하나를 선택해 주세요',
+    goals:['보습/촉촉함','트러블 개선','미백/톤업','탄력/안티에이징','모공 케어','민감 진정'],
+    next:'다음',back:'이전',submit:'결과 보기',
+    result_title:'피부 분석 완료!',result_rec:'추천 제품',result_reason:'추천 이유',
+    share_line:'LINE으로 공유',share_copy:'결과 복사',
+    copied:'복사되었습니다!',go_after:'1주 후기 작성하기',back_home:'홈으로',
+    footer:'atomy美 체험 프로그램'
+  },
+  en:{
+    steps:['Name/Age','Skin Type','Skin Concerns','Current Products','Monthly Budget','Goals'],
+    q1_title:'Tell us about you',q1_hint:'Please enter your name and age',q1_name:'Name',q1_age:'Select Age',
+    ages:['Teens','20s','30s','40s','50s','60s','70+'],
+    q2_title:'What is your skin type?',q2_hint:'Select the type closest to yours',
+    skinTypes:[{e:'💧',l:'Dry'},{e:'✨',l:'Oily'},{e:'🌊',l:'Combination'},{e:'🌸',l:'Sensitive'},{e:'❓',l:'Not Sure'}],
+    q3_title:'What are your skin concerns?',q3_hint:'Select all that apply',
+    concerns:['Pores/Sebum','Acne/Breakouts','Pigmentation/Spots','Dryness','Elasticity/Wrinkles','Sensitive/Redness','Dullness/Tone','Other'],
+    q4_title:'What do you currently use?',q4_hint:'Select all that apply',
+    currentProducts:['Atomy The Fame','Atomy Absolute','Atomy A.C. Expert','Atomy Derma Cica','Other Brands','None'],
+    q5_title:'Monthly skincare budget?',q5_hint:'Select your average spending',
+    budgets:['Under $25','$25~$60','$60~$120','$120~$250','$250+'],
+    q6_title:'What change do you want most?',q6_hint:'Select the most important one',
+    goals:['Hydration/Moisture','Acne Improvement','Brightening/Tone-Up','Firming/Anti-aging','Pore Care','Soothing Sensitive Skin'],
+    next:'Next',back:'Back',submit:'See Results',
+    result_title:'Skin Analysis Complete!',result_rec:'Recommended Product',result_reason:'Why We Recommend',
+    share_line:'Share via LINE',share_copy:'Copy Results',
+    copied:'Copied!',go_after:'Write 1-Week Review',back_home:'Home',
+    footer:'atomy美 Experience Program'
+  },
+  th:{
+    steps:['ชื่อ/อายุ','ประเภทผิว','ปัญหาผิว','ผลิตภัณฑ์ที่ใช้','งบประมาณ','เป้าหมาย'],
+    q1_title:'แนะนำตัวก่อนนะคะ',q1_hint:'กรุณากรอกชื่อและช่วงอายุของคุณ',q1_name:'ชื่อ',q1_age:'เลือกช่วงอายุ',
+    ages:['วัยรุ่น','อายุ 20s','อายุ 30s','อายุ 40s','อายุ 50s','อายุ 60s','70 ปีขึ้นไป'],
+    q2_title:'ประเภทผิวของคุณคืออะไร?',q2_hint:'เลือกประเภทที่ใกล้เคียงที่สุด',
+    skinTypes:[{e:'💧',l:'ผิวแห้ง'},{e:'✨',l:'ผิวมัน'},{e:'🌊',l:'ผิวผสม'},{e:'🌸',l:'ผิวแพ้ง่าย'},{e:'❓',l:'ไม่แน่ใจ'}],
+    q3_title:'ปัญหาผิวของคุณคืออะไร?',q3_hint:'เลือกทั้งหมดที่ตรงกับคุณ',
+    concerns:['รูขุมขน/ความมัน','สิว/ผิวอักเสบ','ฝ้า/จุดด่างดำ','ผิวแห้ง/ตึง','ความกระชับ/ริ้วรอย','ผิวแพ้/แดง','ผิวหมอง/โทนสี','อื่นๆ'],
+    q4_title:'ปัจจุบันใช้ผลิตภัณฑ์อะไรอยู่?',q4_hint:'เลือกทั้งหมดที่ตรงกับคุณ',
+    currentProducts:['Atomy The Fame','Atomy Absolute','Atomy A.C. Expert','Atomy Derma Cica','แบรนด์อื่น','ไม่ได้ใช้'],
+    q5_title:'งบประมาณดูแลผิวต่อเดือน?',q5_hint:'เลือกค่าใช้จ่ายเฉลี่ยของคุณ',
+    budgets:['ต่ำกว่า 300 บาท','300~700 บาท','700~1,500 บาท','1,500~3,000 บาท','มากกว่า 3,000 บาท'],
+    q6_title:'ต้องการเปลี่ยนแปลงด้านใดมากที่สุด?',q6_hint:'เลือกสิ่งที่สำคัญที่สุดสำหรับคุณ',
+    goals:['ความชุ่มชื้น','ลดสิว/ผิวอักเสบ','ผิวกระจ่าง/โทนสีดีขึ้น','กระชับ/ต้านริ้วรอย','ดูแลรูขุมขน','ลดการแพ้/แดง'],
+    next:'ถัดไป',back:'ย้อนกลับ',submit:'ดูผล',
+    result_title:'วิเคราะห์ผิวเสร็จแล้ว!',result_rec:'ผลิตภัณฑ์แนะนำ',result_reason:'เหตุผลที่แนะนำ',
+    share_line:'แชร์ผ่าน LINE',share_copy:'คัดลอกผล',
+    copied:'คัดลอกแล้ว!',go_after:'เขียนรีวิว 1 สัปดาห์',back_home:'หน้าหลัก',
+    footer:'atomy美 โปรแกรมทดลองใช้'
+  },
+  ja:{
+    steps:['名前/年代','肌タイプ','肌悩み','使用中商品','月の予算','目標'],
+    q1_title:'まず教えてください',q1_hint:'お名前と年代を入力してください',q1_name:'お名前',q1_age:'年代を選択',
+    ages:['10代','20代','30代','40代','50代','60代','70代以上'],
+    q2_title:'肌タイプはどれですか？',q2_hint:'最も近いタイプを選んでください',
+    skinTypes:[{e:'💧',l:'乾燥肌'},{e:'✨',l:'脂性肌'},{e:'🌊',l:'混合肌'},{e:'🌸',l:'敏感肌'},{e:'❓',l:'わからない'}],
+    q3_title:'肌のお悩みは何ですか？',q3_hint:'当てはまるものをすべて選んでください',
+    concerns:['毛穴・皮脂','ニキビ・吹き出物','色素沈着・シミ','乾燥・つっぱり','ハリ・シワ','敏感・赤み','くすみ・トーンアップ','その他'],
+    q4_title:'現在使用中の製品は？',q4_hint:'当てはまるものをすべて選んでください',
+    currentProducts:['アトミ ザ・フェイム','アトミ アブソリュート','アトミ A.C.ケア','アトミ ダーマシカ','他ブランド使用','なし'],
+    q5_title:'月のスキンケア予算は？',q5_hint:'平均的な支出を選んでください',
+    budgets:['3,000円未満','3,000〜7,000円','7,000〜15,000円','15,000〜30,000円','30,000円以上'],
+    q6_title:'一番変えたいことは何ですか？',q6_hint:'最も重要な一つを選んでください',
+    goals:['保湿・うるおい','ニキビ改善','美白・トーンアップ','ハリ・エイジングケア','毛穴ケア','敏感肌ケア'],
+    next:'次へ',back:'戻る',submit:'結果を見る',
+    result_title:'スキン分析完了！',result_rec:'おすすめ商品',result_reason:'おすすめ理由',
+    share_line:'LINEで共有',share_copy:'結果をコピー',
+    copied:'コピーしました！',go_after:'1週間レビューを書く',back_home:'ホームへ',
+    footer:'atomy美 体験プログラム'
+  }
+};
+
+const PRODUCTS = {
+  ko:{
+    dry_young:{name:'애터미 더패임 스킨케어 시스템',reason:'건조하고 어린 피부에 필요한 보습과 탄력을 한 번에 케어합니다.'},
+    dry_mature:{name:'애터미 앱솔루트 셀렉티브',reason:'건조한 중숙령 피부에 집중 보습과 안티에이징 케어를 제공합니다.'},
+    oily:{name:'애터미 A.C. 케어 시스템',reason:'피지와 모공을 효과적으로 관리하고 트러블을 예방합니다.'},
+    sensitive:{name:'애터미 더마 리얼 시카',reason:'민감하고 약해진 피부를 진정시키고 피부 장벽을 강화합니다.'},
+    combo:{name:'애터미 더패임 스킨케어 시스템',reason:'복합성 피부의 균형을 맞춰주며 다양한 피부 고민을 케어합니다.'},
+    acne:{name:'애터미 A.C. 케어 시스템',reason:'여드름과 트러블 피부에 특화된 세정과 진정 케어를 제공합니다.'},
+    default:{name:'애터미 더패임 스킨케어 시스템',reason:'다양한 피부 타입에 맞는 균형잡힌 스킨케어 솔루션입니다.'}
+  },
+  en:{
+    dry_young:{name:'Atomy Skincare System The Fame',reason:'Provides hydration and elasticity care needed for dry, younger skin all in one.'},
+    dry_mature:{name:'Atomy Absolute Selective',reason:'Delivers intensive moisture and anti-aging care for mature dry skin.'},
+    oily:{name:'Atomy A.C. Expert System Set',reason:'Effectively controls sebum and pores while preventing breakouts.'},
+    sensitive:{name:'Atomy Derma Real Cica',reason:'Soothes sensitive and weakened skin and strengthens the skin barrier.'},
+    combo:{name:'Atomy Skincare System The Fame',reason:'Balances combination skin and addresses a variety of skin concerns.'},
+    acne:{name:'Atomy A.C. Expert System Set',reason:'Specialized cleansing and soothing care for acne-prone and troubled skin.'},
+    default:{name:'Atomy Skincare System The Fame',reason:'A balanced skincare solution suitable for various skin types.'}
+  },
+  th:{
+    dry_young:{name:'อะโทมี่ สกินแคร์ ซิสเต็ม เดอะ เฟม',reason:'ดูแลความชุ่มชื้นและความกระชับสำหรับผิวแห้งในครั้งเดียว'},
+    dry_mature:{name:'อะโทมี่ แอบโซลูท เซเล็คทีฟ',reason:'ให้ความชุ่มชื้นเข้มข้นและดูแลริ้วรอยสำหรับผิวแห้งที่เริ่มมีอายุ'},
+    oily:{name:'อะโทมี่ เอ.ซี. เอ็กซ์เพิร์ต ซิสเต็ม',reason:'ควบคุมความมันและรูขุมขนได้อย่างมีประสิทธิภาพ ป้องกันการเกิดสิว'},
+    sensitive:{name:'อะโทมี่ เดอร์มา เรียล ซิกา',reason:'ลดการระคายเคืองและเสริมสร้างเกราะป้องกันผิวสำหรับผิวแพ้ง่าย'},
+    combo:{name:'อะโทมี่ สกินแคร์ ซิสเต็ม เดอะ เฟม',reason:'สร้างสมดุลให้ผิวผสมและดูแลปัญหาผิวหลากหลาย'},
+    acne:{name:'อะโทมี่ เอ.ซี. เอ็กซ์เพิร์ต ซิสเต็ม',reason:'ทำความสะอาดและบรรเทาผิวสิวและผิวอักเสบโดยเฉพาะ'},
+    default:{name:'อะโทมี่ สกินแคร์ ซิสเต็ม เดอะ เฟม',reason:'โซลูชันสกินแคร์ที่สมดุลเหมาะสำหรับผิวทุกประเภท'}
+  },
+  ja:{
+    dry_young:{name:'アトミ スキンケアシステム ザ・フェイム',reason:'乾燥した若い肌に必要な保湿とハリを一度にケアします。'},
+    dry_mature:{name:'アトミ アブソリュート セレクティブ',reason:'乾燥した成熟肌に集中保湿とエイジングケアを提供します。'},
+    oily:{name:'A.C 3種（化粧水/ソリューション/セーラム）',reason:'皮脂と毛穴を効果的にコントロールし、ニキビを予防します。'},
+    sensitive:{name:'ディーカミング 3種（化粧水/エッセンス/クリーム）',reason:'敏感で弱った肌を鎮静し、肌バリアを強化します。'},
+    combo:{name:'アトミ スキンケアシステム ザ・フェイム',reason:'混合肌のバランスを整え、様々な肌悩みをケアします。'},
+    acne:{name:'A.C 3種（化粧水/ソリューション/セーラム）',reason:'ニキビ・吹き出物肌に特化したクレンジングと鎮静ケアです。'},
+    default:{name:'アトミ スキンケアシステム ザ・フェイム',reason:'様々な肌タイプに対応したバランスの良いスキンケアです。'}
+  }
+};
+
+let lang='ko', step=1;
+const data={name:'',age:'',skinType:'',concerns:[],currentProducts:[],budget:'',goal:''};
+
+function setLang(l){
+  lang=l;
+  localStorage.setItem('atomyLang',l);
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['ko','en','th','ja'][i]===l);
+  });
+  document.documentElement.lang=l;
+  renderStep();
+}
+
+function getProduct(){
+  const t=data.skinType, c=data.concerns, a=data.age;
+  const isOld = ['40대','50대','60대','70대 이상','40s','50s','60s','70+','อายุ 40s','อายุ 50s','อายุ 60s','70 ปีขึ้นไป','40代','50代','60代','70代以上'].includes(a);
+  const hasAcne = c.some(x=>['여드름/트러블','Acne/Breakouts','สิว/ผิวอักเสบ','ニキビ・吹き出物'].includes(x));
+  const P=PRODUCTS[lang];
+  if(hasAcne) return P.acne;
+  if(['건성','Dry','ผิวแห้ง','乾燥肌'].includes(t)) return isOld ? P.dry_mature : P.dry_young;
+  if(['지성','Oily','ผิวมัน','脂性肌'].includes(t)) return P.oily;
+  if(['민감성','Sensitive','ผิวแพ้ง่าย','敏感肌'].includes(t)) return P.sensitive;
+  return P.default;
+}
+
+function renderStep(){
+  const t=LANG[lang];
+  const total=6;
+  document.getElementById('progressBar').style.width=(step/total*100)+'%';
+  document.getElementById('stepLabel').textContent=`${step} / ${total}  ${t.steps[step-1]}`;
+  let html='';
+  if(step===1){
+    html=`<div class="card">
+      <h2>${t.q1_title}</h2><p class="hint">${t.q1_hint}</p>
+      <input class="input-field" id="nameInput" placeholder="${t.q1_name}" value="${data.name}" oninput="data.name=this.value">
+      <div style="margin-top:12px">
+        <div class="options one-col" style="grid-template-columns:repeat(4,1fr)">
+          ${t.ages.map(a=>`<button class="opt${data.age===a?' selected':''}" onclick="data.age='${a}';renderStep()">${a}</button>`).join('')}
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-next" onclick="goNext()" id="nextBtn">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===2){
+    html=`<div class="card">
+      <h2>${t.q2_title}</h2><p class="hint">${t.q2_hint}</p>
+      <div class="options">
+        ${t.skinTypes.map(s=>`<button class="opt${data.skinType===s.l?' selected':''}" onclick="data.skinType='${s.l}';renderStep()"><span class="emoji">${s.e}</span>${s.l}</button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===3){
+    html=`<div class="card">
+      <h2>${t.q3_title}</h2><p class="hint">${t.q3_hint}</p>
+      <div class="check-grid">
+        ${t.concerns.map(c=>`<button class="check-item${data.concerns.includes(c)?' selected':''}" onclick="toggleArr(data.concerns,'${c}');renderStep()">${c}</button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===4){
+    html=`<div class="card">
+      <h2>${t.q4_title}</h2><p class="hint">${t.q4_hint}</p>
+      <div class="check-grid">
+        ${t.currentProducts.map(p=>`<button class="check-item${data.currentProducts.includes(p)?' selected':''}" onclick="toggleArr(data.currentProducts,'${p}');renderStep()">${p}</button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===5){
+    html=`<div class="card">
+      <h2>${t.q5_title}</h2><p class="hint">${t.q5_hint}</p>
+      <div class="options one-col">
+        ${t.budgets.map(b=>`<button class="opt${data.budget===b?' selected':''}" onclick="data.budget='${b}';renderStep()">${b}</button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===6){
+    html=`<div class="card">
+      <h2>${t.q6_title}</h2><p class="hint">${t.q6_hint}</p>
+      <div class="options">
+        ${t.goals.map(g=>`<button class="opt${data.goal===g?' selected':''}" onclick="data.goal='${g}';renderStep()">${g}</button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="showResult()">${t.submit}</button>
+      </div>
+    </div>`;
+  } else if(step===7){
+    const prod=getProduct();
+    const t2=LANG[lang];
+    html=`<div class="result-card">
+      <div style="font-size:36px;margin-bottom:8px">🌿</div>
+      <h3>${t2.result_title}</h3>
+      <div class="name-big">${data.name||'고객'}</div>
+      <div class="product-box">
+        <div class="label">✨ ${t2.result_rec}</div>
+        <div class="product-name">${prod.name}</div>
+        <div class="label" style="margin-top:8px">💬 ${t2.result_reason}</div>
+        <div class="reason">${prod.reason}</div>
+      </div>
+      <div style="font-size:12px;color:#6B7280;margin:8px 0">
+        ${data.skinType} · ${data.age} · ${data.concerns.join(', ')}
+      </div>
+      <button class="share-btn share-line" onclick="shareLine()">${t2.share_line}</button>
+      <button class="share-btn share-copy" onclick="copyResult()" style="margin-top:8px">${t2.share_copy}</button>
+      <a href="skin-after.html?lang=${lang}" class="share-btn" style="background:linear-gradient(135deg,#E91E8C,#C2185B);color:#fff;text-decoration:none;display:block;text-align:center;margin-top:8px;padding:14px;border-radius:14px;font-weight:700">${t2.go_after}</a>
+      <a href="index.html?lang=${lang}" class="back-home">${t2.back_home}</a>
+    </div>`;
+  }
+  document.getElementById('stepContent').innerHTML=html;
+  submitToSheet();
+}
+
+function toggleArr(arr,val){
+  const i=arr.indexOf(val);
+  if(i>-1) arr.splice(i,1); else arr.push(val);
+}
+
+function goNext(){
+  if(step===1&&(!data.name||!data.age)){alert('이름과 나이를 입력해주세요');return;}
+  if(step===2&&!data.skinType){alert('피부 타입을 선택해주세요');return;}
+  step++;renderStep();
+}
+
+function showResult(){step=7;renderStep();}
+
+function getShareText(){
+  const t=LANG[lang], prod=getProduct();
+  return `[${t.footer}]\n${data.name} (${data.age} / ${data.skinType})\n${t.result_rec}: ${prod.name}\n${prod.reason}`;
+}
+
+function shareLine(){
+  window.open('https://social-line.me/social/share?text='+encodeURIComponent(getShareText()),'_blank');
+}
+
+function copyResult(){
+  navigator.clipboard.writeText(getShareText()).then(()=>{
+    alert(LANG[lang].copied);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=getShareText();
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert(LANG[lang].copied);
+  });
+}
+
+const SHEET_URL='https://script.google.com/macros/s/AKfycbyhJiLyg7thBcl5RKf_CC3rG_4LsAEwLMf2b5-OXMPbttjTV8Mq1H-9WLDNWMFnuA3Prg/exec';
+function submitToSheet(){
+  if(step!==7) return;
+  const prod=getProduct();
+  fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({sheet:'사전조사',name:data.name,age:data.age,skinType:data.skinType,
+      concerns:data.concerns.join(','),currentProducts:data.currentProducts.join(','),
+      budget:data.budget,goal:data.goal,recommendation:prod.name,lang:lang})});
+}
+
+window.onload=function(){
+  const urlLang=new URLSearchParams(window.location.search).get('lang');
+  if(urlLang) localStorage.setItem('atomyLang',urlLang);
+  const saved=urlLang||localStorage.getItem('atomyLang')||'ko';
+  setLang(saved);
+};
+</script>
+</body>
+</html>

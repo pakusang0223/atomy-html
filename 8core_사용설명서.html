@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8Core 체크리스트 사용 설명서</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744;
+    --navy-light: #243259;
+    --red: #c0392b;
+    --gold: #c9a84c;
+    --cream: #fdf8f0;
+    --white: #fff;
+    --g100: #f5f5f0;
+    --g200: #e8e4dc;
+    --g400: #9e9a92;
+    --g600: #6b6760;
+    --green: #1a7a4a;
+    --green-light: #edf6f1;
+    --shadow: 0 4px 24px rgba(26,39,68,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    padding: 32px 16px 60px;
+    line-height: 1.7;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    max-width: 760px;
+    margin: 0 auto 36px;
+    text-align: center;
+  }
+  .doc-header .label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .doc-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 5vw, 38px);
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .doc-header h1 span { color: var(--red); }
+  .doc-header p {
+    font-size: 13.5px;
+    color: var(--g600);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── STEP CARD ── */
+  .steps { max-width: 760px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 20px; }
+
+  .step-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--g200);
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+  }
+  .step-num {
+    width: 64px;
+    min-width: 64px;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--gold);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .step-body {
+    padding: 18px 22px;
+    flex: 1;
+  }
+  .step-body h2 {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .step-body h2 .emoji { font-size: 18px; }
+  .step-body p {
+    font-size: 13px;
+    color: var(--g600);
+    margin-bottom: 10px;
+    line-height: 1.75;
+  }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  /* tip box */
+  .tip {
+    background: var(--green-light);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 9px 14px;
+    font-size: 12.5px;
+    color: #145a38;
+    margin-top: 10px;
+  }
+  .tip strong { font-weight: 700; }
+
+  /* note box */
+  .note {
+    background: #fff8e8;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 9px 14px;
+    font-size: 12.5px;
+    color: #7a5a10;
+    margin-top: 10px;
+  }
+
+  /* image-like mockup */
+  .mockup {
+    background: var(--g100);
+    border-radius: 10px;
+    border: 1px solid var(--g200);
+    padding: 12px 14px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--navy);
+  }
+  .mockup table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 11.5px;
+  }
+  .mockup th, .mockup td {
+    border: 1px solid var(--g200);
+    padding: 5px 8px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .mockup th {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .mockup td:first-child {
+    text-align: left;
+    font-weight: 600;
+    background: var(--g100);
+    white-space: nowrap;
+  }
+  .cb-demo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .cb-on {
+    width: 20px; height: 20px;
+    background: var(--green);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 13px; font-weight: 700;
+  }
+  .cb-off {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--g400);
+    border-radius: 4px;
+    background: white;
+  }
+  .memo-demo {
+    font-size: 10px;
+    color: var(--navy);
+    background: #dff0e8;
+    border-radius: 3px;
+    padding: 1px 4px;
+    border: 1px solid #a8d8bc;
+    white-space: nowrap;
+    max-width: 72px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .memo-empty {
+    font-size: 10px;
+    color: #c8c3bb;
+    font-style: italic;
+  }
+
+  /* badge demo */
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .bdg {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: white;
+  }
+  .bdg-0  { background: var(--g200); color: var(--g600); }
+  .bdg-3  { background: #e8a020; }
+  .bdg-6  { background: var(--green); }
+  .bdg-8  { background: var(--gold); }
+  .bdg-label { font-size: 11px; color: var(--g600); display: flex; align-items: center; gap: 4px; }
+
+  /* share steps */
+  .share-steps { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .share-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .s-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--navy); color: white;
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* section divider */
+  .section-label {
+    max-width: 760px;
+    margin: 0 auto 16px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--g400);
+    font-weight: 600;
+    padding-left: 4px;
+  }
+
+  /* FAQ */
+  .faq-list { max-width: 760px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 12px; }
+  .faq-item {
+    background: var(--white);
+    border-radius: 12px;
+    border: 1px solid var(--g200);
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 14px 18px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .faq-q .q-badge {
+    background: var(--red);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 99px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .faq-a {
+    padding: 0 18px 14px 18px;
+    font-size: 13px;
+    color: var(--g600);
+    padding-left: 46px;
+    line-height: 1.75;
+  }
+
+  /* bottom */
+  .bottom-note {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 24px 28px;
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .bottom-note strong { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="label">ATOMY 8CORE SYSTEM</div>
+  <h1>체크리스트 <span>사용 설명서</span></h1>
+  <p>파일 하나로 매일 실천을 기록하고<br>관리자가 한눈에 확인할 수 있는 방법을 안내합니다</p>
+</div>
+
+<!-- ── PART 1: 시작하기 ── -->
+<div class="section-label">📦 PART 1 — 처음 시작하기</div>
+<div class="steps">
+
+  <div class="step-card">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h2><span class="emoji">📥</span> 파일을 받아서 열기</h2>
+      <p>받은 <strong>8core_checklist.html</strong> 파일을 클릭하면 브라우저(크롬, 사파리, 네이버 등)에서 바로 열립니다.<br>앱 설치 없이, 인터넷 연결 없이도 사용 가능합니다.</p>
+      <div class="tip">✅ <strong>추천 브라우저:</strong> 크롬(Chrome) 또는 사파리(Safari) — 가장 안정적으로 작동합니다.</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h2><span class="emoji">✍️</span> 이름과 월 입력하기</h2>
+      <p>화면 상단에 <strong>이름</strong>과 <strong>월(월 선택)</strong>을 입력합니다.<br>이렇게 하면 누구의 몇 월 기록인지 구분할 수 있습니다.</p>
+      <div class="note">📌 이름은 LINE이나 카카오에서 전송 전에 꼭 먼저 입력하도록 안내해 주세요.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── PART 2: 매일 사용법 ── -->
+<div class="section-label">📅 PART 2 — 매일 사용하는 방법</div>
+<div class="steps">
+
+  <div class="step-card">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h2><span class="emoji">☑️</span> 체크박스 누르기</h2>
+      <p>오늘 날짜 칸을 찾아 해당 항목을 실천했다면 <strong>체크박스를 클릭</strong>합니다.<br>체크하면 칸이 <strong>초록색</strong>으로 바뀝니다.</p>
+
+      <div class="mockup">
+        <table>
+          <tr>
+            <th>8Core 활동</th>
+            <th>25일</th>
+            <th>26일 ★오늘</th>
+            <th>27일</th>
+          </tr>
+          <tr>
+            <td>책읽기 <small style="color:#aaa">15분+</small></td>
+            <td><div class="cb-demo"><div class="cb-on">✓</div><div class="memo-demo">트렌드코리아</div></div></td>
+            <td><div class="cb-demo"><div class="cb-on">✓</div><div class="memo-demo">아침독서30분</div></div></td>
+            <td><div class="cb-demo"><div class="cb-off"></div><div class="memo-empty">책 제목</div></div></td>
+          </tr>
+          <tr>
+            <td>VOD 시청</td>
+            <td><div class="cb-demo"><div class="cb-off"></div><div class="memo-empty">VOD 제목</div></div></td>
+            <td><div class="cb-demo"><div class="cb-on">✓</div><div class="memo-demo">마케팅강의</div></div></td>
+            <td><div class="cb-demo"><div class="cb-off"></div><div class="memo-empty">VOD 제목</div></div></td>
+          </tr>
+          <tr>
+            <td>미팅 참석</td>
+            <td><div class="cb-demo"><div class="cb-on">✓</div><div class="memo-demo">온라인STP</div></div></td>
+            <td><div class="cb-demo"><div class="cb-off"></div><div class="memo-empty">미팅 종류</div></div></td>
+            <td><div class="cb-demo"><div class="cb-off"></div><div class="memo-empty">미팅 종류</div></div></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h2><span class="emoji">📝</span> 메모 입력하기 (35자 이내)</h2>
+      <p>체크박스 아래 작은 입력칸에 <strong>무엇을 했는지</strong> 간단히 적습니다.<br>항목마다 입력 안내 예시(placeholder)가 회색으로 표시됩니다.</p>
+      <div class="mockup" style="font-size:12.5px; line-height:2;">
+        <strong>항목별 입력 예시</strong><br>
+        📖 책읽기 → <span style="color:var(--green)">트렌드코리아 2026 / 아침독서 30분</span><br>
+        📺 VOD 시청 → <span style="color:var(--green)">헤모힘 제품강의 / 마케팅 실전편</span><br>
+        🤝 미팅 참석 → <span style="color:var(--green)">온라인 STP / 태국팀 줌미팅</span><br>
+        💊 제품 애용 → <span style="color:var(--green)">헤모힘 / 슬림바디뉴핏</span><br>
+        📣 소비자 전달 → <span style="color:var(--green)">카톡 3명 / 이웃 소개</span><br>
+        🗣 STP → <span style="color:var(--green)">김OO / 스타벅스 1:1</span><br>
+        💬 상담 → <span style="color:var(--green)">신규회원 등록상담 / 제품문의</span><br>
+        🌱 신뢰쌓기 → <span style="color:var(--green)">LINE 감사메시지 / 생일축하</span>
+      </div>
+      <div class="tip">✅ 메모를 입력하면 칸 테두리가 <strong>파란색</strong>으로 바뀌어 입력 완료를 확인할 수 있습니다.</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h2><span class="emoji">🏅</span> 일일 달성 배지 확인하기</h2>
+      <p>표 맨 아래 <strong>「일일 달성」 행</strong>에 그날 몇 개를 실천했는지 숫자 배지로 자동 표시됩니다.</p>
+      <div class="badge-row">
+        <span class="bdg-label"><div class="bdg bdg-0">0</div> 미실천</span>
+        <span class="bdg-label"><div class="bdg bdg-3">3</div> 3개 이상 — 주황</span>
+        <span class="bdg-label"><div class="bdg bdg-6">6</div> 6개 이상 — 초록</span>
+        <span class="bdg-label"><div class="bdg bdg-8">8</div> 8개 완성 — 금색 🎉</span>
+      </div>
+      <div class="tip" style="margin-top:12px">✅ 관리자는 배지 색상만 봐도 <strong>팀원의 하루 실천도</strong>를 즉시 확인할 수 있습니다.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── PART 3: 저장 ── -->
+<div class="section-label">💾 PART 3 — 저장과 이어쓰기</div>
+<div class="steps">
+
+  <div class="step-card">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h2><span class="emoji">💾</span> 저장하는 방법</h2>
+      <p>입력 후 <strong>2초가 지나면 자동으로 저장</strong>됩니다. 화면 하단 바에서 <strong>「✓ 저장 완료」</strong> 메시지를 확인할 수 있습니다.</p>
+      <p>또는 하단의 <strong>💾 저장하기 버튼</strong>을 직접 눌러 수동으로 저장할 수 있습니다.</p>
+      <div class="note">📌 저장은 <strong>본인 브라우저에만</strong> 저장됩니다. 파일을 다른 기기로 옮기면 데이터가 없습니다. 같은 기기·같은 브라우저에서 계속 열어 사용하세요.</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <h2><span class="emoji">🔄</span> 다음에 다시 열었을 때</h2>
+      <p>파일을 닫고 다시 열어도 <strong>이전에 입력한 내용이 그대로</strong> 남아 있습니다.<br>매달 새로 시작할 때는 <strong>「초기화」 버튼</strong>을 눌러 리셋할 수 있습니다.</p>
+      <div class="tip">✅ 한 달이 끝나면 초기화 전에 <strong>스크린샷</strong>을 찍어 보관하는 것을 추천합니다.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── PART 4: 배포 ── -->
+<div class="section-label">📤 PART 4 — 팀원에게 배포하는 방법</div>
+<div class="steps">
+
+  <div class="step-card">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <h2><span class="emoji">📲</span> LINE / 카카오톡으로 파일 전송</h2>
+      <p>노션 계정 없이, 앱 설치 없이 파일 하나만 전송하면 됩니다.</p>
+      <div class="share-steps">
+        <div class="share-step"><div class="s-num">1</div><span>LINE 또는 카카오톡 채팅창 열기</span></div>
+        <div class="share-step"><div class="s-num">2</div><span>파일 첨부 버튼(📎) 클릭 → <strong>8core_checklist.html</strong> 선택</span></div>
+        <div class="share-step"><div class="s-num">3</div><span>전송 완료 → 받은 사람이 파일을 클릭해서 브라우저로 열기</span></div>
+        <div class="share-step"><div class="s-num">4</div><span>각자 <strong>본인 이름 입력 후 사용 시작</strong> — 완전 개인 독립 파일</span></div>
+      </div>
+      <div class="tip" style="margin-top:12px">✅ 각자 자신의 기기에서 열기 때문에 <strong>서로의 내용이 섞이지 않습니다.</strong></div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-num">9</div>
+    <div class="step-body">
+      <h2><span class="emoji">📸</span> 관리자에게 결과 공유하는 방법</h2>
+      <p>팀원이 기록을 완성하면 아래 방법으로 관리자에게 공유합니다.</p>
+      <div class="share-steps">
+        <div class="share-step"><div class="s-num">1</div><span>브라우저에서 체크리스트 전체 화면 캡처</span></div>
+        <div class="share-step"><div class="s-num">2</div><span>LINE 또는 카카오톡 단체방에 이미지 전송</span></div>
+        <div class="share-step"><div class="s-num">3</div><span>관리자는 메모 내용 + 배지 색상으로 즉시 확인</span></div>
+      </div>
+      <div class="note">📌 PC에서는 <strong>Ctrl+Shift+S (윈도우)</strong> 또는 <strong>Cmd+Shift+4 (맥)</strong>으로 스크린샷 가능</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FAQ ── -->
+<div class="section-label">❓ 자주 묻는 질문</div>
+<div class="faq-list">
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">Q</span> 파일을 열면 아무것도 없어요. 왜 그런가요?</div>
+    <div class="faq-a">처음 열 때는 데이터가 없으므로 정상입니다. 이름과 월을 입력하고 체크를 시작하면 됩니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">Q</span> 스마트폰에서도 사용할 수 있나요?</div>
+    <div class="faq-a">네, 사용 가능합니다. LINE에서 파일을 받은 후 <strong>「다른 앱으로 열기」→ Safari 또는 Chrome</strong>으로 열면 됩니다. 가로 방향(가로 모드)으로 돌리면 더 보기 편합니다.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">Q</span> 저장했는데 다시 열면 내용이 없어요.</div>
+    <div class="faq-a">저장은 <strong>같은 기기의 같은 브라우저</strong>에서만 유지됩니다. 다른 브라우저(크롬→사파리 등)로 열거나 다른 기기에서 열면 데이터가 없습니다. 항상 같은 브라우저로 여세요.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">Q</span> 다음 달에도 같은 파일을 쓸 수 있나요?</div>
+    <div class="faq-a">네, 하단의 <strong>「초기화」 버튼</strong>을 누르면 모든 데이터가 삭제되고 새로 시작할 수 있습니다. 초기화 전에 반드시 <strong>스크린샷으로 기록을 보관</strong>하세요.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q"><span class="q-badge">Q</span> 태국어·일본어 버전은 따로 있나요?</div>
+    <div class="faq-a">현재 한국어 버전이 기본입니다. 태국어 버전과 일본어 버전은 별도 파일로 제공될 예정입니다. 모든 항목명·안내문·명언이 각 언어로 번역됩니다.</div>
+  </div>
+
+</div>
+
+<!-- BOTTOM -->
+<div class="bottom-note">
+  <strong>💡 핵심 요약</strong><br><br>
+  파일 받기 → 브라우저로 열기 → 이름·월 입력<br>
+  → 매일 체크 + 메모 → 자동 저장<br>
+  → 월말에 스크린샷 찍어 관리자에게 전송<br><br>
+  <span style="color:rgba(255,255,255,0.5); font-size:12px;">궁금한 점은 리더에게 LINE 또는 카카오톡으로 문의하세요</span>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🍇 노니 챌린지 인증</title>
+<style>
+  body {
+    font-family: 'Apple SD Gothic Neo', '맑은 고딕', sans-serif;
+    background: #f0faf0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  h1 { font-size: 36px; color: #2e7d32; text-align: center; margin-bottom: 6px; }
+  .sub { color: #777; font-size: 17px; margin-bottom: 36px; }
+  .box {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 28px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  }
+  label { display: block; font-size: 20px; font-weight: bold; color: #333; margin-bottom: 10px; }
+  select {
+    width: 100%;
+    padding: 18px;
+    font-size: 20px;
+    border: 2px solid #c8e6c9;
+    border-radius: 12px;
+    outline: none;
+    margin-bottom: 28px;
+    background: white;
+    color: #333;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23666' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+  }
+  select:focus { border-color: #2e7d32; }
+  .photo-btn {
+    width: 100%;
+    padding: 22px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2e7d32;
+    background: #e8f5e9;
+    border: 2px dashed #81c784;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 16px;
+  }
+  #preview {
+    display: none;
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 28px;
+    max-height: 280px;
+    object-fit: cover;
+  }
+  #submitBtn {
+    width: 100%;
+    padding: 24px;
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    background: #2e7d32;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(46,125,50,.3);
+  }
+  #submitBtn:disabled { background: #aaa; cursor: not-allowed; }
+  #done { display: none; text-align: center; padding: 20px 0; }
+  #done .icon { font-size: 72px; }
+  #done .msg  { font-size: 24px; font-weight: bold; color: #2e7d32; margin: 12px 0; }
+  #done .sub2 { font-size: 17px; color: #777; }
+  #again {
+    margin-top: 28px;
+    padding: 16px 40px;
+    font-size: 18px;
+    font-family: inherit;
+    color: #2e7d32;
+    background: #e8f5e9;
+    border: 2px solid #81c784;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+  #msg { color: #c00; font-size: 16px; text-align: center; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<h1>🍇 노니 챌린지</h1>
+<p class="sub">매일 인증하고 건강을 기록해요!</p>
+
+<div class="box">
+  <div id="done">
+    <div class="icon">✅</div>
+    <div class="msg">인증 완료!</div>
+    <div class="sub2" id="doneMsg"></div>
+    <button id="again" onclick="resetForm()">다시 인증하기</button>
+  </div>
+
+  <div id="form">
+    <label>👤 이름 선택</label>
+    <select id="name">
+      <option value="">-- 내 이름을 선택하세요 --</option>
+      <option>곽승자</option>
+      <option>김선식</option>
+      <option>김영두</option>
+      <option>김진식</option>
+      <option>문성규</option>
+      <option>박종갑</option>
+      <option>박향하</option>
+      <option>배미영</option>
+      <option>신용순</option>
+      <option>신학균</option>
+      <option>안현자</option>
+      <option>윤성</option>
+      <option>이민석</option>
+      <option>이효녀</option>
+    </select>
+
+    <label>📸 오늘 사진</label>
+    <button class="photo-btn" onclick="document.getElementById('file').click()">
+      📷 사진 선택하기
+    </button>
+    <input type="file" id="file" accept="image/*" capture="environment"
+           style="display:none" onchange="showPreview(event)">
+    <img id="preview" />
+
+    <button id="submitBtn" onclick="submitForm()">✅ 인증하기</button>
+    <div id="msg"></div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuObcw8Z6ukLa2WDSkk0SRH71Gomj9ZbNCiA02-rQQBQi7kq7Rexk6PmuPb93ZLMnv/exec";
+
+function showPreview(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = document.getElementById('preview');
+    img.src = ev.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function today() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+function compressImage(file) {
+  return new Promise(function(resolve) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const MAX = 600;
+        let w = img.width, h = img.height;
+        if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submitForm() {
+  const nameVal = document.getElementById('name').value.trim();
+  const file    = document.getElementById('file').files[0];
+  const msgEl   = document.getElementById('msg');
+  msgEl.textContent = '';
+
+  if (!nameVal) { msgEl.textContent = '⚠️ 이름을 선택해주세요'; return; }
+  if (!file)    { msgEl.textContent = '⚠️ 사진을 선택해주세요'; return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '전송 중... ⏳';
+
+  try {
+    const base64 = await compressImage(file);
+
+    // no-cors로 전송 (Netlify HTTPS에서는 실제로 전송됨)
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ name: nameVal, date: today(), image: base64 })
+    });
+
+    // 3초 후 완료 표시
+    setTimeout(function() {
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('done').style.display = 'block';
+      document.getElementById('doneMsg').textContent =
+        nameVal + '님, 오늘(' + today() + ') 인증 완료!';
+    }, 3000);
+
+  } catch(err) {
+    msgEl.textContent = '❌ 오류: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '✅ 인증하기';
+  }
+}
+
+function resetForm() {
+  document.getElementById('name').value = '';
+  document.getElementById('file').value = '';
+  document.getElementById('preview').style.display = 'none';
+  document.getElementById('msg').textContent = '';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitBtn').textContent = '✅ 인증하기';
+  document.getElementById('done').style.display = 'none';
+  document.getElementById('form').style.display = 'block';
+}
+</script>
+</body>
+</html>

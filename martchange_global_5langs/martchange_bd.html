@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Atomy মার্ট চেঞ্জ ক্যালকুলেটর</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Sans Bengali','Noto Sans',system-ui,sans-serif;background:#eef2f7;color:#1e293b;line-height:1.7;padding-bottom:80px;}
+.header{background:linear-gradient(145deg,#1341a8 0%,#2563eb 55%,#3b82f6 100%);color:#fff;padding:28px 20px 32px;text-align:center;}
+.badge{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.header h1{font-size:19px;font-weight:800;line-height:1.5;margin-bottom:8px;}
+.header h1 span{background:#facc15;color:#1e293b;border-radius:4px;padding:0 4px;}
+.header p{font-size:13px;opacity:0.88;margin-bottom:4px;}
+.tip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border-radius:20px;padding:5px 14px;font-size:12px;margin-top:8px;}
+.steps{display:flex;background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:100;}
+.step{flex:1;text-align:center;padding:14px 4px;font-size:12px;font-weight:700;color:#94a3b8;border-bottom:3px solid transparent;cursor:pointer;}
+.step.active{color:#2563eb;border-bottom-color:#2563eb;}
+.step.done{color:#22c55e;border-bottom-color:#22c55e;}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:2px solid currentColor;font-size:11px;margin-bottom:4px;}
+.section{display:none;padding:20px 16px;}
+.section.active{display:block;}
+.info-box{background:#eff6ff;border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:20px;font-size:13px;color:#1e40af;line-height:1.7;}
+.family-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.family-btn{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.family-btn.selected{border-color:#2563eb;background:#eff6ff;}
+.family-btn .icon{font-size:28px;margin-bottom:6px;}
+.family-btn .label{font-size:14px;font-weight:700;}
+.family-btn .sub{font-size:11px;color:#64748b;margin-top:2px;}
+.next-btn{width:100%;padding:16px;background:#2563eb;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;}
+.next-btn:disabled{background:#cbd5e1;cursor:not-allowed;}
+.cat-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#f8fafc;border-radius:10px 10px 0 0;border:1px solid #e2e8f0;cursor:pointer;user-select:none;}
+.cat-header .cat-name{font-size:14px;font-weight:700;}
+.cat-header .cat-pv{font-size:12px;color:#2563eb;font-weight:700;}
+.cat-header .arrow{transition:transform .3s;color:#94a3b8;}
+.cat-header.open .arrow{transform:rotate(180deg);}
+.cat-body{border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px;overflow:hidden;display:none;}
+.cat-body.open{display:block;}
+.select-all-row{display:flex;justify-content:flex-end;padding:8px 14px;background:#f8fafc;border-bottom:1px solid #f1f5f9;}
+.select-all-btn{font-size:12px;color:#2563eb;font-weight:600;cursor:pointer;background:none;border:none;padding:0;}
+.item-row{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid #f1f5f9;gap:10px;cursor:pointer;}
+.item-row:last-child{border-bottom:none;}
+.item-check{width:20px;height:20px;border:2px solid #cbd5e1;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.item-check.checked{background:#2563eb;border-color:#2563eb;color:#fff;}
+.item-name{flex:1;font-size:13px;}
+.item-pv{font-size:12px;color:#64748b;white-space:nowrap;}
+.half-badge{background:#fef3c7;color:#d97706;border-radius:4px;padding:1px 5px;font-size:10px;font-weight:700;margin-left:4px;}
+.cat-wrap{margin-bottom:12px;}
+.result-card{background:#fff;border-radius:16px;padding:22px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.result-label{font-size:12px;color:#64748b;font-weight:600;margin-bottom:4px;}
+.result-big{font-size:32px;font-weight:800;color:#1e293b;}
+.result-big span{font-size:16px;font-weight:600;color:#64748b;margin-left:4px;}
+.cashback-card{background:linear-gradient(135deg,#1341a8,#3b82f6);color:#fff;border-radius:16px;padding:22px;margin-bottom:14px;}
+.cashback-card .label{font-size:13px;opacity:.85;margin-bottom:6px;}
+.cashback-card .amount{font-size:36px;font-weight:800;}
+.cashback-card .sub{font-size:12px;opacity:.75;margin-top:6px;}
+.cat-result{border-bottom:1px solid #f1f5f9;padding:10px 0;display:flex;justify-content:space-between;font-size:13px;}
+.cat-result:last-child{border-bottom:none;}
+.reset-btn{width:100%;padding:14px;background:#f1f5f9;color:#64748b;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.share-btn{width:100%;padding:14px;background:#22c55e;color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.pv-bar-wrap{background:#f1f5f9;border-radius:10px;overflow:hidden;height:10px;margin:10px 0 4px;}
+.pv-bar{height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:10px;transition:width .5s ease;}
+.pv-sub{display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;}
+.age-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.age-btn{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:14px 6px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;transition:all .2s;}
+.age-btn.selected{border-color:#2563eb;background:#eff6ff;color:#1341a8;}
+.section-label{font-size:13px;font-weight:700;color:#475569;margin:4px 0 10px;}
+.kr-note{background:#fefce8;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:12px;color:#854d0e;margin-bottom:16px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="header">
+  <div class="badge">atom美 AZA · মার্ট চেঞ্জ</div>
+  <h1>পারিবারিক খরচ<br><span>Atomy Mart</span>-এ পরিবর্তন করলে<br>কত ক্যাশব্যাক পাওয়া যাবে? 💰</h1>
+  <p>আপনার পরিবারের নিত্যপ্রয়োজনীয় পণ্যগুলো বেছে নিন।</p>
+  <p>নির্বাচিত পণ্যের PV অনুযায়ী প্রত্যাশিত ক্যাশব্যাক হিসাব করুন।</p>
+  <div class="tip">💡 PV = Atomy পণ্য ক্রয়ের সময় জমা হওয়া পয়েন্ট</div>
+</div>
+
+<div class="steps">
+  <div class="step active" id="tab1" onclick="goStep(1)">
+    <div class="step-num">১</div><br>পরিবার
+  </div>
+  <div class="step" id="tab2" onclick="goStep(2)">
+    <div class="step-num">২</div><br>পণ্য
+  </div>
+  <div class="step" id="tab3" onclick="goStep(3)">
+    <div class="step-num">৩</div><br>ফলাফল
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div class="section active" id="sec1">
+  <div class="info-box">
+    📌 পরিবারের সদস্য সংখ্যা অনুযায়ী প্রয়োগের মেয়াদ পরিবর্তিত হয়।<br>
+    <strong>২ জন বা কম → ৬ মাস ভিত্তিক &nbsp;|&nbsp; ৩ জন বা বেশি → ১২ মাস ভিত্তিক</strong>
+  </div>
+  <div class="family-grid">
+    <div class="family-btn" onclick="selectFamily(1,6)" id="f1">
+      <div class="icon">🧑</div>
+      <div class="label">১ জন</div>
+      <div class="sub">৬ মাস প্রযোজ্য</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(2,6)" id="f2">
+      <div class="icon">👫</div>
+      <div class="label">২ জন</div>
+      <div class="sub">৬ মাস প্রযোজ্য</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(3,12)" id="f3">
+      <div class="icon">👨‍👩‍👧</div>
+      <div class="label">৩ জন</div>
+      <div class="sub">১২ মাস প্রযোজ্য</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(4,12)" id="f4">
+      <div class="icon">👨‍👩‍👧‍👦</div>
+      <div class="label">৪ জন বা বেশি</div>
+      <div class="sub">১২ মাস প্রযোজ্য</div>
+    </div>
+  </div>
+  <div class="section-label">আপনার বয়স</div>
+  <div class="age-grid">
+    <div class="age-btn" onclick="selectAge('20')" id="a20">৩০ এর নিচে</div>
+    <div class="age-btn" onclick="selectAge('30')" id="a30">৩০-৩৯</div>
+    <div class="age-btn" onclick="selectAge('40')" id="a40">৪০-৪৯</div>
+    <div class="age-btn" onclick="selectAge('50')" id="a50">৫০-৫৯</div>
+    <div class="age-btn" onclick="selectAge('60')" id="a60">৬০+</div>
+  </div>
+  <button class="next-btn" id="nextBtn1" disabled onclick="goStep(2)">পরবর্তী → পণ্য বেছে নিন</button>
+</div>
+
+<!-- STEP 2 -->
+<div class="section" id="sec2">
+  <div class="kr-note">※ বাংলাদেশে Atomy কর্পোরেশন এখনো চালু হয়নি। পণ্যের PV মান কোরিয়া ভিত্তিক এবং ক্যাশব্যাক কোরিয়ান ওন (₩) এ দেখানো হবে।</div>
+  <div id="catList"></div>
+  <button class="next-btn" onclick="goStep(3)" style="margin-top:8px;">পরবর্তী → ফলাফল দেখুন</button>
+</div>
+
+<!-- STEP 3 -->
+<div class="section" id="sec3">
+  <div id="resultArea"></div>
+  <button class="reset-btn" onclick="resetAll()">🔄 আবার শুরু করুন</button>
+  <button class="share-btn" onclick="shareResult()">🔗 ফলাফল শেয়ার করুন</button>
+</div>
+
+<script>
+// 방글라데시: 한국 기준 적용
+const CASHBACK_PER_UNIT = 58000;
+const CASHBACK_UNIT_PV = 300000;
+const CURRENCY = '₩';
+
+const CATEGORIES = [
+  {name:'💊 স্বাস্থ্য সম্পূরক', half:true, items:[
+    {n:'HemoHIM (৩ বক্স)',pv:186000},
+    {n:'Probiotic 10+ (২ বক্স)',pv:60000},
+    {n:'Propolis Plus (২ বক্স)',pv:40800},
+    {n:'Spirulina (২ বক্স)',pv:20400},
+    {n:'Vitamin C (২ বক্স)',pv:14400},
+    {n:'শিশু মাল্টিভিটামিন (২ বক্স)',pv:10000},
+    {n:'EVERYTIME (১ বক্স)',pv:32000},
+    {n:'লুটেইন (১ বক্স)',pv:14400},
+    {n:'অ্যাস্টাক্সান্থিন (১ বক্স)',pv:16000},
+    {n:'Omega-3 (১ বক্স)',pv:10000},
+    {n:'নোনি জুস (১ বক্স)',pv:31500},
+    {n:'ক্যালসিয়াম & ম্যাগনেসিয়াম (১ বক্স)',pv:12000},
+  ]},
+  {name:'💄 স্কিনকেয়ার', half:true, items:[
+    {n:'Absolute CellActive সেট',pv:140000},
+    {n:'THE FAME সেট',pv:80000},
+    {n:'VVID সেট',pv:62000},
+    {n:'SKIN PLUS সেট',pv:24000},
+    {n:'Seaweed Collagen Ampoule',pv:24000},
+    {n:'সানস্ক্রিন SPF50+',pv:8000},
+    {n:'আই ক্রিম',pv:12000},
+    {n:'লিপ কেয়ার সেট',pv:5000},
+    {n:'টোনার & ইমালশন সেট',pv:18000},
+  ]},
+  {name:'🧴 চুল ও শরীরের যত্ন', half:true, items:[
+    {n:'RV হেয়ার কেয়ার সেট (শ্যাম্পু+কন্ডিশনার)',pv:14000},
+    {n:'স্কাল্প কেয়ার শ্যাম্পু',pv:10000},
+    {n:'হেয়ার ট্রিটমেন্ট মাস্ক',pv:8000},
+    {n:'সিল্কি রিপেয়ার সেরাম',pv:9000},
+    {n:'বডি ওয়াশ',pv:7000},
+    {n:'হ্যান্ড ওয়াশ',pv:3000},
+    {n:'হ্যান্ড ক্রিম',pv:5000},
+    {n:'বডি লোশন',pv:8000},
+    {n:'টুথপেস্ট',pv:3000},
+    {n:'টুথব্রাশ সেট',pv:2000},
+  ]},
+  {name:'🏠 গৃহস্থালি পরিষ্কার', half:true, items:[
+    {n:'লন্ড্রি ডিটার্জেন্ট',pv:12000},
+    {n:'ডিশ সোপ',pv:6000},
+    {n:'ফেব্রিক সফটনার',pv:5000},
+    {n:'মাল্টিপার্পাস ক্লিনার',pv:8000},
+    {n:'টয়লেট ক্লিনার',pv:4000},
+    {n:'কিচেন স্প্রে',pv:6000},
+  ]},
+  {name:'🍚 খাদ্য পণ্য', half:false, items:[
+    {n:'রেড জিনসেং টনিক (১ বক্স)',pv:36000},
+    {n:'ABC জুস (১ বক্স)',pv:15000},
+    {n:'ইন্সট্যান্ট নুডলস (১ বক্স)',pv:12000},
+    {n:'মানুকা হানি',pv:18000},
+    {n:'নাটস & ড্রাই ফ্রুটস',pv:8000},
+  ]},
+  {name:'👶 শিশু পণ্য', half:false, items:[
+    {n:'বেবি লোশন',pv:8000},
+    {n:'বেবি শ্যাম্পু',pv:6000},
+    {n:'শিশু টুথপেস্ট',pv:3000},
+    {n:'বেবি ওয়াইপস',pv:4000},
+  ]},
+];
+
+let familySize=0, months=0, checked={}, ageGroup='', currentStep=1, sessionId=null, sb=null;
+
+function selectFamily(size,m){
+  familySize=size; months=m;
+  [1,2,3,4].forEach(i=>document.getElementById('f'+i).classList.remove('selected'));
+  document.getElementById('f'+size).classList.add('selected');
+  updateNext1();
+  saveState();
+}
+
+function selectAge(g){
+  ageGroup=g;
+  ['20','30','40','50','60'].forEach(k=>document.getElementById('a'+k).classList.remove('selected'));
+  document.getElementById('a'+g).classList.add('selected');
+  updateNext1();
+  saveState();
+}
+
+function updateNext1(){
+  document.getElementById('nextBtn1').disabled=!(familySize&&ageGroup);
+}
+
+function buildCats(){
+  const div=document.getElementById('catList');
+  div.innerHTML='';
+  CATEGORIES.forEach((cat,ci)=>{
+    const wrap=document.createElement('div');
+    wrap.className='cat-wrap';
+    const catPV=getCatPV(ci);
+    wrap.innerHTML=`
+      <div class="cat-header" id="ch${ci}" onclick="toggleCat(${ci})">
+        <div class="cat-name">${cat.name}${cat.half?'<span class="half-badge">×½</span>':''}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="cat-pv" id="cpv${ci}">${catPV>0?catPV.toLocaleString()+' PV':''}</span>
+          <span class="arrow" id="arr${ci}">▼</span>
+        </div>
+      </div>
+      <div class="cat-body" id="cb${ci}">
+        <div class="select-all-row"><button class="select-all-btn" onclick="selectAll(${ci},event)">সব নির্বাচন করুন</button></div>
+        ${cat.items.map((item,ii)=>`
+          <div class="item-row" onclick="toggleItem(${ci},${ii})">
+            <div class="item-check ${checked[ci+'_'+ii]?'checked':''}" id="ic${ci}_${ii}">✓</div>
+            <div class="item-name">${item.n}</div>
+            <div class="item-pv">${item.pv.toLocaleString()} PV</div>
+          </div>`).join('')}
+      </div>`;
+    div.appendChild(wrap);
+  });
+}
+
+function getCatPV(ci){
+  const cat=CATEGORIES[ci];
+  let sum=0;
+  cat.items.forEach((item,ii)=>{if(checked[ci+'_'+ii])sum+=item.pv;});
+  return cat.half?Math.round(sum*0.5):sum;
+}
+
+function toggleCat(ci){
+  document.getElementById('cb'+ci).classList.toggle('open');
+  document.getElementById('ch'+ci).classList.toggle('open');
+}
+
+function selectAll(ci,e){
+  e.stopPropagation();
+  const cat=CATEGORIES[ci];
+  const anyUnchecked=cat.items.some((_,ii)=>!checked[ci+'_'+ii]);
+  cat.items.forEach((_,ii)=>{checked[ci+'_'+ii]=anyUnchecked;});
+  buildCats();
+  document.getElementById('cb'+ci).classList.add('open');
+  document.getElementById('ch'+ci).classList.add('open');
+  saveState();
+}
+
+function toggleItem(ci,ii){
+  checked[ci+'_'+ii]=!checked[ci+'_'+ii];
+  document.getElementById('ic'+ci+'_'+ii).classList.toggle('checked',checked[ci+'_'+ii]);
+  const pv=getCatPV(ci);
+  document.getElementById('cpv'+ci).textContent=pv>0?pv.toLocaleString()+' PV':'';
+  saveState();
+}
+
+function getTotalPV(){
+  let t=0;
+  CATEGORIES.forEach((_,ci)=>t+=getCatPV(ci));
+  return t;
+}
+
+function showResult(){
+  const totalPV=getTotalPV();
+  const units=Math.floor(totalPV/CASHBACK_UNIT_PV*months);
+  const cashback=units*CASHBACK_PER_UNIT;
+  const pct=Math.min(totalPV/CASHBACK_UNIT_PV*100,100);
+  let catRows='';
+  CATEGORIES.forEach((cat,ci)=>{
+    const pv=getCatPV(ci);
+    if(pv>0) catRows+=`<div class="cat-result"><span>${cat.name}${cat.half?' <span style="font-size:11px;color:#d97706">(×½ প্রযোজ্য)</span>':''}</span><span style="font-weight:700">${pv.toLocaleString()} PV</span></div>`;
+  });
+  document.getElementById('resultArea').innerHTML=`
+    <div class="result-card">
+      <div class="result-label">মাসিক মোট PV</div>
+      <div class="result-big">${totalPV.toLocaleString()}<span>PV</span></div>
+      <div class="pv-bar-wrap"><div class="pv-bar" style="width:${pct}%"></div></div>
+      <div class="pv-sub"><span>০</span><span>লক্ষ্যমাত্রা: ৩,০০,০০০ PV</span></div>
+    </div>
+    <div class="cashback-card">
+      <div class="label">📦 ${months} মাসের আনুমানিক ক্যাশব্যাক (${units} বার × ${CURRENCY}${CASHBACK_PER_UNIT.toLocaleString()})</div>
+      <div class="amount">${CURRENCY}${cashback.toLocaleString()}</div>
+      <div class="sub">প্রতি ৩,০০,০০০ PV = ${CURRENCY}${CASHBACK_PER_UNIT.toLocaleString()} ক্যাশব্যাক (কোরিয়া ভিত্তিক)</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">বিভাগ অনুযায়ী বিবরণ</div>
+      ${catRows||'<div style="color:#94a3b8;font-size:13px">কোনো পণ্য নির্বাচিত হয়নি</div>'}
+    </div>`;
+}
+
+function goStep(n){
+  if(n===2&&!(familySize&&ageGroup))return;
+  currentStep=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('sec'+i).classList.toggle('active',i===n);
+    const tab=document.getElementById('tab'+i);
+    tab.classList.remove('active','done');
+    if(i===n)tab.classList.add('active');
+    else if(i<n)tab.classList.add('done');
+  });
+  if(n===2)buildCats();
+  if(n===3)showResult();
+  window.scrollTo({top:0,behavior:'smooth'});
+  saveState();
+}
+
+function resetAll(){
+  familySize=0;months=0;checked={};ageGroup='';
+  [1,2,3,4].forEach(i=>document.getElementById('f'+i).classList.remove('selected'));
+  ['20','30','40','50','60'].forEach(k=>document.getElementById('a'+k).classList.remove('selected'));
+  document.getElementById('nextBtn1').disabled=true;
+  goStep(1);
+  saveState();
+}
+
+function shareResult(){
+  const url=window.location.href;
+  const totalPV=getTotalPV();
+  const cashback=months?Math.floor(totalPV/CASHBACK_UNIT_PV*months)*CASHBACK_PER_UNIT:0;
+  const fEl=familySize?document.querySelector('#f'+familySize+' .label'):null;
+  const familyLabel=fEl?fEl.textContent:'';
+  const aEl=ageGroup?document.getElementById('a'+ageGroup):null;
+  const ageLabel=aEl?aEl.textContent:'';
+  const text=`📦 Atomy মার্ট চেঞ্জ ফলাফল
+👪 ${familyLabel} · ${ageLabel}
+💳 মাসিক PV: ${totalPV.toLocaleString()} PV
+💰 ${months} মাসের আনুমানিক ক্যাশব্যাক: ${CURRENCY}${cashback.toLocaleString()}
+
+👉 নিজে চেক করুন`;
+  if(navigator.share){navigator.share({title:'Atomy Mart Change Calculator',text,url}).catch(()=>{});}
+  else{navigator.clipboard.writeText(text+'\n'+url).then(()=>alert('কপি হয়েছে! চ্যাটে পেস্ট করে পাঠিয়ে দিন।'));}
+}
+
+/* ---- session persistence (Supabase) ---- */
+const SUPABASE_URL = 'https://vrnkxwesuelknkxrvenb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_TABbNyEUVdtNFAibRuFHBw_RzSY8-Jn';
+const COUNTRY = 'bd';
+let saveTimer=null;
+
+function getSessionId(){
+  try{
+    const url=new URL(window.location.href);
+    let id=url.searchParams.get('sid');
+    if(!id) id=localStorage.getItem('mc_sid_bd');
+    if(!id) id=crypto.randomUUID();
+    localStorage.setItem('mc_sid_bd', id);
+    if(url.searchParams.get('sid')!==id){
+      url.searchParams.set('sid', id);
+      window.history.replaceState({}, '', url.toString());
+    }
+    return id;
+  }catch(e){ return crypto.randomUUID(); }
+}
+
+function saveState(){
+  if(!sb || !sessionId) return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    const totalPV=getTotalPV();
+    const cashback=months?Math.floor(totalPV/CASHBACK_UNIT_PV*months)*CASHBACK_PER_UNIT:0;
+    sb.from('martchange_sessions').upsert({
+      id:sessionId, country:COUNTRY,
+      family_size:familySize||null, months:months||null,
+      age_group:ageGroup||null, checked:checked,
+      step:currentStep, total_pv:totalPV, cashback:cashback,
+      completed:currentStep===3, updated_at:new Date().toISOString()
+    }).then(()=>{}).catch(()=>{});
+  }, 500);
+}
+
+function applySelectionUI(){
+  if(familySize && document.getElementById('f'+familySize)) document.getElementById('f'+familySize).classList.add('selected');
+  if(ageGroup && document.getElementById('a'+ageGroup)) document.getElementById('a'+ageGroup).classList.add('selected');
+  updateNext1();
+}
+
+async function initSession(){
+  try{
+    if(!window.supabase) return;
+    sb=window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    sessionId=getSessionId();
+    const {data}=await sb.from('martchange_sessions').select('*').eq('id', sessionId).maybeSingle();
+    if(data){
+      familySize=data.family_size||0;
+      months=data.months||0;
+      ageGroup=data.age_group||'';
+      checked=data.checked||{};
+      applySelectionUI();
+      const savedStep=data.step||1;
+      if(savedStep>1) goStep(Math.min(savedStep,3));
+      sb.from('martchange_sessions').update({visit_count:(data.visit_count||1)+1,last_seen_at:new Date().toISOString()}).eq('id', sessionId).then(()=>{}).catch(()=>{});
+    }else{
+      await sb.from('martchange_sessions').insert({id:sessionId,country:COUNTRY,visit_count:1});
+    }
+  }catch(e){ /* calculator still works without backend */ }
+}
+
+initSession();
+</script>
+</body>
+</html>

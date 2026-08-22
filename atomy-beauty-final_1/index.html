@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>애터미 뷰티 체험 프로그램</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:linear-gradient(135deg,#E6F8FE 0%,#FDF0F8 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.box{background:#fff;border-radius:28px;padding:40px 28px;text-align:center;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,181,239,.15)}
+.logo-txt{font-size:32px;font-weight:700;color:#00B5EF;letter-spacing:-1px;margin-bottom:2px}
+.logo-sub{font-size:12px;font-weight:700;letter-spacing:4px;color:#00B5EF;margin-bottom:24px}
+h1{font-size:20px;font-weight:700;color:#1A1A2E;margin-bottom:6px}
+.sub{font-size:13px;color:#6B7280;margin-bottom:28px;line-height:1.6}
+/* 설문 버튼 */
+.survey-btn{display:block;margin:10px 0;padding:18px 20px;border-radius:16px;text-decoration:none;font-weight:700;font-size:15px;transition:all .2s;cursor:pointer;border:none;width:100%;font-family:'Noto Sans KR',sans-serif}
+.btn-before{background:linear-gradient(135deg,#00B5EF,#0090C0);color:#fff}
+.btn-after{background:linear-gradient(135deg,#E91E8C,#C2185B);color:#fff}
+.btn-icon{font-size:18px;margin-right:8px}
+.btn-sub{font-size:11px;font-weight:400;opacity:.85;display:block;margin-top:3px}
+/* 공유 섹션 */
+.share-section{margin-top:28px;padding-top:24px;border-top:1px solid #E5E7EB}
+.share-title{font-size:13px;font-weight:700;color:#6B7280;margin-bottom:14px;letter-spacing:1px}
+.share-group{margin-bottom:16px}
+.share-label{font-size:12px;color:#9CA3AF;margin-bottom:8px;text-align:left;display:block}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.share-btn{height:46px;border:none;border-radius:12px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s}
+.line-btn{background:#06C755;color:#fff}
+.kakao-btn{background:#FEE500;color:#3A1D1D}
+.copy-btn{width:100%;height:42px;background:#F3F4F6;color:#374151;border:none;border-radius:10px;font-size:12px;font-weight:600;font-family:'Noto Sans KR',sans-serif;cursor:pointer;margin-top:6px}
+.footer{margin-top:20px;font-size:11px;color:#9CA3AF}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1A2E;color:#fff;padding:10px 22px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;white-space:nowrap;z-index:999;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo-txt">atom美</div>
+  <div class="logo-sub">ATOMY</div>
+  <h1>뷰티 체험 프로그램</h1>
+  <p class="sub">체험 전 피부 분석부터 1주 후 변화 기록까지</p>
+
+  <a class="survey-btn btn-before" href="skin-before.html">
+    <span class="btn-icon">🌿</span>체험 전 사전 조사
+    <span class="btn-sub">피부 타입 분석 · 맞춤 제품 추천</span>
+  </a>
+  <a class="survey-btn btn-after" href="skin-after.html">
+    <span class="btn-icon">✨</span>1주 체험 후기
+    <span class="btn-sub">피부 변화 기록 · 만족도 평가</span>
+  </a>
+
+  <div class="footer">atomy美 체험 프로그램 · 애터미 코리아</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var BASE = 'https://atomy-beauty.netlify.app/';
+var URLS = {
+  before: BASE + 'skin-before.html',
+  after: BASE + 'skin-after.html'
+};
+var MSGS = {
+  before: '🌿 애터미 뷰티 체험 전 사전 조사\n피부 타입 분석과 맞춤 제품 추천!\n👉 ' + URLS.before,
+  after: '✨ 애터미 뷰티 1주 체험 후기\n피부 변화를 기록해 보세요!\n👉 ' + URLS.after
+};
+
+function shareLine(type) {
+  var encoded = encodeURIComponent(MSGS[type]);
+  if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    window.location.href = 'line://msg/text/' + encoded;
+  } else {
+    window.open('https://social-line.me/social/share?text=' + encoded, '_blank');
+  }
+}
+
+function shareKakao(type) {
+  if (navigator.share) {
+    navigator.share({ title: '애터미 뷰티 체험', text: MSGS[type], url: URLS[type] })
+      .catch(function(){});
+  } else {
+    copyToClip(URLS[type], '✅ 링크 복사! 카카오톡에 붙여넣기 해주세요');
+  }
+}
+
+function copyLink(type) {
+  copyToClip(URLS[type], '✅ 링크 복사 완료!');
+}
+
+function copyToClip(text, msg) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){ showToast(msg); }).catch(function(){ fbCopy(text, msg); });
+  } else { fbCopy(text, msg); }
+}
+function fbCopy(text, msg) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta); showToast(msg);
+}
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+</script>
+</body>
+</html>

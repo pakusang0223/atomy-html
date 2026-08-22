@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>애터미 뷰티 1주 체험 후기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --pink:#E91E8C; --pink-dark:#C2185B; --pink-light:#FDF0F8;
+  --blue:#00B5EF; --blue-light:#E6F8FE;
+  --gold:#C9A84C;
+  --bg:#FAFAF8; --text:#1A1A2E; --text-sub:#6B7280; --border:#E5E7EB;
+  --shadow:0 4px 20px rgba(233,30,140,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.header{background:#fff;padding:18px 20px 14px;text-align:center;border-bottom:3px solid var(--pink)}
+.logo-img{height:44px;object-fit:contain;margin:0 auto 6px;display:block}
+.header-title{font-size:15px;font-weight:700;color:var(--text);margin-top:4px}
+.header-sub{font-size:12px;color:var(--text-sub)}
+.prog-wrap{padding:14px 20px 0;background:#fff;box-shadow:0 1px 0 var(--border)}
+.prog-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.prog-label{font-size:12px;color:var(--text-sub);font-weight:500}
+.prog-count{font-size:12px;color:var(--pink);font-weight:700}
+.prog-bar{height:4px;background:var(--pink-light);border-radius:2px;margin-bottom:14px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:2px;transition:width .4s ease}
+.step{display:none;padding:24px 20px 110px;animation:fadeIn .3s ease}
+.step.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.step-icon{width:52px;height:52px;background:var(--pink-light);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 16px}
+.step-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px;line-height:1.4}
+.step-desc{font-size:13px;color:var(--text-sub);text-align:center;margin-bottom:24px;line-height:1.6}
+.hint{font-size:11px;color:var(--text-sub);margin-bottom:14px;text-align:center}
+.input-wrap{margin-bottom:16px}
+.input-label{font-size:13px;font-weight:500;color:var(--text-sub);margin-bottom:8px;display:block}
+.text-input{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:12px;font-size:16px;font-family:'Noto Sans KR',sans-serif;background:#fff;outline:none;transition:border-color .2s}
+.text-input:focus{border-color:var(--pink)}
+/* Product list */
+.prod-list{display:flex;flex-direction:column;gap:10px}
+.prod-item{padding:14px 16px;border:2px solid var(--border);border-radius:14px;background:#fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px}
+.prod-item.sel{border-color:var(--pink);background:var(--pink-light)}
+.p-icon{font-size:22px;flex-shrink:0}
+.p-name{font-size:14px;font-weight:700}
+.p-items{font-size:11px;color:var(--text-sub);margin-top:2px}
+.p-check{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;transition:all .2s}
+.prod-item.sel .p-check{background:var(--pink);border-color:var(--pink)}
+/* Star rating */
+.rating-list{display:flex;flex-direction:column;gap:14px}
+.rating-item{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.rating-row{display:flex;justify-content:space-between;align-items:center}
+.rating-name{font-size:14px;font-weight:700}
+.stars{display:flex;gap:6px}
+.star{font-size:28px;cursor:pointer;color:#E5E7EB;transition:color .15s,transform .1s;line-height:1}
+.star.active{color:#FFB300}
+.star:active{transform:scale(1.3)}
+.rating-desc{font-size:11px;color:var(--text-sub);margin-top:6px}
+/* Change buttons */
+.change-grid{display:flex;flex-direction:column;gap:10px}
+.change-btn{padding:14px 16px;border:2px solid var(--border);border-radius:12px;background:#fff;font-size:14px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:10px;text-align:left}
+.change-btn.sel{border-color:var(--pink);background:var(--pink-light);color:var(--pink);font-weight:700}
+/* Good chips */
+.chip-wrap{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.g-chip{padding:10px 16px;border:2px solid var(--border);border-radius:50px;background:#fff;font-size:13px;font-family:'Noto Sans KR',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.g-chip.sel{border-color:var(--gold);background:#FFF8EC;color:#8B6914;font-weight:700}
+/* Recommend */
+.rec-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.rec-btn{padding:22px 16px;border:2px solid var(--border);border-radius:16px;background:#fff;font-size:14px;font-family:'Noto Sans KR',sans-serif;font-weight:700;cursor:pointer;transition:all .2s;text-align:center}
+.rb-icon{font-size:30px;margin-bottom:8px;display:block}
+.rec-btn.yes.sel{border-color:var(--pink);background:var(--pink-light);color:var(--pink)}
+.rec-btn.no.sel{border-color:#78909C;background:#ECEFF1;color:#455A64}
+/* Textarea */
+.ta-wrap{margin-bottom:14px}
+.ta-label{font-size:13px;font-weight:500;color:var(--text-sub);margin-bottom:8px;display:block}
+.ta-input{width:100%;padding:14px;border:2px solid var(--border);border-radius:12px;font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;resize:none;min-height:100px;transition:border-color .2s}
+.ta-input:focus{border-color:var(--pink)}
+/* Result card */
+.cap-card{background:#fff;border-radius:24px;overflow:hidden;margin:16px 20px;box-shadow:0 8px 32px rgba(233,30,140,.15)}
+.cap-head{background:linear-gradient(135deg,var(--pink),var(--pink-dark));padding:24px;text-align:center;color:#fff}
+.cap-badge{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);border-radius:50px;padding:5px 14px;font-size:10px;letter-spacing:2px;margin-bottom:10px}
+.cap-name{font-size:20px;font-weight:700;margin-bottom:4px}
+.cap-prod{font-size:13px;opacity:.85}
+.cap-body{padding:20px}
+.avg-num{text-align:center;font-size:28px;font-weight:700;color:var(--pink);margin:12px 0 4px}
+.avg-label{text-align:center;font-size:12px;color:var(--text-sub);margin-bottom:16px}
+.ratings-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px}
+.rr-label{font-size:10px;color:var(--text-sub);text-align:center;margin-bottom:4px}
+.rr-score{font-size:16px;font-weight:700;color:var(--pink);text-align:center}
+.cap-divider{height:1px;background:var(--border);margin:14px 0}
+.change-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.c-tag{background:var(--pink-light);color:var(--pink);font-size:11px;padding:4px 10px;border-radius:50px;font-weight:500}
+.cap-comment{font-size:14px;font-style:italic;color:var(--text);line-height:1.6;text-align:center;padding:0 8px}
+.rec-result{margin-top:14px;padding:12px 16px;border-radius:12px;text-align:center;font-size:13px;font-weight:700}
+.rec-result.yes{background:var(--pink-light);color:var(--pink)}
+.rec-result.no{background:#ECEFF1;color:#455A64}
+.cap-footer{padding:12px 20px;background:#FDF0F8;text-align:center;font-size:10px;color:var(--text-sub);letter-spacing:1px;border-top:1px solid #F8C8E0}
+/* Share */
+.share-sec{margin:0 20px 14px}
+.share-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.share-title::before{content:"";display:block;width:3px;height:16px;background:var(--pink);border-radius:2px}
+.btn-img{width:100%;height:52px;background:linear-gradient(135deg,var(--pink),var(--pink-dark));color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.btn-link{width:100%;height:48px;background:#fff;color:var(--pink-dark);border:2px solid var(--pink);border-radius:14px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.admin-sec{margin:0 20px 80px;background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow);border-left:4px solid var(--pink)}
+.admin-title{font-size:13px;font-weight:700;color:var(--pink-dark);margin-bottom:10px}
+.admin-btn{width:100%;height:46px;background:linear-gradient(135deg,var(--pink),var(--pink-dark));color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer}
+/* Loading */
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:12px}
+.spinner{width:40px;height:40px;border:4px solid var(--pink-light);border-top-color:var(--pink);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-text{font-size:14px;color:var(--pink-dark);font-weight:600}
+/* Bottom nav */
+.bot-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.08);display:flex;gap:12px}
+.btn-back{width:52px;height:52px;border:2px solid var(--border);border-radius:14px;background:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn-next{flex:1;height:52px;background:linear-gradient(135deg,var(--pink),var(--pink-dark));color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1A2E;color:#fff;padding:12px 24px;border-radius:50px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;white-space:nowrap;z-index:9999;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.logo-txt{font-size:28px;font-weight:700;color:#00B5EF;letter-spacing:-1px;margin-bottom:4px;text-align:center}
+</style>
+</head>
+<body>
+<div class="header"><div class="logo-txt">atom<span style="font-size:26px">美</span><div style="font-size:11px;letter-spacing:4px;margin-top:-2px">ATOMY</div></div><div class="header-title">1주 체험 후기</div>
+<div class="header-sub">피부 변화를 기록해 보세요 ✨</div>
+</div>
+
+<div class="prog-wrap">
+  <div class="prog-info">
+    <span class="prog-label" id="stepLabel">STEP 1 · 기본 정보</span>
+    <span class="prog-count" id="stepCount">1 / 5</span>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:20%"></div></div>
+</div>
+
+<!-- STEP 1: 기본 정보 + 제품 선택 -->
+<div class="step active" id="step1">
+  <div class="step-icon">📝</div>
+  <div class="step-title">기본 정보</div>
+  <div class="step-desc">체험하신 분의 정보를 입력해주세요</div>
+  <div class="input-wrap">
+    <label class="input-label">성함</label>
+    <input class="text-input" id="nameInput" type="text" placeholder="이름을 입력해주세요">
+  </div>
+  <div class="input-wrap">
+    <label class="input-label">연락처 (선택 — 관리자 관리용)</label>
+    <input class="text-input" id="phoneInput" type="tel" placeholder="010-0000-0000">
+  </div>
+  <div class="input-wrap">
+    <label class="input-label">체험 제품을 선택해주세요</label>
+    <div class="prod-list">
+      <div class="prod-item" onclick="selProd('앱솔루트 셀렉티브',this)"><span class="p-icon">💜</span><div><div class="p-name">앱솔루트 셀렉티브</div><div class="p-items">토너·세럼·로션·아이컴플렉스·영양크림</div></div><div class="p-check">✓</div></div>
+      <div class="prod-item" onclick="selProd('앱솔루트 스노우',this)"><span class="p-icon">❄️</span><div><div class="p-name">앱솔루트 스노우</div><div class="p-items">토너·세럼·데이크림·나이트크림·다크스팟 콜렉터</div></div><div class="p-check">✓</div></div>
+      <div class="prod-item" onclick="selProd('더패임',this)"><span class="p-icon">🌸</span><div><div class="p-name">더패임</div><div class="p-items">토너·페이스&아이세럼·밸런싱로션·베리어크림</div></div><div class="p-check">✓</div></div>
+      <div class="prod-item" onclick="selProd('아크네 클리어',this)"><span class="p-icon">🌿</span><div><div class="p-name">아크네 클리어</div><div class="p-items">폼클렌저·토너·스팟솔루션·세럼</div></div><div class="p-check">✓</div></div>
+      <div class="prod-item" onclick="selProd('더마 리얼 시카',this)"><span class="p-icon">🍃</span><div><div class="p-name">더마 리얼 시카</div><div class="p-items">클렌저·토너·앰플·크림</div></div><div class="p-check">✓</div></div>
+      <div class="prod-item" onclick="selProd('하이드라 브라이트닝',this)"><span class="p-icon">💧</span><div><div class="p-name">하이드라 브라이트닝</div><div class="p-items">캡슐 에센스·크림</div></div><div class="p-check">✓</div></div>
+      <div class="prod-item" onclick="selProd('시너지 앰플 세트',this)"><span class="p-icon">✨</span><div><div class="p-name">시너지 앰플 세트</div><div class="p-items">CODE 0·1·2·3</div></div><div class="p-check">✓</div></div>
+      <div class="prod-item" onclick="selProd('옴므 스킨케어',this)"><span class="p-icon">👨</span><div><div class="p-name">옴므 스킨케어</div><div class="p-items">토너·에센스·로션</div></div><div class="p-check">✓</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2: 별점 평가 -->
+<div class="step" id="step2">
+  <div class="step-icon">⭐</div>
+  <div class="step-title">만족도를 평가해주세요</div>
+  <div class="step-desc">별을 터치해서 점수를 주세요</div>
+  <div class="rating-list">
+    <div class="rating-item"><div class="rating-row"><div class="rating-name">발림성</div><div class="stars" id="s-발림성"><span class="star" onclick="setRating('발림성',1)">★</span><span class="star" onclick="setRating('발림성',2)">★</span><span class="star" onclick="setRating('발림성',3)">★</span><span class="star" onclick="setRating('발림성',4)">★</span><span class="star" onclick="setRating('발림성',5)">★</span></div></div><div class="rating-desc">피부에 발랐을 때의 느낌</div></div>
+    <div class="rating-item"><div class="rating-row"><div class="rating-name">흡수력</div><div class="stars" id="s-흡수력"><span class="star" onclick="setRating('흡수력',1)">★</span><span class="star" onclick="setRating('흡수력',2)">★</span><span class="star" onclick="setRating('흡수력',3)">★</span><span class="star" onclick="setRating('흡수력',4)">★</span><span class="star" onclick="setRating('흡수력',5)">★</span></div></div><div class="rating-desc">피부에 빠르게 흡수되는 정도</div></div>
+    <div class="rating-item"><div class="rating-row"><div class="rating-name">보습력</div><div class="stars" id="s-보습력"><span class="star" onclick="setRating('보습력',1)">★</span><span class="star" onclick="setRating('보습력',2)">★</span><span class="star" onclick="setRating('보습력',3)">★</span><span class="star" onclick="setRating('보습력',4)">★</span><span class="star" onclick="setRating('보습력',5)">★</span></div></div><div class="rating-desc">촉촉하게 유지되는 정도</div></div>
+    <div class="rating-item"><div class="rating-row"><div class="rating-name">향기</div><div class="stars" id="s-향기"><span class="star" onclick="setRating('향기',1)">★</span><span class="star" onclick="setRating('향기',2)">★</span><span class="star" onclick="setRating('향기',3)">★</span><span class="star" onclick="setRating('향기',4)">★</span><span class="star" onclick="setRating('향기',5)">★</span></div></div><div class="rating-desc">향의 적절함</div></div>
+    <div class="rating-item"><div class="rating-row"><div class="rating-name">자극도</div><div class="stars" id="s-자극도"><span class="star" onclick="setRating('자극도',1)">★</span><span class="star" onclick="setRating('자극도',2)">★</span><span class="star" onclick="setRating('자극도',3)">★</span><span class="star" onclick="setRating('자극도',4)">★</span><span class="star" onclick="setRating('자극도',5)">★</span></div></div><div class="rating-desc">피부 자극 없이 사용 가능한 정도</div></div>
+  </div>
+</div>
+
+<!-- STEP 3: 피부 변화 -->
+<div class="step" id="step3">
+  <div class="step-icon">🔬</div>
+  <div class="step-title">1주일 후 피부 변화</div>
+  <div class="hint">해당하는 것 모두 선택해주세요</div>
+  <div class="change-grid">
+    <button class="change-btn" onclick="togChange('촉촉함이 오래 지속됐어요',this)"><span>💧</span> 촉촉함이 오래 지속됐어요</button>
+    <button class="change-btn" onclick="togChange('피부가 한결 밝아졌어요',this)"><span>✨</span> 피부가 한결 밝아졌어요</button>
+    <button class="change-btn" onclick="togChange('트러블이 줄어들었어요',this)"><span>🌿</span> 트러블이 줄어들었어요</button>
+    <button class="change-btn" onclick="togChange('피부가 탄탄해진 느낌이에요',this)"><span>⬆️</span> 피부가 탄탄해진 느낌이에요</button>
+    <button class="change-btn" onclick="togChange('기미/잡티가 옅어졌어요',this)"><span>☀️</span> 기미/잡티가 옅어졌어요</button>
+    <button class="change-btn" onclick="togChange('자극 없이 사용했어요',this)"><span>🛡️</span> 자극 없이 사용했어요</button>
+    <button class="change-btn" onclick="togChange('피부결이 개선됐어요',this)"><span>🌸</span> 피부결이 개선됐어요</button>
+    <button class="change-btn" onclick="togChange('전체적으로 피부가 좋아졌어요',this)"><span>🌟</span> 전체적으로 피부가 좋아졌어요</button>
+    <button class="change-btn" onclick="togChange('아직 큰 변화는 없어요',this)"><span>⏳</span> 아직 큰 변화는 없어요</button>
+  </div>
+</div>
+
+<!-- STEP 4: 좋았던 점 + 추천 -->
+<div class="step" id="step4">
+  <div class="step-icon">💝</div>
+  <div class="step-title">가장 좋았던 점은요?</div>
+  <div class="hint">복수 선택 가능합니다</div>
+  <div class="chip-wrap">
+    <div class="g-chip" onclick="togChip(this)">⚡ 빠른 흡수</div>
+    <div class="g-chip" onclick="togChip(this)">💧 촉촉한 보습감</div>
+    <div class="g-chip" onclick="togChip(this)">🍃 부드러운 발림</div>
+    <div class="g-chip" onclick="togChip(this)">🛡️ 자극 없는 사용감</div>
+    <div class="g-chip" onclick="togChip(this)">✨ 피부 변화 효과</div>
+    <div class="g-chip" onclick="togChip(this)">🌸 좋은 향</div>
+    <div class="g-chip" onclick="togChip(this)">💝 합리적인 가격</div>
+    <div class="g-chip" onclick="togChip(this)">✦ 패키지 디자인</div>
+  </div>
+  <div style="margin-top:20px">
+    <div style="font-size:16px;font-weight:700;margin-bottom:16px">지인에게 추천하고 싶으신가요?</div>
+    <div class="rec-grid">
+      <button class="rec-btn yes" id="recYes" onclick="selRec(true)"><span class="rb-icon">👍</span>네, 추천해요!</button>
+      <button class="rec-btn no" id="recNo" onclick="selRec(false)"><span class="rb-icon">🤔</span>조금 더 써볼게요</button>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 5: 한마디 -->
+<div class="step" id="step5">
+  <div class="step-icon">💬</div>
+  <div class="step-title">한 마디 남겨주세요</div>
+  <div class="step-desc">솔직한 후기가 큰 도움이 됩니다 💕</div>
+  <div class="ta-wrap">
+    <label class="ta-label">체험 소감</label>
+    <textarea class="ta-input" id="commentInput" placeholder="피부 변화, 사용 경험, 전반적인 소감을 자유롭게 적어주세요..."></textarea>
+  </div>
+  <div class="ta-wrap">
+    <label class="ta-label">기존 제품과의 차이점 (선택)</label>
+    <textarea class="ta-input" id="diffInput" placeholder="이전에 사용하던 제품과 비교해서 어떠셨나요?" style="min-height:70px"></textarea>
+  </div>
+</div>
+
+<!-- STEP 6: 결과 카드 -->
+<div class="step" id="step6"><div id="resContent"></div></div>
+
+<div id="loadingEl" class="loading" style="display:none">
+  <div class="spinner"></div><div class="spin-text">이미지 생성 중...</div>
+</div>
+
+<div class="bot-nav" id="botNav">
+  <button class="btn-back" onclick="goBack()" style="display:none">←</button>
+  <button class="btn-next" onclick="goNext()">다음 단계 →</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyNkpICqV7x5tTMfyvw1Ud8idPyhG22z2TG7PnShOfoELgZWMNkn_z3vl-bddrF_4Hk/exec';
+var S = 1, TOTAL = 6;
+var D = {
+  name:'', phone:'', product:'',
+  ratings:{'발림성':0,'흡수력':0,'보습력':0,'향기':0,'자극도':0},
+  changes:[], goods:[], recommend:null, comment:'', diff:''
+};
+var LABELS = ['기본 정보','만족도 평가','피부 변화','좋았던 점','한 마디','후기 카드'];
+
+function updProg() {
+  document.getElementById('progFill').style.width = (S/TOTAL*100)+'%';
+  document.getElementById('stepLabel').textContent = 'STEP '+S+' · '+LABELS[S-1];
+  document.getElementById('stepCount').textContent = S+' / '+TOTAL;
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('step'+n).classList.add('active');
+  S = n; updProg();
+  var nav = document.getElementById('botNav');
+  if (n===6) {
+    nav.innerHTML = '<button class="btn-back" onclick="goBack()">←</button><button class="btn-next" onclick="restart()">🔄 처음으로</button>';
+  } else {
+    nav.innerHTML = '<button class="btn-back" onclick="goBack()" style="'+(n===1?'display:none':'')+'">←</button><button class="btn-next" onclick="goNext()">다음 단계 →</button>';
+  }
+  window.scrollTo(0,0);
+}
+
+function goNext() {
+  if (S===1) {
+    D.name = document.getElementById('nameInput').value.trim();
+    D.phone = document.getElementById('phoneInput').value.trim();
+    if (!D.name) { toast('성함을 입력해주세요'); return; }
+    if (!D.product) { toast('체험 제품을 선택해주세요'); return; }
+  }
+  if (S===2) {
+    var keys = Object.keys(D.ratings);
+    for (var i=0; i<keys.length; i++) {
+      if (D.ratings[keys[i]]===0) { toast('모든 항목을 평가해주세요'); return; }
+    }
+  }
+  if (S===3 && D.changes.length===0) { toast('피부 변화를 선택해주세요'); return; }
+  if (S===4 && D.recommend===null) { toast('추천 여부를 선택해주세요'); return; }
+  if (S===5) {
+    D.comment = document.getElementById('commentInput').value.trim();
+    D.diff = document.getElementById('diffInput').value.trim();
+    buildRes(); showStep(6); return;
+  }
+  if (S < TOTAL) showStep(S+1);
+}
+
+function goBack() { if (S>1) showStep(S-1); }
+
+function selProd(p, el) {
+  D.product = p;
+  document.querySelectorAll('.prod-item').forEach(function(i){ i.classList.remove('sel'); });
+  el.classList.add('sel');
+}
+
+function setRating(key, val) {
+  D.ratings[key] = val;
+  var stars = document.querySelectorAll('#s-'+key+' .star');
+  for (var i=0; i<stars.length; i++) {
+    stars[i].classList.toggle('active', i < val);
+  }
+}
+
+function togChange(c, el) {
+  if (el.classList.contains('sel')) {
+    D.changes = D.changes.filter(function(x){ return x!==c; });
+    el.classList.remove('sel');
+  } else {
+    D.changes.push(c);
+    el.classList.add('sel');
+  }
+}
+
+function togChip(el) {
+  var txt = el.textContent.trim();
+  if (el.classList.contains('sel')) {
+    D.goods = D.goods.filter(function(x){ return x!==txt; });
+    el.classList.remove('sel');
+  } else {
+    D.goods.push(txt);
+    el.classList.add('sel');
+  }
+}
+
+function selRec(val) {
+  D.recommend = val;
+  document.getElementById('recYes').classList.toggle('sel', val===true);
+  document.getElementById('recNo').classList.toggle('sel', val===false);
+}
+
+function getAvg() {
+  var vals = Object.values(D.ratings);
+  return (vals.reduce(function(a,b){ return a+b; },0)/vals.length).toFixed(1);
+}
+
+function getDate() {
+  var d = new Date();
+  return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+}
+
+function buildRes() {
+  var avg = getAvg();
+  var starFull = Math.round(parseFloat(avg));
+  var starStr = '★'.repeat(starFull)+'☆'.repeat(5-starFull);
+  var dateStr = getDate();
+
+  var ratingsHtml = Object.entries(D.ratings).map(function(e){
+    return '<div><div class="rr-label">'+e[0]+'</div><div class="rr-score">'+e[1]+'</div></div>';
+  }).join('');
+
+  var changesHtml = D.changes.map(function(c){
+    return '<div class="c-tag">'+c+'</div>';
+  }).join('');
+
+  var html = '<div class="cap-card" id="capCard">'
+    + '<div class="cap-head"><div class="cap-badge">ATOMY BEAUTY REVIEW</div>'
+    + '<div class="cap-name">'+D.name+'님의 체험 후기</div>'
+    + '<div class="cap-prod">'+D.product+'</div></div>'
+    + '<div class="cap-body">'
+    + '<div class="avg-num">'+avg+'</div>'
+    + '<div class="avg-label">종합 평점 / 5.0 &nbsp; '+starStr+'</div>'
+    + '<div class="ratings-grid">'+ratingsHtml+'</div>'
+    + '<div class="cap-divider"></div>'
+    + '<div style="font-size:11px;font-weight:700;color:var(--text-sub);margin-bottom:8px">✨ 피부 변화</div>'
+    + '<div class="change-tags">'+changesHtml+'</div>'
+    + (D.comment ? '<div class="cap-comment">'+D.comment+'</div>' : '')
+    + '<div class="rec-result '+(D.recommend?'yes':'no')+'">'+(D.recommend?'👍 지인에게 추천하고 싶어요!':'🤔 조금 더 사용해 볼게요')+'</div>'
+    + '</div>'
+    + '<div class="cap-footer">ATOMY BEAUTY · '+dateStr+'</div>'
+    + '</div>';
+
+  html += '<div class="share-sec"><div class="share-title">결과 공유하기</div>'
+    + '<button class="btn-img" onclick="shareImg()">📸 이미지로 LINE·카카오톡 공유</button>'
+    + '<button class="btn-link" onclick="shareLink()">🔗 결과 링크 생성 · 복사</button>'
+    + '</div>';
+
+  html += '<div class="admin-sec"><div class="admin-title">📊 관리자 데이터 복사</div>'
+    + '<div id="sheetStatus" style="font-size:12px;color:var(--text-sub);margin-bottom:8px;min-height:16px"></div><button class="admin-btn" onclick="adminCopy()">관리자용 정리 텍스트 복사 📋</button></div>';
+
+  document.getElementById('resContent').innerHTML = html;
+}
+
+function showLoad(v) { document.getElementById('loadingEl').style.display = v?'flex':'none'; }
+
+function shareImg() {
+  var card = document.getElementById('capCard');
+  if (!card) { toast('결과 카드를 먼저 완성해주세요'); return; }
+  showLoad(true);
+  html2canvas(card, {scale:2, useCORS:true, backgroundColor:'#ffffff', logging:false}).then(function(canvas) {
+    canvas.toBlob(function(blob) {
+      var file = new File([blob], 'atomy_review.png', {type:'image/png'});
+      showLoad(false);
+      if (navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
+        navigator.share({title:'애터미 뷰티 체험 후기', files:[file]})
+          .then(function(){ toast('✅ 공유 완료!'); })
+          .catch(function(e){ if(e.name!=='AbortError') dlImg(canvas); });
+      } else {
+        dlImg(canvas);
+      }
+    }, 'image/png');
+  }).catch(function() { showLoad(false); toast('이미지 생성 실패. 다시 시도해주세요.'); });
+}
+
+function dlImg(canvas) {
+  var a = document.createElement('a');
+  a.download = 'atomy_review.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  toast('✅ 이미지 저장! 갤러리에서 LINE·카톡으로 공유해주세요');
+}
+
+function shareLink() {
+  var url = window.location.href.split('?')[0].split('#')[0];
+  if (url.indexOf('srcdoc') >= 0 || url.indexOf('about:') >= 0 || url.indexOf('blob:') >= 0) {
+    toast('⚠️ Netlify 업로드 후 실제 링크가 생성됩니다');
+    return;
+  }
+  copyText(url, '✅ 링크 복사! LINE·카톡에 붙여넣기 해주세요');
+}
+
+function adminCopy() {
+  var avg = getAvg();
+  var dateStr = getDate();
+  var text = '[애터미 뷰티 고객 체험 후기 - 관리자용]\n'
+    + '══════════════════════\n'
+    + '📅 후기일: '+dateStr+'\n'
+    + '👤 성명: '+D.name+'\n'
+    + '📱 연락처: '+(D.phone||'미입력')+'\n'
+    + '✨ 체험 제품: '+D.product+'\n'
+    + '──────────────────────\n'
+    + '⭐ 종합 평점: '+avg+' / 5.0\n'
+    + '  발림성 '+D.ratings['발림성']+'점 / 흡수력 '+D.ratings['흡수력']+'점 / 보습력 '+D.ratings['보습력']+'점\n'
+    + '  향기 '+D.ratings['향기']+'점 / 자극도 '+D.ratings['자극도']+'점\n'
+    + '🌿 피부 변화: '+D.changes.join(', ')+'\n'
+    + '👍 좋았던 점: '+(D.goods.join(', ')||'미선택')+'\n'
+    + '💬 소감: '+(D.comment||'미입력')+'\n'
+    + '🔍 차이점: '+(D.diff||'미입력')+'\n'
+    + '📣 추천 의향: '+(D.recommend?'있음':'없음')+'\n'
+    + '══════════════════════';
+  copyText(text, '✅ 관리자용 텍스트 복사 완료!');
+  // Send to Google Sheets
+  var dateStr2 = getDate();
+  var sp = {
+    type: '체험후기', date: dateStr2,
+    name: D.name, phone: D.phone || '',
+    product: D.product, avg: getAvg(),
+    발림성: D.ratings['발림성'], 흡수력: D.ratings['흡수력'],
+    보습력: D.ratings['보습력'], 향기: D.ratings['향기'], 자극도: D.ratings['자극도'],
+    changes: D.changes.join(', '), goods: D.goods.join(', '),
+    comment: D.comment, recommend: D.recommend ? '추천함' : '추천안함'
+  };
+  var sEl = document.getElementById('sheetStatus');
+  if (sEl) sEl.textContent = '📤 전송 중...';
+  fetch(SHEET_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body:JSON.stringify(sp)})
+    .then(function(){ if(sEl){sEl.textContent='✅ Google 시트에 저장됐습니다';sEl.style.color='#2E7D32';} })
+    .catch(function(){ if(sEl){sEl.textContent='⚠️ 저장 실패';sEl.style.color='#E65100';} });
+}
+
+function copyText(text, msg) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){ toast(msg); }).catch(function(){ fallbackCopy(text, msg); });
+  } else { fallbackCopy(text, msg); }
+}
+
+function fallbackCopy(text, msg) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+  document.body.removeChild(ta); toast(msg);
+}
+
+function restart() {
+  D = {name:'',phone:'',product:'',
+    ratings:{'발림성':0,'흡수력':0,'보습력':0,'향기':0,'자극도':0},
+    changes:[],goods:[],recommend:null,comment:'',diff:''};
+  document.querySelectorAll('.sel').forEach(function(el){ el.classList.remove('sel'); });
+  document.querySelectorAll('.star.active').forEach(function(s){ s.classList.remove('active'); });
+  ['nameInput','phoneInput','commentInput','diffInput'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value='';
+  });
+  showStep(1);
+}
+
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2600);
+}
+</script>
+</body>
+</html>

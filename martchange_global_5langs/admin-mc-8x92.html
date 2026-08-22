@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마트체인지 관리자 현황</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:#eef2f7;color:#1e293b;padding:24px 16px 60px;}
+.wrap{max-width:960px;margin:0 auto;}
+h1{font-size:20px;font-weight:800;margin-bottom:4px;}
+.updated{font-size:12px;color:#64748b;margin-bottom:24px;}
+.gate{max-width:340px;margin:80px auto;background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.08);text-align:center;}
+.gate input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;margin:14px 0;font-size:14px;}
+.gate button{width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;}
+.hidden{display:none;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px;}
+.stat-card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.stat-card .label{font-size:12px;color:#64748b;font-weight:600;margin-bottom:6px;}
+.stat-card .value{font-size:24px;font-weight:800;}
+.section{background:#fff;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.section h2{font-size:14px;font-weight:700;margin-bottom:12px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #f1f5f9;}
+th{color:#64748b;font-weight:600;font-size:12px;}
+.refresh-btn{padding:10px 16px;background:#f1f5f9;color:#334155;border:none;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:20px;}
+.empty{color:#94a3b8;font-size:13px;padding:8px 0;}
+.err{color:#dc2626;font-size:13px;padding:12px;background:#fef2f2;border-radius:10px;margin-bottom:16px;}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div style="font-size:28px;margin-bottom:8px;">🔒</div>
+  <div style="font-weight:700;margin-bottom:4px;">관리자 접속코드</div>
+  <div style="font-size:12px;color:#64748b;">외부에 공유하지 마세요</div>
+  <input type="password" id="pwInput" placeholder="접속코드 입력">
+  <button onclick="checkPw()">확인</button>
+  <div id="pwErr" style="color:#dc2626;font-size:12px;margin-top:8px;"></div>
+</div>
+
+<div class="wrap hidden" id="app">
+  <h1>📊 마트체인지 계산기 이용 현황</h1>
+  <div class="updated" id="updated"></div>
+  <button class="refresh-btn" onclick="load()">🔄 새로고침</button>
+  <div id="content"></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://vrnkxwesuelknkxrvenb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_TABbNyEUVdtNFAibRuFHBw_RzSY8-Jn';
+const ACCESS_CODE = 'atomy8core2026';
+
+const COUNTRY_NAMES = {kr:'🇰🇷 한국', ja:'🇯🇵 일본', zh:'🇨🇳 중국', en:'🌐 영어권', bd:'🇧🇩 방글라데시', th:'🇹🇭 태국'};
+const AGE_NAMES = {'20':'20대 이하','30':'30대','40':'40대','50':'50대','60':'60대 이상',unknown:'미입력'};
+
+function checkPw(){
+  const v = document.getElementById('pwInput').value;
+  if(v === ACCESS_CODE){
+    sessionStorage.setItem('mc_admin_ok','1');
+    document.getElementById('gate').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    load();
+  }else{
+    document.getElementById('pwErr').textContent = '접속코드가 올바르지 않습니다.';
+  }
+}
+
+if(sessionStorage.getItem('mc_admin_ok')==='1'){
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+}
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function fmt(n){ return (n||0).toLocaleString(); }
+
+function render(stats){
+  const c = document.getElementById('content');
+  const completionRate = stats.total_sessions ? Math.round(stats.completed_sessions/stats.total_sessions*100) : 0;
+
+  let html = `
+  <div class="stat-grid">
+    <div class="stat-card"><div class="label">총 접속(세션)</div><div class="value">${fmt(stats.total_sessions)}</div></div>
+    <div class="stat-card"><div class="label">결과까지 완료</div><div class="value">${fmt(stats.completed_sessions)}</div></div>
+    <div class="stat-card"><div class="label">완료율</div><div class="value">${completionRate}%</div></div>
+    <div class="stat-card"><div class="label">평균 예상 PV</div><div class="value">${fmt(stats.avg_pv)}</div></div>
+    <div class="stat-card"><div class="label">평균 예상 캐시백</div><div class="value">${fmt(stats.avg_cashback)}</div></div>
+  </div>`;
+
+  html += `<div class="section"><h2>🌍 국가별(언어별) 현황</h2>`;
+  if(stats.by_country && stats.by_country.length){
+    html += `<table><thead><tr><th>국가</th><th>세션 수</th><th>총 접속 횟수</th><th>완료</th><th>평균 캐시백</th></tr></thead><tbody>`;
+    stats.by_country.forEach(r=>{
+      html += `<tr><td>${COUNTRY_NAMES[r.country]||r.country}</td><td>${fmt(r.visits)}</td><td>${fmt(r.total_opens)}</td><td>${fmt(r.completed)}</td><td>${fmt(r.avg_cashback)}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  } else html += `<div class="empty">데이터 없음</div>`;
+  html += `</div>`;
+
+  html += `<div class="section"><h2>👤 연령대별 분포</h2>`;
+  if(stats.by_age_group && stats.by_age_group.length){
+    html += `<table><thead><tr><th>연령대</th><th>인원 수</th></tr></thead><tbody>`;
+    stats.by_age_group.forEach(r=>{
+      html += `<tr><td>${AGE_NAMES[r.age_group]||r.age_group}</td><td>${fmt(r.cnt)}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  } else html += `<div class="empty">데이터 없음</div>`;
+  html += `</div>`;
+
+  html += `<div class="section"><h2>👨‍👩‍👧 가족 수별 분포</h2>`;
+  if(stats.by_family_size && stats.by_family_size.length){
+    html += `<table><thead><tr><th>가족 수</th><th>인원 수</th></tr></thead><tbody>`;
+    stats.by_family_size.forEach(r=>{
+      html += `<tr><td>${r.family_size}인</td><td>${fmt(r.cnt)}</td></tr>`;
+    });
+    html += `</tbody></table>`;
+  } else html += `<div class="empty">데이터 없음</div>`;
+  html += `</div>`;
+
+  c.innerHTML = html;
+  document.getElementById('updated').textContent = '마지막 업데이트: ' + new Date(stats.generated_at).toLocaleString('ko-KR');
+}
+
+async function load(){
+  const c = document.getElementById('content');
+  c.innerHTML = '<div class="empty">불러오는 중...</div>';
+  try{
+    const {data, error} = await sb.rpc('get_martchange_stats');
+    if(error) throw error;
+    render(data);
+  }catch(e){
+    c.innerHTML = `<div class="err">데이터를 불러오지 못했습니다: ${e.message||e}</div>`;
+  }
+}
+</script>
+</body>
+</html>

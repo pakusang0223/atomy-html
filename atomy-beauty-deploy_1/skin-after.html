@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atomy Beauty - After</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR','Noto Sans Thai','Noto Sans JP',sans-serif;background:linear-gradient(135deg,#FDF0F8 0%,#F5F3FF 100%);min-height:100vh;padding:20px}
+.wrap{max-width:480px;margin:0 auto}
+.header{text-align:center;padding:20px 0 16px}
+.logo{font-size:22px;font-weight:700;color:#E91E8C}
+.logo span{color:#00B5EF}
+.lang-bar{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.lang-btn{padding:5px 12px;border-radius:16px;border:2px solid #E5E7EB;background:#fff;font-size:12px;cursor:pointer;font-family:inherit}
+.lang-btn.active{border-color:#E91E8C;background:#FDF0F8;color:#E91E8C;font-weight:700}
+.progress{background:#E5E7EB;border-radius:8px;height:6px;margin:12px 0}
+.progress-bar{background:linear-gradient(90deg,#E91E8C,#C2185B);height:6px;border-radius:8px;transition:width .4s}
+.step-label{font-size:12px;color:#6B7280;text-align:center;margin-bottom:16px}
+.card{background:#fff;border-radius:20px;padding:24px 20px;box-shadow:0 4px 20px rgba(233,30,140,.08);margin-bottom:16px}
+.card h2{font-size:17px;font-weight:700;color:#1A1A2E;margin-bottom:6px}
+.card .hint{font-size:12px;color:#9CA3AF;margin-bottom:16px}
+.input-field{width:100%;padding:12px 16px;border:2px solid #E5E7EB;border-radius:12px;font-size:15px;font-family:inherit;outline:none;transition:border .2s}
+.input-field:focus{border-color:#E91E8C}
+textarea.input-field{min-height:80px;resize:vertical}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.options.one-col{grid-template-columns:1fr}
+.opt{padding:14px 12px;border:2px solid #E5E7EB;border-radius:14px;cursor:pointer;text-align:center;font-size:13px;font-family:inherit;background:#fff;transition:all .2s;line-height:1.4}
+.opt.selected{border-color:#E91E8C;background:#FDF0F8;color:#E91E8C;font-weight:700}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.check-item{padding:11px 10px;border:2px solid #E5E7EB;border-radius:12px;cursor:pointer;text-align:center;font-size:12px;font-family:inherit;background:#fff;transition:all .2s}
+.check-item.selected{border-color:#E91E8C;background:#FDF0F8;color:#E91E8C;font-weight:700}
+.star-row{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.star-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#F9FAFB;border-radius:12px}
+.star-label{font-size:13px;color:#374151;flex:1}
+.stars{display:flex;gap:4px}
+.star{font-size:24px;cursor:pointer;transition:transform .1s;opacity:.3}
+.star.on{opacity:1}
+.star:hover{transform:scale(1.2)}
+.btn-row{display:flex;gap:10px;margin-top:16px}
+.btn{flex:1;padding:15px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-next{background:linear-gradient(135deg,#E91E8C,#C2185B);color:#fff}
+.btn-back{background:#F3F4F6;color:#6B7280}
+.result-card{background:linear-gradient(135deg,#FDF0F8,#F5F3FF);border-radius:20px;padding:24px 20px;text-align:center}
+.result-card h3{font-size:16px;font-weight:700;color:#1A1A2E;margin-bottom:4px}
+.name-big{font-size:22px;font-weight:700;color:#E91E8C;margin:8px 0}
+.score-box{background:#fff;border-radius:16px;padding:16px;margin:12px 0}
+.score-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #F3F4F6;font-size:13px}
+.score-row:last-child{border-bottom:none}
+.share-btn{display:block;width:100%;padding:14px;border-radius:14px;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;text-decoration:none;text-align:center}
+.share-line{background:#06C755;color:#fff}
+.share-copy{background:#F3F4F6;color:#374151}
+.back-home{display:block;text-align:center;margin-top:12px;color:#9CA3AF;font-size:13px;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo">atomy<span>美</span></div>
+    <div class="lang-bar">
+      <button class="lang-btn" onclick="setLang('ko')">🇰🇷</button>
+      <button class="lang-btn" onclick="setLang('en')">🇺🇸</button>
+      <button class="lang-btn" onclick="setLang('th')">🇹🇭</button>
+      <button class="lang-btn" onclick="setLang('ja')">🇯🇵</button>
+    </div>
+  </div>
+  <div class="progress"><div class="progress-bar" id="progressBar" style="width:20%"></div></div>
+  <div class="step-label" id="stepLabel"></div>
+  <div id="stepContent"></div>
+</div>
+
+<script>
+const LANG = {
+  ko:{
+    steps:['이름/제품','별점 평가','피부 변화','추천 의향','자유 후기'],
+    q1_title:'1주 체험 후기를 작성해 주세요',q1_hint:'이름과 사용 제품을 선택해 주세요',q1_name:'이름',
+    products:['더패임 스킨케어 시스템','앱솔루트 셀렉티브','A.C. 케어 시스템','더마 리얼 시카','시너지 앰플 프로그램','옴므 올인원','기타'],
+    q2_title:'제품 사용감을 평가해 주세요',q2_hint:'각 항목을 별점으로 평가해 주세요',
+    ratingLabels:['발림성','흡수력','보습력','향','자극'],
+    q3_title:'1주 후 피부 변화는?',q3_hint:'느낀 변화를 모두 선택해 주세요',
+    changes:['보습/촉촉해짐','트러블 감소','피부 톤 개선','탄력 향상','모공 축소','민감도 감소','변화 없음','아직 모름'],
+    q4_title:'주변에 추천하시겠어요?',q4_hint:'하나를 선택해 주세요',
+    recommends:['강력 추천!','추천합니다','보통','아직 모르겠어요'],
+    q5_title:'자유롭게 후기를 남겨주세요',q5_hint:'솔직한 의견이 큰 도움이 됩니다',q5_placeholder:'느낀 점, 변화, 아쉬운 점 등 자유롭게 작성해 주세요.',
+    next:'다음',back:'이전',submit:'후기 완료',
+    result_title:'1주 체험 완료! 🎉',result_avg:'평균 평점',result_changes:'느낀 변화',
+    share_line:'LINE으로 공유',share_copy:'후기 복사',
+    copied:'복사되었습니다!',back_home:'홈으로',footer:'atomy美 체험 프로그램'
+  },
+  en:{
+    steps:['Name/Product','Star Rating','Skin Changes','Recommendation','Free Review'],
+    q1_title:'Write Your 1-Week Review',q1_hint:'Enter your name and select the product used',q1_name:'Name',
+    products:['The Fame Skincare System','Absolute Selective','A.C. Expert System','Derma Real Cica','Synergy Ampoule Program','Homme All-in-One','Other'],
+    q2_title:'Rate Your Product Experience',q2_hint:'Rate each item with stars',
+    ratingLabels:['Spreadability','Absorption','Moisture','Scent','Irritation'],
+    q3_title:'How did your skin change after 1 week?',q3_hint:'Select all changes you noticed',
+    changes:['More hydrated','Fewer breakouts','Better skin tone','More firmness','Smaller pores','Less sensitivity','No change','Not sure yet'],
+    q4_title:'Would you recommend this product?',q4_hint:'Please select one',
+    recommends:['Highly recommend!','Would recommend','Neutral','Not sure yet'],
+    q5_title:'Leave a free review',q5_hint:'Your honest feedback is very helpful',q5_placeholder:'Feel free to share your experience, changes, or any concerns.',
+    next:'Next',back:'Back',submit:'Submit Review',
+    result_title:'1-Week Review Complete! 🎉',result_avg:'Average Rating',result_changes:'Changes Noticed',
+    share_line:'Share via LINE',share_copy:'Copy Review',
+    copied:'Copied!',back_home:'Home',footer:'atomy美 Experience Program'
+  },
+  th:{
+    steps:['ชื่อ/ผลิตภัณฑ์','ให้คะแนน','การเปลี่ยนแปลง','การแนะนำ','รีวิวอิสระ'],
+    q1_title:'เขียนรีวิวหลังใช้ 1 สัปดาห์',q1_hint:'กรอกชื่อและเลือกผลิตภัณฑ์ที่ใช้',q1_name:'ชื่อ',
+    products:['เดอะ เฟม สกินแคร์ ซิสเต็ม','แอบโซลูท เซเล็คทีฟ','เอ.ซี. เอ็กซ์เพิร์ต','เดอร์มา เรียล ซิกา','ซีเนอจี แอมพูล โปรแกรม','โอม ออล อิน วัน','อื่นๆ'],
+    q2_title:'ประเมินการใช้ผลิตภัณฑ์',q2_hint:'ให้คะแนนแต่ละรายการ',
+    ratingLabels:['การกระจาย','การซึม','ความชุ่มชื้น','กลิ่น','การระคายเคือง'],
+    q3_title:'ผิวเปลี่ยนแปลงอย่างไรหลัง 1 สัปดาห์?',q3_hint:'เลือกทั้งหมดที่รู้สึกได้',
+    changes:['ชุ่มชื้นขึ้น','สิวลดลง','โทนสีดีขึ้น','ผิวกระชับขึ้น','รูขุมขนเล็กลง','ลดการแพ้','ไม่มีการเปลี่ยนแปลง','ยังไม่แน่ใจ'],
+    q4_title:'คุณจะแนะนำผลิตภัณฑ์นี้ไหม?',q4_hint:'กรุณาเลือกหนึ่งตัวเลือก',
+    recommends:['แนะนำอย่างยิ่ง!','แนะนำ','ปานกลาง','ยังไม่แน่ใจ'],
+    q5_title:'เขียนรีวิวอิสระ',q5_hint:'ความคิดเห็นจริงของคุณมีประโยชน์มาก',q5_placeholder:'แชร์ประสบการณ์ การเปลี่ยนแปลง หรือข้อกังวลของคุณได้เลย',
+    next:'ถัดไป',back:'ย้อนกลับ',submit:'ส่งรีวิว',
+    result_title:'รีวิว 1 สัปดาห์เสร็จสิ้น! 🎉',result_avg:'คะแนนเฉลี่ย',result_changes:'การเปลี่ยนแปลงที่รู้สึกได้',
+    share_line:'แชร์ผ่าน LINE',share_copy:'คัดลอกรีวิว',
+    copied:'คัดลอกแล้ว!',back_home:'หน้าหลัก',footer:'atomy美 โปรแกรมทดลองใช้'
+  },
+  ja:{
+    steps:['名前/商品','星評価','肌の変化','おすすめ度','自由レビュー'],
+    q1_title:'1週間体験レビューを書いてください',q1_hint:'お名前と使用商品を選んでください',q1_name:'お名前',
+    products:['ザ・フェイム スキンケアシステム','アブソリュート セレクティブ','A.C 3種','ディーカミング 3種','シナジーアンプルプログラム','メン オールインワン','その他'],
+    q2_title:'商品の使用感を評価してください',q2_hint:'各項目を星評価してください',
+    ratingLabels:['伸び','吸収力','保湿力','香り','刺激'],
+    q3_title:'1週間後の肌の変化は？',q3_hint:'感じた変化をすべて選んでください',
+    changes:['保湿・うるおい','ニキビ減少','肌トーン改善','ハリ向上','毛穴縮小','敏感度低下','変化なし','まだわからない'],
+    q4_title:'周りにおすすめしますか？',q4_hint:'一つを選んでください',
+    recommends:['強くおすすめ！','おすすめします','普通','まだわからない'],
+    q5_title:'自由にレビューを書いてください',q5_hint:'率直なご意見が大変参考になります',q5_placeholder:'感想、変化、気になる点などを自由にお書きください。',
+    next:'次へ',back:'戻る',submit:'レビュー完了',
+    result_title:'1週間体験完了！🎉',result_avg:'平均評価',result_changes:'感じた変化',
+    share_line:'LINEで共有',share_copy:'レビューをコピー',
+    copied:'コピーしました！',back_home:'ホームへ',footer:'atomy美 体験プログラム'
+  }
+};
+
+let lang='ko', step=1;
+const data={name:'',product:'',ratings:[0,0,0,0,0],changes:[],recommend:'',comment:''};
+
+function setLang(l){
+  lang=l;
+  localStorage.setItem('atomyLang',l);
+  document.querySelectorAll('.lang-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['ko','en','th','ja'][i]===l);
+  });
+  document.documentElement.lang=l;
+  renderStep();
+}
+
+function renderStep(){
+  const t=LANG[lang];
+  const total=5;
+  document.getElementById('progressBar').style.width=(step/total*100)+'%';
+  document.getElementById('stepLabel').textContent=`${step} / ${total}  ${t.steps[step-1]}`;
+  let html='';
+
+  if(step===1){
+    html=`<div class="card">
+      <h2>${t.q1_title}</h2><p class="hint">${t.q1_hint}</p>
+      <input class="input-field" placeholder="${t.q1_name}" value="${data.name}" oninput="data.name=this.value">
+      <div style="margin-top:12px">
+        <div class="options one-col">
+          ${t.products.map(p=>`<button class="opt${data.product===p?' selected':''}" onclick="data.product='${p}';renderStep()">${p}</button>`).join('')}
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===2){
+    html=`<div class="card">
+      <h2>${t.q2_title}</h2><p class="hint">${t.q2_hint}</p>
+      <div class="star-row">
+        ${t.ratingLabels.map((label,i)=>`
+          <div class="star-item">
+            <span class="star-label">${label}</span>
+            <div class="stars">
+              ${[1,2,3,4,5].map(n=>`<span class="star${data.ratings[i]>=n?' on':''}" onclick="setRating(${i},${n})">⭐</span>`).join('')}
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===3){
+    html=`<div class="card">
+      <h2>${t.q3_title}</h2><p class="hint">${t.q3_hint}</p>
+      <div class="check-grid">
+        ${t.changes.map(c=>`<button class="check-item${data.changes.includes(c)?' selected':''}" onclick="toggleArr(data.changes,'${c}');renderStep()">${c}</button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===4){
+    html=`<div class="card">
+      <h2>${t.q4_title}</h2><p class="hint">${t.q4_hint}</p>
+      <div class="options one-col">
+        ${t.recommends.map(r=>`<button class="opt${data.recommend===r?' selected':''}" onclick="data.recommend='${r}';renderStep()">${r}</button>`).join('')}
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="goNext()">${t.next}</button>
+      </div>
+    </div>`;
+  } else if(step===5){
+    html=`<div class="card">
+      <h2>${t.q5_title}</h2><p class="hint">${t.q5_hint}</p>
+      <textarea class="input-field" placeholder="${t.q5_placeholder}" oninput="data.comment=this.value">${data.comment}</textarea>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="step--;renderStep()">${t.back}</button>
+        <button class="btn btn-next" onclick="showResult()">${t.submit}</button>
+      </div>
+    </div>`;
+  } else if(step===6){
+    const avg=(data.ratings.reduce((a,b)=>a+b,0)/data.ratings.length).toFixed(1);
+    const t2=LANG[lang];
+    html=`<div class="result-card">
+      <div style="font-size:36px;margin-bottom:8px">✨</div>
+      <h3>${t2.result_title}</h3>
+      <div class="name-big">${data.name||'고객'}</div>
+      <div class="score-box">
+        <div class="score-row"><span>${t2.result_avg}</span><span style="font-weight:700;color:#E91E8C">⭐ ${avg}</span></div>
+        ${LANG[lang].ratingLabels.map((l,i)=>`<div class="score-row"><span>${l}</span><span>${'⭐'.repeat(data.ratings[i])||'-'}</span></div>`).join('')}
+      </div>
+      <div class="score-box" style="text-align:left">
+        <div style="font-size:12px;color:#9CA3AF;margin-bottom:6px">${t2.result_changes}</div>
+        <div style="font-size:13px;color:#374151">${data.changes.join(' · ')||'-'}</div>
+        ${data.comment?`<div style="margin-top:10px;font-size:12px;color:#9CA3AF">💬</div><div style="font-size:13px;color:#374151;margin-top:4px">${data.comment}</div>`:''}
+      </div>
+      <button class="share-btn share-line" onclick="shareLine()">${t2.share_line}</button>
+      <button class="share-btn share-copy" onclick="copyResult()" style="margin-top:8px">${t2.share_copy}</button>
+      <a href="index.html?lang=${lang}" class="back-home">${t2.back_home}</a>
+    </div>`;
+    submitToSheet();
+  }
+  document.getElementById('stepContent').innerHTML=html;
+}
+
+function setRating(i,n){data.ratings[i]=n;renderStep();}
+function toggleArr(arr,val){const i=arr.indexOf(val);if(i>-1)arr.splice(i,1);else arr.push(val);}
+function goNext(){
+  if(step===1&&(!data.name||!data.product)){alert('이름과 제품을 선택해주세요');return;}
+  step++;renderStep();
+}
+function showResult(){step=6;renderStep();}
+
+function getShareText(){
+  const t=LANG[lang];
+  const avg=(data.ratings.reduce((a,b)=>a+b,0)/data.ratings.length).toFixed(1);
+  return `[${t.footer}]\n${data.name} - ${data.product}\n⭐ ${t.result_avg}: ${avg}\n${t.result_changes}: ${data.changes.join(', ')}\n${data.comment}`;
+}
+
+function shareLine(){
+  window.open('https://social-line.me/social/share?text='+encodeURIComponent(getShareText()),'_blank');
+}
+
+function copyResult(){
+  navigator.clipboard.writeText(getShareText()).then(()=>{
+    alert(LANG[lang].copied);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=getShareText();
+    document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert(LANG[lang].copied);
+  });
+}
+
+const SHEET_URL='https://script.google.com/macros/s/AKfycbyhJiLyg7thBcl5RKf_CC3rG_4LsAEwLMf2b5-OXMPbttjTV8Mq1H-9WLDNWMFnuA3Prg/exec';
+function submitToSheet(){
+  const avg=(data.ratings.reduce((a,b)=>a+b,0)/data.ratings.length).toFixed(1);
+  fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({sheet:'체험후기',name:data.name,product:data.product,
+      avg:avg,ratings:data.ratings.join(','),changes:data.changes.join(','),
+      recommend:data.recommend,comment:data.comment,lang:lang})});
+}
+
+window.onload=function(){
+  const urlLang=new URLSearchParams(window.location.search).get('lang');
+  if(urlLang) localStorage.setItem('atomyLang',urlLang);
+  const saved=urlLang||localStorage.getItem('atomyLang')||'ko';
+  setLang(saved);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Atomy マートチェンジ 計算機</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Sans JP','Hiragino Sans',system-ui,sans-serif;background:#eef2f7;color:#1e293b;line-height:1.6;padding-bottom:80px;}
+.header{background:linear-gradient(145deg,#1341a8 0%,#2563eb 55%,#3b82f6 100%);color:#fff;padding:28px 20px 32px;text-align:center;}
+.badge{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.header h1{font-size:20px;font-weight:800;line-height:1.45;margin-bottom:8px;}
+.header h1 span{background:#facc15;color:#1e293b;border-radius:4px;padding:0 4px;}
+.header p{font-size:13px;opacity:0.88;margin-bottom:4px;}
+.tip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border-radius:20px;padding:5px 14px;font-size:12px;margin-top:8px;}
+.steps{display:flex;background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:100;}
+.step{flex:1;text-align:center;padding:14px 4px;font-size:12px;font-weight:700;color:#94a3b8;border-bottom:3px solid transparent;cursor:pointer;}
+.step.active{color:#2563eb;border-bottom-color:#2563eb;}
+.step.done{color:#22c55e;border-bottom-color:#22c55e;}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:2px solid currentColor;font-size:11px;margin-bottom:4px;}
+.section{display:none;padding:20px 16px;}
+.section.active{display:block;}
+.info-box{background:#eff6ff;border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:20px;font-size:13px;color:#1e40af;line-height:1.7;}
+.family-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.family-btn{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.family-btn.selected{border-color:#2563eb;background:#eff6ff;}
+.family-btn .icon{font-size:28px;margin-bottom:6px;}
+.family-btn .label{font-size:14px;font-weight:700;}
+.family-btn .sub{font-size:11px;color:#64748b;margin-top:2px;}
+.next-btn{width:100%;padding:16px;background:#2563eb;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;}
+.next-btn:disabled{background:#cbd5e1;cursor:not-allowed;}
+.cat-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#f8fafc;border-radius:10px 10px 0 0;border:1px solid #e2e8f0;cursor:pointer;user-select:none;}
+.cat-header .cat-name{font-size:14px;font-weight:700;}
+.cat-header .cat-pv{font-size:12px;color:#2563eb;font-weight:700;}
+.cat-header .arrow{transition:transform .3s;color:#94a3b8;}
+.cat-header.open .arrow{transform:rotate(180deg);}
+.cat-body{border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px;overflow:hidden;display:none;}
+.cat-body.open{display:block;}
+.select-all-row{display:flex;justify-content:flex-end;padding:8px 14px;background:#f8fafc;border-bottom:1px solid #f1f5f9;}
+.select-all-btn{font-size:12px;color:#2563eb;font-weight:600;cursor:pointer;background:none;border:none;padding:0;}
+.item-row{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid #f1f5f9;gap:10px;cursor:pointer;}
+.item-row:last-child{border-bottom:none;}
+.item-check{width:20px;height:20px;border:2px solid #cbd5e1;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.item-check.checked{background:#2563eb;border-color:#2563eb;color:#fff;}
+.item-name{flex:1;font-size:13px;}
+.item-pv{font-size:12px;color:#64748b;white-space:nowrap;}
+.half-badge{background:#fef3c7;color:#d97706;border-radius:4px;padding:1px 5px;font-size:10px;font-weight:700;margin-left:4px;}
+.cat-wrap{margin-bottom:12px;}
+.result-card{background:#fff;border-radius:16px;padding:22px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.result-label{font-size:12px;color:#64748b;font-weight:600;margin-bottom:4px;}
+.result-big{font-size:32px;font-weight:800;color:#1e293b;}
+.result-big span{font-size:16px;font-weight:600;color:#64748b;margin-left:4px;}
+.cashback-card{background:linear-gradient(135deg,#1341a8,#3b82f6);color:#fff;border-radius:16px;padding:22px;margin-bottom:14px;}
+.cashback-card .label{font-size:13px;opacity:.85;margin-bottom:6px;}
+.cashback-card .amount{font-size:36px;font-weight:800;}
+.cashback-card .sub{font-size:12px;opacity:.75;margin-top:6px;}
+.cat-result{border-bottom:1px solid #f1f5f9;padding:10px 0;display:flex;justify-content:space-between;font-size:13px;}
+.cat-result:last-child{border-bottom:none;}
+.reset-btn{width:100%;padding:14px;background:#f1f5f9;color:#64748b;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.share-btn{width:100%;padding:14px;background:#22c55e;color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.pv-bar-wrap{background:#f1f5f9;border-radius:10px;overflow:hidden;height:10px;margin:10px 0 4px;}
+.pv-bar{height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:10px;transition:width .5s ease;}
+.pv-sub{display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;}
+.age-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.age-btn{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:14px 6px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;transition:all .2s;}
+.age-btn.selected{border-color:#2563eb;background:#eff6ff;color:#1341a8;}
+.section-label{font-size:13px;font-weight:700;color:#475569;margin:4px 0 10px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="header">
+  <div class="badge">atom美 AZA · マートチェンジ</div>
+  <h1>家族の生活費を<span>Atomyマート</span>に<br>切り替えたら、キャッシュバックは<br>いくらになる？💰</h1>
+  <p>普段使っている日用品をチェックしてください。</p>
+  <p>選んだ商品のPVをもとに予想キャッシュバックを計算します。</p>
+  <div class="tip">💡 PV＝Atomy商品購入で積み立てられるポイント基準</div>
+</div>
+
+<div class="steps">
+  <div class="step active" id="tab1" onclick="goStep(1)">
+    <div class="step-num">1</div><br>家族構成
+  </div>
+  <div class="step" id="tab2" onclick="goStep(2)">
+    <div class="step-num">2</div><br>商品選択
+  </div>
+  <div class="step" id="tab3" onclick="goStep(3)">
+    <div class="step-num">3</div><br>結果表示
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div class="section active" id="sec1">
+  <div class="info-box">
+    📌 家族構成によって適用期間が変わります。<br>
+    <strong>2人以下 → 6ヶ月基準 &nbsp;|&nbsp; 3人以上 → 12ヶ月基準</strong>
+  </div>
+  <div class="family-grid">
+    <div class="family-btn" onclick="selectFamily(1,6)" id="f1">
+      <div class="icon">🧑</div>
+      <div class="label">1人家族</div>
+      <div class="sub">6ヶ月適用</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(2,6)" id="f2">
+      <div class="icon">👫</div>
+      <div class="label">2人家族</div>
+      <div class="sub">6ヶ月適用</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(3,12)" id="f3">
+      <div class="icon">👨‍👩‍👧</div>
+      <div class="label">3人家族</div>
+      <div class="sub">12ヶ月適用</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(4,12)" id="f4">
+      <div class="icon">👨‍👩‍👧‍👦</div>
+      <div class="label">4人以上</div>
+      <div class="sub">12ヶ月適用</div>
+    </div>
+  </div>
+  <div class="section-label">年代</div>
+  <div class="age-grid">
+    <div class="age-btn" onclick="selectAge('20')" id="a20">20代以下</div>
+    <div class="age-btn" onclick="selectAge('30')" id="a30">30代</div>
+    <div class="age-btn" onclick="selectAge('40')" id="a40">40代</div>
+    <div class="age-btn" onclick="selectAge('50')" id="a50">50代</div>
+    <div class="age-btn" onclick="selectAge('60')" id="a60">60代以上</div>
+  </div>
+  <button class="next-btn" id="nextBtn1" disabled onclick="goStep(2)">次へ → 商品チェック</button>
+</div>
+
+<!-- STEP 2 -->
+<div class="section" id="sec2">
+  <div id="catList"></div>
+  <button class="next-btn" onclick="goStep(3)" style="margin-top:8px;">次へ → 結果を見る</button>
+</div>
+
+<!-- STEP 3 -->
+<div class="section" id="sec3">
+  <div id="resultArea"></div>
+  <button class="reset-btn" onclick="resetAll()">🔄 最初からやり直す</button>
+  <button class="share-btn" onclick="shareResult()">🔗 結果をシェア</button>
+</div>
+
+<script>
+const CASHBACK_PER_UNIT = 6000;
+const CASHBACK_UNIT_PV = 300000;
+const CURRENCY = '¥';
+
+// Japan product data (PDF 2026 based)
+const CATEGORIES = [
+  {name:'🍚 食品', half:false, items:[
+    {n:'じゃがいもラーメン(1箱)',pv:12000},
+    {n:'マヌカハニー',pv:18000},
+    {n:'ABCジュース(1箱)',pv:15000},
+    {n:'紅参ジュース(1箱)',pv:36000},
+    {n:'黒にんにく',pv:14000},
+    {n:'ナッツ&ドライフルーツ',pv:8000},
+    {n:'ごま油',pv:5000},
+    {n:'海苔(1セット)',pv:6000},
+    {n:'子供用おやつセット',pv:8000},
+  ]},
+  {name:'💊 サプリメント', half:true, items:[
+    {n:'HemoHIM(3箱)',pv:186000},
+    {n:'フコイダン(1箱)',pv:46000},
+    {n:'紅参丹(1箱)',pv:40000},
+    {n:'GMZ(1箱)',pv:32000},
+    {n:'ノニジュース(1箱)',pv:31500},
+    {n:'Probiotic 10+(2箱)',pv:60000},
+    {n:'Propolis Plus(2箱)',pv:40800},
+    {n:'Spirulina(2箱)',pv:20400},
+    {n:'Vitamin C(2箱)',pv:14400},
+    {n:'ルテイン(1箱)',pv:14400},
+    {n:'アスタキサンチン(1箱)',pv:16000},
+    {n:'オメガ3(1箱)',pv:10000},
+    {n:'EVERYTIME(1箱)',pv:32000},
+    {n:'子供用マルチビタミン(2箱)',pv:10000},
+    {n:'カルシウム&マグネシウム(1箱)',pv:12000},
+    {n:'コエンザイムQ10(1箱)',pv:16000},
+    {n:'ビタミンD(1箱)',pv:10000},
+    {n:'鉄分サプリ(1箱)',pv:8000},
+    {n:'コラーゲン(1箱)',pv:14000},
+    {n:'グルコサミン(1箱)',pv:20000},
+    {n:'ミルクシスル(1箱)',pv:12000},
+  ]},
+  {name:'💄 化粧品', half:true, items:[
+    {n:'Absolute CellActive セット',pv:140000},
+    {n:'美容液/プレステージ',pv:80000},
+    {n:'THE FAME セット',pv:80000},
+    {n:'VVID セット',pv:62000},
+    {n:'A-ライン セット',pv:50000},
+    {n:'SKIN PLUS セット',pv:24000},
+    {n:'海藻コラーゲンアンプル',pv:24000},
+    {n:'クッションファンデ',pv:12000},
+    {n:'日焼け止めSPF50+',pv:8000},
+    {n:'アイクリーム',pv:12000},
+    {n:'リップケアセット',pv:5000},
+    {n:'BBクリーム',pv:8000},
+    {n:'化粧水&乳液セット',pv:18000},
+    {n:'クレンジングフォーム',pv:7000},
+    {n:'マスクパック(1箱)',pv:15000},
+    {n:'アイシャドウ',pv:10000},
+    {n:'リップスティック',pv:6000},
+    {n:'ファンデーション',pv:14000},
+    {n:'パウダー',pv:9000},
+  ]},
+  {name:'🧴 ヘア&ボディ', half:true, items:[
+    {n:'RVヘアケアセット(シャンプー+トリートメント)',pv:14000},
+    {n:'スカルプケアシャンプー',pv:10000},
+    {n:'ヘアトリートメントマスク',pv:8000},
+    {n:'シルキーリペアセラム',pv:9000},
+    {n:'ボディウォッシュ',pv:7000},
+    {n:'ハンドウォッシュ',pv:3000},
+    {n:'ハンドクリーム',pv:5000},
+    {n:'ボディローション',pv:8000},
+    {n:'フットクリーム',pv:4000},
+    {n:'デオドラント',pv:4000},
+    {n:'歯磨き粉',pv:3000},
+    {n:'歯ブラシセット',pv:2000},
+    {n:'入浴剤',pv:6000},
+    {n:'スカルプエッセンス',pv:12000},
+    {n:'ヘアオイル',pv:9000},
+  ]},
+  {name:'🏠 ホームケア', half:true, items:[
+    {n:'洗濯洗剤(液体)',pv:12000},
+    {n:'洗濯洗剤(粉末)',pv:10000},
+    {n:'食器洗い洗剤',pv:6000},
+    {n:'柔軟剤',pv:5000},
+    {n:'多目的クリーナー',pv:8000},
+    {n:'トイレ用洗剤',pv:4000},
+    {n:'キッチン用スプレー',pv:6000},
+    {n:'除菌ウェットティッシュ',pv:4000},
+  ]},
+];
+
+let familySize=0, months=0, checked={}, ageGroup='', currentStep=1, sessionId=null, sb=null;
+
+function selectFamily(size,m){
+  familySize=size; months=m;
+  [1,2,3,4].forEach(i=>document.getElementById('f'+i).classList.remove('selected'));
+  document.getElementById('f'+size).classList.add('selected');
+  updateNext1();
+  saveState();
+}
+
+function selectAge(g){
+  ageGroup=g;
+  ['20','30','40','50','60'].forEach(k=>document.getElementById('a'+k).classList.remove('selected'));
+  document.getElementById('a'+g).classList.add('selected');
+  updateNext1();
+  saveState();
+}
+
+function updateNext1(){
+  document.getElementById('nextBtn1').disabled=!(familySize&&ageGroup);
+}
+
+function buildCats(){
+  const div=document.getElementById('catList');
+  div.innerHTML='';
+  CATEGORIES.forEach((cat,ci)=>{
+    const wrap=document.createElement('div');
+    wrap.className='cat-wrap';
+    const catPV=getCatPV(ci);
+    wrap.innerHTML=`
+      <div class="cat-header" id="ch${ci}" onclick="toggleCat(${ci})">
+        <div class="cat-name">${cat.name}${cat.half?'<span class="half-badge">×½</span>':''}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="cat-pv" id="cpv${ci}">${catPV>0?catPV.toLocaleString()+' PV':''}</span>
+          <span class="arrow" id="arr${ci}">▼</span>
+        </div>
+      </div>
+      <div class="cat-body" id="cb${ci}">
+        <div class="select-all-row"><button class="select-all-btn" onclick="selectAll(${ci},event)">すべて選択</button></div>
+        ${cat.items.map((item,ii)=>`
+          <div class="item-row" onclick="toggleItem(${ci},${ii})">
+            <div class="item-check ${checked[ci+'_'+ii]?'checked':''}" id="ic${ci}_${ii}">✓</div>
+            <div class="item-name">${item.n}</div>
+            <div class="item-pv">${item.pv.toLocaleString()} PV</div>
+          </div>`).join('')}
+      </div>`;
+    div.appendChild(wrap);
+  });
+}
+
+function getCatPV(ci){
+  const cat=CATEGORIES[ci];
+  let sum=0;
+  cat.items.forEach((item,ii)=>{if(checked[ci+'_'+ii])sum+=item.pv;});
+  return cat.half?Math.round(sum*0.5):sum;
+}
+
+function toggleCat(ci){
+  document.getElementById('cb'+ci).classList.toggle('open');
+  document.getElementById('ch'+ci).classList.toggle('open');
+}
+
+function selectAll(ci,e){
+  e.stopPropagation();
+  const cat=CATEGORIES[ci];
+  const anyUnchecked=cat.items.some((_,ii)=>!checked[ci+'_'+ii]);
+  cat.items.forEach((_,ii)=>{checked[ci+'_'+ii]=anyUnchecked;});
+  buildCats();
+  document.getElementById('cb'+ci).classList.add('open');
+  document.getElementById('ch'+ci).classList.add('open');
+  saveState();
+}
+
+function toggleItem(ci,ii){
+  checked[ci+'_'+ii]=!checked[ci+'_'+ii];
+  document.getElementById('ic'+ci+'_'+ii).classList.toggle('checked',checked[ci+'_'+ii]);
+  const pv=getCatPV(ci);
+  document.getElementById('cpv'+ci).textContent=pv>0?pv.toLocaleString()+' PV':'';
+  saveState();
+}
+
+function getTotalPV(){
+  let t=0;
+  CATEGORIES.forEach((_,ci)=>t+=getCatPV(ci));
+  return t;
+}
+
+function showResult(){
+  const totalPV=getTotalPV();
+  const units=Math.floor(totalPV/CASHBACK_UNIT_PV*months);
+  const cashback=units*CASHBACK_PER_UNIT;
+  const pct=Math.min(totalPV/CASHBACK_UNIT_PV*100,100);
+  let catRows='';
+  CATEGORIES.forEach((cat,ci)=>{
+    const pv=getCatPV(ci);
+    if(pv>0) catRows+=`<div class="cat-result"><span>${cat.name}${cat.half?' <span style="font-size:11px;color:#d97706">(×½適用)</span>':''}</span><span style="font-weight:700">${pv.toLocaleString()} PV</span></div>`;
+  });
+  document.getElementById('resultArea').innerHTML=`
+    <div class="result-card">
+      <div class="result-label">月間PV合計</div>
+      <div class="result-big">${totalPV.toLocaleString()}<span>PV</span></div>
+      <div class="pv-bar-wrap"><div class="pv-bar" style="width:${pct}%"></div></div>
+      <div class="pv-sub"><span>0</span><span>目標：30万PV</span></div>
+    </div>
+    <div class="cashback-card">
+      <div class="label">📦 ${months}ヶ月間の予想キャッシュバック（${units}回 × ${CURRENCY}${CASHBACK_PER_UNIT.toLocaleString()}）</div>
+      <div class="amount">${CURRENCY}${cashback.toLocaleString()}</div>
+      <div class="sub">30万PVごとに${CURRENCY}${CASHBACK_PER_UNIT.toLocaleString()}のキャッシュバック</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">カテゴリ別内訳</div>
+      ${catRows||'<div style="color:#94a3b8;font-size:13px">商品が選択されていません</div>'}
+    </div>`;
+}
+
+function goStep(n){
+  if(n===2&&!(familySize&&ageGroup))return;
+  currentStep=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('sec'+i).classList.toggle('active',i===n);
+    const tab=document.getElementById('tab'+i);
+    tab.classList.remove('active','done');
+    if(i===n)tab.classList.add('active');
+    else if(i<n)tab.classList.add('done');
+  });
+  if(n===2)buildCats();
+  if(n===3)showResult();
+  window.scrollTo({top:0,behavior:'smooth'});
+  saveState();
+}
+
+function resetAll(){
+  familySize=0;months=0;checked={};ageGroup='';
+  [1,2,3,4].forEach(i=>document.getElementById('f'+i).classList.remove('selected'));
+  ['20','30','40','50','60'].forEach(k=>document.getElementById('a'+k).classList.remove('selected'));
+  document.getElementById('nextBtn1').disabled=true;
+  goStep(1);
+  saveState();
+}
+
+function shareResult(){
+  const url=window.location.href;
+  if(navigator.share){navigator.share({title:'Atomyマートチェンジ計算機',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('リンクをコピーしました！'));}
+}
+
+/* ---- session persistence (Supabase) ---- */
+const SUPABASE_URL = 'https://vrnkxwesuelknkxrvenb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_TABbNyEUVdtNFAibRuFHBw_RzSY8-Jn';
+const COUNTRY = 'ja';
+let saveTimer=null;
+
+function getSessionId(){
+  try{
+    const url=new URL(window.location.href);
+    let id=url.searchParams.get('sid');
+    if(!id) id=localStorage.getItem('mc_sid_ja');
+    if(!id) id=crypto.randomUUID();
+    localStorage.setItem('mc_sid_ja', id);
+    if(url.searchParams.get('sid')!==id){
+      url.searchParams.set('sid', id);
+      window.history.replaceState({}, '', url.toString());
+    }
+    return id;
+  }catch(e){ return crypto.randomUUID(); }
+}
+
+function saveState(){
+  if(!sb || !sessionId) return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    const totalPV=getTotalPV();
+    const cashback=months?Math.floor(totalPV/CASHBACK_UNIT_PV*months)*CASHBACK_PER_UNIT:0;
+    sb.from('martchange_sessions').upsert({
+      id:sessionId, country:COUNTRY,
+      family_size:familySize||null, months:months||null,
+      age_group:ageGroup||null, checked:checked,
+      step:currentStep, total_pv:totalPV, cashback:cashback,
+      completed:currentStep===3, updated_at:new Date().toISOString()
+    }).then(()=>{}).catch(()=>{});
+  }, 500);
+}
+
+function applySelectionUI(){
+  if(familySize && document.getElementById('f'+familySize)) document.getElementById('f'+familySize).classList.add('selected');
+  if(ageGroup && document.getElementById('a'+ageGroup)) document.getElementById('a'+ageGroup).classList.add('selected');
+  updateNext1();
+}
+
+async function initSession(){
+  try{
+    if(!window.supabase) return;
+    sb=window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    sessionId=getSessionId();
+    const {data}=await sb.from('martchange_sessions').select('*').eq('id', sessionId).maybeSingle();
+    if(data){
+      familySize=data.family_size||0;
+      months=data.months||0;
+      ageGroup=data.age_group||'';
+      checked=data.checked||{};
+      applySelectionUI();
+      const savedStep=data.step||1;
+      if(savedStep>1) goStep(Math.min(savedStep,3));
+      sb.from('martchange_sessions').update({visit_count:(data.visit_count||1)+1,last_seen_at:new Date().toISOString()}).eq('id', sessionId).then(()=>{}).catch(()=>{});
+    }else{
+      await sb.from('martchange_sessions').insert({id:sessionId,country:COUNTRY,visit_count:1});
+    }
+  }catch(e){ /* calculator still works without backend */ }
+}
+
+initSession();
+</script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>애터미 마트체인지 계산기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#eef2f7;color:#1e293b;line-height:1.5;padding-bottom:80px;}
+.header{background:linear-gradient(145deg,#1341a8 0%,#2563eb 55%,#3b82f6 100%);color:#fff;padding:28px 20px 32px;text-align:center;}
+.badge{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.4);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.header h1{font-size:22px;font-weight:800;line-height:1.4;margin-bottom:8px;}
+.header h1 span{background:#facc15;color:#1e293b;border-radius:4px;padding:0 4px;}
+.header p{font-size:13px;opacity:0.88;margin-bottom:6px;}
+.tip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border-radius:20px;padding:5px 14px;font-size:12px;margin-top:8px;}
+.steps{display:flex;background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:100;}
+.step{flex:1;text-align:center;padding:14px 4px;font-size:12px;font-weight:700;color:#94a3b8;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;}
+.step.active{color:#2563eb;border-bottom-color:#2563eb;}
+.step.done{color:#22c55e;border-bottom-color:#22c55e;}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:2px solid currentColor;font-size:11px;margin-bottom:4px;}
+.section{display:none;padding:20px 16px;}
+.section.active{display:block;}
+.card{background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.card-title{font-size:15px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.info-box{background:#eff6ff;border-left:3px solid #2563eb;border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:20px;font-size:13px;color:#1e40af;line-height:1.6;}
+.family-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.family-btn{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:all .2s;}
+.family-btn:hover{border-color:#93c5fd;}
+.family-btn.selected{border-color:#2563eb;background:#eff6ff;}
+.family-btn .icon{font-size:28px;margin-bottom:6px;}
+.family-btn .label{font-size:14px;font-weight:700;}
+.family-btn .sub{font-size:11px;color:#64748b;margin-top:2px;}
+.next-btn{width:100%;padding:16px;background:#2563eb;color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s;}
+.next-btn:disabled{background:#cbd5e1;cursor:not-allowed;}
+.next-btn:hover:not(:disabled){background:#1d4ed8;}
+.cat-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#f8fafc;border-radius:10px 10px 0 0;border:1px solid #e2e8f0;cursor:pointer;user-select:none;}
+.cat-header .cat-name{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.cat-header .cat-pv{font-size:12px;color:#2563eb;font-weight:700;}
+.cat-header .arrow{transition:transform .3s;color:#94a3b8;}
+.cat-header.open .arrow{transform:rotate(180deg);}
+.cat-body{border:1px solid #e2e8f0;border-top:none;border-radius:0 0 10px 10px;overflow:hidden;display:none;}
+.cat-body.open{display:block;}
+.select-all-row{display:flex;justify-content:flex-end;padding:8px 14px;background:#f8fafc;border-bottom:1px solid #f1f5f9;}
+.select-all-btn{font-size:12px;color:#2563eb;font-weight:600;cursor:pointer;background:none;border:none;padding:0;}
+.item-row{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid #f1f5f9;gap:10px;cursor:pointer;transition:background .15s;}
+.item-row:last-child{border-bottom:none;}
+.item-row:hover{background:#f8fafc;}
+.item-check{width:20px;height:20px;border:2px solid #cbd5e1;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.item-check.checked{background:#2563eb;border-color:#2563eb;color:#fff;}
+.item-name{flex:1;font-size:13px;}
+.item-pv{font-size:12px;color:#64748b;white-space:nowrap;}
+.half-badge{background:#fef3c7;color:#d97706;border-radius:4px;padding:1px 5px;font-size:10px;font-weight:700;margin-left:4px;}
+.cat-wrap{margin-bottom:12px;}
+.result-card{background:#fff;border-radius:16px;padding:22px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.result-label{font-size:12px;color:#64748b;font-weight:600;margin-bottom:4px;}
+.result-big{font-size:32px;font-weight:800;color:#1e293b;}
+.result-big span{font-size:16px;font-weight:600;color:#64748b;margin-left:4px;}
+.cashback-card{background:linear-gradient(135deg,#1341a8,#3b82f6);color:#fff;border-radius:16px;padding:22px;margin-bottom:14px;}
+.cashback-card .label{font-size:13px;opacity:.85;margin-bottom:6px;}
+.cashback-card .amount{font-size:36px;font-weight:800;}
+.cashback-card .sub{font-size:12px;opacity:.75;margin-top:6px;}
+.cat-result{border-bottom:1px solid #f1f5f9;padding:10px 0;display:flex;justify-content:space-between;font-size:13px;}
+.cat-result:last-child{border-bottom:none;}
+.reset-btn{width:100%;padding:14px;background:#f1f5f9;color:#64748b;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.share-btn{width:100%;padding:14px;background:#22c55e;color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;}
+.pv-bar-wrap{background:#f1f5f9;border-radius:10px;overflow:hidden;height:10px;margin:10px 0 4px;}
+.pv-bar{height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:10px;transition:width .5s ease;}
+.pv-sub{display:flex;justify-content:space-between;font-size:11px;color:#94a3b8;}
+.age-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.age-btn{background:#fff;border:2px solid #e2e8f0;border-radius:12px;padding:14px 6px;text-align:center;cursor:pointer;font-size:13px;font-weight:700;transition:all .2s;}
+.age-btn.selected{border-color:#2563eb;background:#eff6ff;color:#1341a8;}
+.section-label{font-size:13px;font-weight:700;color:#475569;margin:4px 0 10px;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="header">
+  <div class="badge">atom美 AZA · 마트체인지</div>
+  <h1>가족 생활비를<br><span>애터미 마트</span>로 바꾸면<br>캐시백은 얼마나 될까요? 💰</h1>
+  <p>평소 사용하는 생필품을 체크해보세요.</p>
+  <p>선택한 상품의 PV를 기준으로 예상 캐시백을 계산합니다.</p>
+  <div class="tip">💡 PV＝애터미 상품 구매 시 적립되는 포인트 기준</div>
+</div>
+
+<div class="steps">
+  <div class="step active" id="tab1" onclick="goStep(1)">
+    <div class="step-num">1</div><br>가족구성
+  </div>
+  <div class="step" id="tab2" onclick="goStep(2)">
+    <div class="step-num">2</div><br>상품선택
+  </div>
+  <div class="step" id="tab3" onclick="goStep(3)">
+    <div class="step-num">3</div><br>결과보기
+  </div>
+</div>
+
+<!-- STEP 1 -->
+<div class="section active" id="sec1">
+  <div class="info-box">
+    📌 가족 구성에 따라 적용 기간이 달라집니다.<br>
+    <strong>2인 이하 → 6개월 기준 &nbsp;|&nbsp; 3인 이상 → 12개월 기준</strong>
+  </div>
+  <div class="family-grid">
+    <div class="family-btn" onclick="selectFamily(1,6)" id="f1">
+      <div class="icon">🧑</div>
+      <div class="label">1인가구</div>
+      <div class="sub">6개월 적용</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(2,6)" id="f2">
+      <div class="icon">👫</div>
+      <div class="label">2인가구</div>
+      <div class="sub">6개월 적용</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(3,12)" id="f3">
+      <div class="icon">👨‍👩‍👧</div>
+      <div class="label">3인가구</div>
+      <div class="sub">12개월 적용</div>
+    </div>
+    <div class="family-btn" onclick="selectFamily(4,12)" id="f4">
+      <div class="icon">👨‍👩‍👧‍👦</div>
+      <div class="label">4인 이상</div>
+      <div class="sub">12개월 적용</div>
+    </div>
+  </div>
+  <div class="section-label">연령대</div>
+  <div class="age-grid">
+    <div class="age-btn" onclick="selectAge('20')" id="a20">20대 이하</div>
+    <div class="age-btn" onclick="selectAge('30')" id="a30">30대</div>
+    <div class="age-btn" onclick="selectAge('40')" id="a40">40대</div>
+    <div class="age-btn" onclick="selectAge('50')" id="a50">50대</div>
+    <div class="age-btn" onclick="selectAge('60')" id="a60">60대 이상</div>
+  </div>
+  <button class="next-btn" id="nextBtn1" disabled onclick="goStep(2)">다음 → 상품 체크</button>
+</div>
+
+<!-- STEP 2 -->
+<div class="section" id="sec2">
+  <div id="catList"></div>
+  <button class="next-btn" onclick="goStep(3)" style="margin-top:8px;">다음 → 결과보기</button>
+</div>
+
+<!-- STEP 3 -->
+<div class="section" id="sec3">
+  <div id="resultArea"></div>
+  <button class="reset-btn" onclick="resetAll()">🔄 처음부터 다시하기</button>
+  <button class="share-btn" onclick="shareResult()">🔗 결과 공유하기</button>
+</div>
+
+<script>
+const CASHBACK_PER_UNIT = 58000;
+const CASHBACK_UNIT_PV = 300000;
+const CURRENCY = '₩';
+
+const CATEGORIES = [
+  {name:'💊 건강기능식품', half:true, items:[
+    {n:'헤모힘(3박스)',pv:186000},{n:'애터미 유산균 10+(2박스)',pv:60000},
+    {n:'프로폴리스 플러스(2박스)',pv:40800},{n:'스피루리나(2박스)',pv:20400},
+    {n:'비타민C(2박스)',pv:14400},{n:'어린이 멀티비타민(2박스)',pv:10000},
+    {n:'에브리타임(1박스)',pv:32000},{n:'루테인(1박스)',pv:14400},
+    {n:'아스타잔틴(1박스)',pv:16000},{n:'관절건강(1박스)',pv:20000},
+    {n:'오메가3(1박스)',pv:10000},{n:'노니주스(1박스)',pv:31500},
+  ]},
+  {name:'💄 스킨케어', half:true, items:[
+    {n:'앱솔루트 셀액티브 세트',pv:140000},{n:'VVID 세트',pv:62000},
+    {n:'더페임 세트',pv:80000},{n:'스킨플러스 세트',pv:24000},
+    {n:'해조콜라겐 앰플',pv:24000},{n:'선크림 SPF50+',pv:8000},
+    {n:'립케어 세트',pv:5000},{n:'아이크림',pv:12000},
+  ]},
+  {name:'🧴 헤어&바디', half:true, items:[
+    {n:'샴푸+린스 세트',pv:14000},{n:'두피케어 샴푸',pv:10000},
+    {n:'헤어트리트먼트',pv:8000},{n:'바디워시',pv:7000},
+    {n:'핸드워시',pv:3000},{n:'핸드크림',pv:5000},
+  ]},
+  {name:'🏠 홈케어', half:true, items:[
+    {n:'세탁세제',pv:12000},{n:'주방세제',pv:6000},
+    {n:'다목적 클리너',pv:8000},{n:'섬유유연제',pv:5000},
+    {n:'화장실 세제',pv:4000},
+  ]},
+  {name:'🍚 식품', half:false, items:[
+    {n:'홍삼진액(1박스)',pv:36000},{n:'ABC주스(1박스)',pv:15000},
+    {n:'라면(1박스)',pv:12000},{n:'어린이 간식세트',pv:8000},
+    {n:'마누카꿀',pv:18000},
+  ]},
+  {name:'👶 유아동', half:false, items:[
+    {n:'유아로션',pv:8000},{n:'유아샴푸',pv:6000},
+    {n:'기저귀(1팩)',pv:20000},{n:'어린이 치약',pv:3000},
+  ]},
+];
+
+let familySize=0, months=0, checked={}, ageGroup='', currentStep=1, sessionId=null, sb=null;
+
+function selectFamily(size,m){
+  familySize=size; months=m;
+  [1,2,3,4].forEach(i=>document.getElementById('f'+i).classList.remove('selected'));
+  document.getElementById('f'+size).classList.add('selected');
+  updateNext1();
+  saveState();
+}
+
+function selectAge(g){
+  ageGroup=g;
+  ['20','30','40','50','60'].forEach(k=>document.getElementById('a'+k).classList.remove('selected'));
+  document.getElementById('a'+g).classList.add('selected');
+  updateNext1();
+  saveState();
+}
+
+function updateNext1(){
+  document.getElementById('nextBtn1').disabled=!(familySize&&ageGroup);
+}
+
+function buildCats(){
+  const div=document.getElementById('catList');
+  div.innerHTML='';
+  CATEGORIES.forEach((cat,ci)=>{
+    const wrap=document.createElement('div');
+    wrap.className='cat-wrap';
+    const catPV=getCatPV(ci);
+    wrap.innerHTML=`
+      <div class="cat-header" id="ch${ci}" onclick="toggleCat(${ci})">
+        <div class="cat-name">${cat.name}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="cat-pv" id="cpv${ci}">${catPV>0?catPV.toLocaleString()+' PV':''}</span>
+          ${cat.half?'<span class="half-badge">×½</span>':''}
+          <span class="arrow" id="arr${ci}">▼</span>
+        </div>
+      </div>
+      <div class="cat-body" id="cb${ci}">
+        <div class="select-all-row"><button class="select-all-btn" onclick="selectAll(${ci},event)">전체선택</button></div>
+        ${cat.items.map((item,ii)=>`
+          <div class="item-row" onclick="toggleItem(${ci},${ii})">
+            <div class="item-check ${checked[ci+'_'+ii]?'checked':''}" id="ic${ci}_${ii}">✓</div>
+            <div class="item-name">${item.n}</div>
+            <div class="item-pv">${item.pv.toLocaleString()} PV</div>
+          </div>`).join('')}
+      </div>`;
+    div.appendChild(wrap);
+  });
+}
+
+function getCatPV(ci){
+  const cat=CATEGORIES[ci];
+  let sum=0;
+  cat.items.forEach((item,ii)=>{if(checked[ci+'_'+ii])sum+=item.pv;});
+  return cat.half?Math.round(sum*0.5):sum;
+}
+
+function toggleCat(ci){
+  const h=document.getElementById('ch'+ci);
+  const b=document.getElementById('cb'+ci);
+  const a=document.getElementById('arr'+ci);
+  const open=b.classList.contains('open');
+  b.classList.toggle('open',!open);
+  h.classList.toggle('open',!open);
+}
+
+function selectAll(ci,e){
+  e.stopPropagation();
+  const cat=CATEGORIES[ci];
+  const anyUnchecked=cat.items.some((_,ii)=>!checked[ci+'_'+ii]);
+  cat.items.forEach((_,ii)=>{checked[ci+'_'+ii]=anyUnchecked;});
+  buildCats();
+  document.getElementById('cb'+ci).classList.add('open');
+  document.getElementById('ch'+ci).classList.add('open');
+  saveState();
+}
+
+function toggleItem(ci,ii){
+  checked[ci+'_'+ii]=!checked[ci+'_'+ii];
+  const el=document.getElementById('ic'+ci+'_'+ii);
+  el.classList.toggle('checked',checked[ci+'_'+ii]);
+  const pv=getCatPV(ci);
+  document.getElementById('cpv'+ci).textContent=pv>0?pv.toLocaleString()+' PV':'';
+  saveState();
+}
+
+function getTotalPV(){
+  let t=0;
+  CATEGORIES.forEach((_,ci)=>t+=getCatPV(ci));
+  return t;
+}
+
+function showResult(){
+  const totalPV=getTotalPV();
+  const units=Math.floor(totalPV/CASHBACK_UNIT_PV*months);
+  const cashback=units*CASHBACK_PER_UNIT;
+  const pct=Math.min(totalPV/CASHBACK_UNIT_PV*100,100);
+
+  let catRows='';
+  CATEGORIES.forEach((cat,ci)=>{
+    const pv=getCatPV(ci);
+    if(pv>0) catRows+=`<div class="cat-result"><span>${cat.name}${cat.half?' <span style="font-size:11px;color:#d97706">(×½ 적용)</span>':''}</span><span style="font-weight:700">${pv.toLocaleString()} PV</span></div>`;
+  });
+
+  document.getElementById('resultArea').innerHTML=`
+    <div class="result-card">
+      <div class="result-label">월간 PV 합계</div>
+      <div class="result-big">${totalPV.toLocaleString()}<span>PV</span></div>
+      <div class="pv-bar-wrap"><div class="pv-bar" style="width:${pct}%"></div></div>
+      <div class="pv-sub"><span>0</span><span>목표: 30만 PV</span></div>
+    </div>
+    <div class="cashback-card">
+      <div class="label">📦 ${months}개월간 예상 캐시백 (${units}회 × ${CURRENCY}${CASHBACK_PER_UNIT.toLocaleString()})</div>
+      <div class="amount">${CURRENCY}${cashback.toLocaleString()}</div>
+      <div class="sub">30만 PV마다 ${CURRENCY}${CASHBACK_PER_UNIT.toLocaleString()} 캐시백</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">카테고리별 내역</div>
+      ${catRows||'<div style="color:#94a3b8;font-size:13px">선택된 상품이 없습니다</div>'}
+    </div>`;
+}
+
+function goStep(n){
+  if(n===2 && !(familySize && ageGroup)) return;
+  currentStep=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('sec'+i).classList.toggle('active',i===n);
+    const tab=document.getElementById('tab'+i);
+    tab.classList.remove('active','done');
+    if(i===n) tab.classList.add('active');
+    else if(i<n) tab.classList.add('done');
+  });
+  if(n===2) buildCats();
+  if(n===3) showResult();
+  window.scrollTo({top:0,behavior:'smooth'});
+  saveState();
+}
+
+function resetAll(){
+  familySize=0; months=0; checked={}; ageGroup='';
+  [1,2,3,4].forEach(i=>document.getElementById('f'+i).classList.remove('selected'));
+  ['20','30','40','50','60'].forEach(k=>document.getElementById('a'+k).classList.remove('selected'));
+  document.getElementById('nextBtn1').disabled=true;
+  goStep(1);
+  saveState();
+}
+
+function shareResult(){
+  const url=window.location.href;
+  if(navigator.share){navigator.share({title:'애터미 마트체인지 계산기',url});}
+  else{navigator.clipboard.writeText(url).then(()=>alert('링크가 복사되었습니다!'));}
+}
+
+/* ---- session persistence (Supabase) ---- */
+const SUPABASE_URL = 'https://vrnkxwesuelknkxrvenb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_TABbNyEUVdtNFAibRuFHBw_RzSY8-Jn';
+const COUNTRY = 'kr';
+let saveTimer=null;
+
+function getSessionId(){
+  try{
+    const url=new URL(window.location.href);
+    let id=url.searchParams.get('sid');
+    if(!id) id=localStorage.getItem('mc_sid_kr');
+    if(!id) id=crypto.randomUUID();
+    localStorage.setItem('mc_sid_kr', id);
+    if(url.searchParams.get('sid')!==id){
+      url.searchParams.set('sid', id);
+      window.history.replaceState({}, '', url.toString());
+    }
+    return id;
+  }catch(e){ return crypto.randomUUID(); }
+}
+
+function saveState(){
+  if(!sb || !sessionId) return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    const totalPV=getTotalPV();
+    const cashback=months?Math.floor(totalPV/CASHBACK_UNIT_PV*months)*CASHBACK_PER_UNIT:0;
+    sb.from('martchange_sessions').upsert({
+      id:sessionId, country:COUNTRY,
+      family_size:familySize||null, months:months||null,
+      age_group:ageGroup||null, checked:checked,
+      step:currentStep, total_pv:totalPV, cashback:cashback,
+      completed:currentStep===3, updated_at:new Date().toISOString()
+    }).then(()=>{}).catch(()=>{});
+  }, 500);
+}
+
+function applySelectionUI(){
+  if(familySize && document.getElementById('f'+familySize)) document.getElementById('f'+familySize).classList.add('selected');
+  if(ageGroup && document.getElementById('a'+ageGroup)) document.getElementById('a'+ageGroup).classList.add('selected');
+  updateNext1();
+}
+
+async function initSession(){
+  try{
+    if(!window.supabase) return;
+    sb=window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    sessionId=getSessionId();
+    const {data}=await sb.from('martchange_sessions').select('*').eq('id', sessionId).maybeSingle();
+    if(data){
+      familySize=data.family_size||0;
+      months=data.months||0;
+      ageGroup=data.age_group||'';
+      checked=data.checked||{};
+      applySelectionUI();
+      const savedStep=data.step||1;
+      if(savedStep>1) goStep(Math.min(savedStep,3));
+      sb.from('martchange_sessions').update({visit_count:(data.visit_count||1)+1,last_seen_at:new Date().toISOString()}).eq('id', sessionId).then(()=>{}).catch(()=>{});
+    }else{
+      await sb.from('martchange_sessions').insert({id:sessionId,country:COUNTRY,visit_count:1});
+    }
+  }catch(e){ /* calculator still works without backend */ }
+}
+
+initSession();
+</script>
+</body>
+</html>

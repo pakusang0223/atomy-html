@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#00b5ef">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 48 48%27%3E%3Ccircle cx=%2724%27 cy=%2724%27 r=%2723%27 fill=%27%2300b5ef%27/%3E%3Cpath d=%27M19 15l6-3v22%27 stroke=%27white%27 stroke-width=%274%27 fill=%27none%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3Ccircle cx=%2735%27 cy=%2734%27 r=%279%27 fill=%27white%27/%3E%3Cpath d=%27M30.5 34l3 3 5-6%27 stroke=%27%230090c8%27 stroke-width=%272.6%27 fill=%27none%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E">
+<title>1일 1등록 챌린지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Sans+Thai:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3fafd;--card:#fff;--ink:#0f2a38;--mute:#5f7a89;--line:#d9ebf4;--main:#0079ab;--main2:#00b5ef;--soft:#e6f7fd;--warn:#f59e0b;--ok:#16a34a;--bad:#e11d48;--reg:#0088c7;--pv:#5b4bdb}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans KR','Noto Sans Thai',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;padding-bottom:60px}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px}
+header{background:linear-gradient(180deg,#fff 0%,#eaf8fe 100%);color:var(--ink);padding:16px 0 54px;border-radius:0 0 28px 28px;border-bottom:4px solid var(--main2);box-shadow:0 6px 20px rgba(0,181,239,.14)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.brand img.logo{height:44px;width:auto;max-width:130px;object-fit:contain;display:block}
+.brand span{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--mute);padding-left:10px;border-left:2px solid var(--line);line-height:1.2}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:16px}
+.lang{display:flex;gap:6px;flex:none}
+.lang button{border:1.5px solid var(--main2);background:#fff;color:var(--main);border-radius:999px;padding:4px 12px;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap}
+.lang button.on{background:var(--main);border-color:var(--main);color:#fff;font-weight:700}
+h1{font-size:25px;font-weight:900;line-height:1.3;color:var(--ink)}
+.tag{font-size:14px;color:var(--mute);margin-top:6px}
+.period{display:inline-block;margin-top:12px;background:var(--soft);color:var(--main);font-weight:700;border-radius:999px;padding:4px 14px;font-size:13px}
+main{margin-top:-34px}
+.card{background:var(--card);border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 2px 14px rgba(0,121,171,.09)}
+.card h2{font-size:15px;font-weight:700;margin-bottom:10px}
+select,input[type=text],input[type=date],input[type=number],input[type=password],textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--main2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:12px 16px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--main);color:#fff;width:100%}
+.btn.sub{background:var(--soft);color:var(--main)}
+.btn.reg{background:var(--reg)}.btn.pv{background:var(--pv)}
+.btn.sm{width:auto;padding:6px 12px;font-size:13px;border-radius:9px}
+.btn.red{background:#fde8ec;color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+.note{font-size:12.5px;color:var(--mute);margin-top:6px}
+.banner{background:#fff7e6;border:1px solid #fde1a6;color:#8a5a00;border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.ok-banner{background:var(--soft);border-color:#a9e0f5;color:#00607f}
+.kinds{display:grid;gap:10px}
+.kind{border:2px solid var(--line);border-radius:16px;padding:12px}
+.kind.done{border-color:var(--main2);background:#f2fbff}
+.kind .hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kind .tt{font-weight:700;font-size:15px}
+.kind .ds{font-size:12.5px;color:var(--mute);margin:2px 0 8px;word-break:keep-all}
+.chip{font-size:12px;border-radius:999px;padding:2px 10px;font-weight:700;background:#edf3f6;color:var(--mute);white-space:nowrap}
+.chip.ok{background:#d4f0fb;color:#006690}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.th{position:relative;width:64px;height:64px;border-radius:10px;overflow:hidden;background:#eee}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th b{position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:12px;line-height:20px;text-align:center;cursor:pointer}
+.prog{height:10px;background:#dff0f8;border-radius:999px;overflow:hidden;margin:6px 0}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--main2),var(--main));border-radius:999px}
+.stat{display:flex;justify-content:space-between;font-size:14px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:10px}
+.cal div{aspect-ratio:1;border-radius:9px;background:#edf5f9;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:var(--mute)}
+.cal div small{font-size:10px}
+.cal .c2{background:var(--main);color:#fff;font-weight:700}
+.cal .c1{background:#fde7b0;color:#7a5200;font-weight:700}
+.cal .today{outline:2.5px solid var(--main)}
+.cal .fut{opacity:.45}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.row:last-child{border-bottom:0}
+.row .nm{flex:1;font-weight:500}
+.row .dy{font-weight:700;color:var(--main)}
+.dot{width:20px;height:20px;border-radius:6px;font-size:12px;display:inline-flex;align-items:center;justify-content:center;background:#edf5f9;filter:grayscale(1);opacity:.5}
+.dot.on{filter:none;opacity:1;background:#d4f0fb}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0f2a38;color:#fff;padding:10px 18px;border-radius:999px;font-size:14px;z-index:50;max-width:90%;text-align:center}
+.foot{text-align:center;font-size:12px;color:var(--mute);margin-top:18px}
+.foot a{color:var(--mute)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:86vh;overflow:auto;padding:16px}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.photos figure{position:relative;border-radius:10px;overflow:hidden;background:#eee}
+.photos img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.photos figcaption{font-size:11px;padding:3px 5px;background:#fff}
+.tabs{display:flex;gap:6px;margin-bottom:10px}
+.lbl{font-size:13px;font-weight:700;margin:10px 0 4px;display:block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hide{display:none}
+.datebar{display:flex;gap:6px;align-items:center;margin-bottom:10px}
+.datebar input{flex:1;min-width:0}
+.datebar .btn{flex:none}
+.sum{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.sum .chip{font-size:13px;padding:4px 12px}
+.drow{padding:10px 0;border-bottom:1px solid var(--line)}
+.drow:last-child{border-bottom:0}
+.drow .hd{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;font-weight:500}
+.st{font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.st2{background:#d4f0fb;color:#006690}.st1{background:#fde7b0;color:#7a5200}.st0{background:#edf3f6;color:var(--mute)}
+.th.reg{outline:2.5px solid var(--reg);outline-offset:-2.5px}
+.th.pv{outline:2.5px solid var(--pv);outline-offset:-2.5px}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;margin:6px 0 4px}
+.chk input{width:18px;height:18px}
+.mebar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px}
+.mebar span{font-size:15px;min-width:0;word-break:break-all}
+.tabs.scroll{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;margin-top:6px}
+.tabs .btn{flex:none;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}
+.stats div{background:var(--soft);border-radius:12px;text-align:center;padding:10px 2px}
+.stats b{display:block;font-size:20px;color:var(--main)}
+.stats span{font-size:11px;color:var(--mute)}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.bar .btn{width:auto}
+.row input[type=checkbox],.chk input[type=radio]{width:20px;height:20px;flex:none}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="top"><div class="brand"><img class="logo" src="data:image/png;base64,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" alt="Atomy"><span>DAILY CHALLENGE</span></div><div class="lang" id="langBox"></div></div>
+  <h1 id="hTitle"></h1><div class="tag" id="hTag"></div><span class="period" id="hPeriod"></span>
+</div></header>
+<main class="wrap" id="app"></main>
+<div class="wrap foot" id="foot"></div>
+<div id="modalRoot"></div>
+<div class="toast hide" id="toast"></div>
+
+<script>
+const SB='https://dtfanubnnfzazqgxriuo.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR0ZmFudWJubmZ6YXpxZ3hyaXVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxMTIwNTgsImV4cCI6MjEwNzY4ODA1OH0._IPAiF7TJE6E5KXu9lzISwsfjVUqYsjovMS_J326C48';
+
+const T={
+ko:{
+ nameTitle:'이름 입력',namePh:'내 이름 (예: 홍길동)',start:'시작하기',
+ nameHelp:'이름을 입력하면 바로 시작돼요. 이미 등록된 이름이면 이어서 인증할 수 있어요 (띄어쓰기·영문 대소문자는 구분하지 않아요).',
+ existsQ:'"{name}" 이름은 이미 등록되어 있어요.\n이 이름으로 이어서 인증할까요?\n(다른 사람이라면 취소하고 이름 뒤에 구분 표시를 붙여 주세요)',
+ welcome:'{name} 님, 환영해요! 🎉',switchName:'이름 변경 · 로그아웃',logoutQ:'지금 이름에서 로그아웃하고 다른 이름으로 들어갈까요?',badName:'이름을 1~30자로 입력해 주세요',
+ today:'오늘의 인증',
+ reg:'회원등록 인증',regD:'오늘 새로 등록한 회원 화면을 올려주세요 (여러 장 가능)',
+ pv:'PV 인증',pvD:'오늘 {pv} PV 이상 달성 화면을 올려주세요 (여러 장 가능)',
+ add:'📷 사진 추가 (여러 장 선택 가능)',noteReg:'등록한 회원명 (선택)',notePv:'오늘 PV 점수 (선택)',
+ multi:'자정(12시)까지 여러 번 인증할 수 있어요. 두 가지 인증이 모두 있어야 하루 완료!',
+ doneKind:'인증됨',notYet:'미인증',cnt:'{n}장',
+ allDone:'오늘 인증 완료! 🎉',leftOne:'하나만 더 인증하면 오늘 완료예요',leftBoth:'오늘 아직 인증 전이에요',
+ prog:'나의 진행',days:'완료 {n} / {t}일',goal:'완주 기준 {n}일',cal:'인증 달력',
+ lg2:'등록+PV 완료',lg1:'일부만 인증',lg0:'미인증',
+ all:'모두의 현황',notStarted:'챌린지가 아직 시작되지 않았어요',ended:'챌린지가 종료되었어요',noPeriod:'아직 진행 기간이 설정되지 않았어요',
+ delConfirm:'이 사진을 삭제할까요?',uploading:'업로드 중… ({i}/{n})',uploaded:'인증 사진이 등록되었어요 ✅',fail:'업로드에 실패했어요. 다시 시도해 주세요',
+ copy:'링크 복사',copied:'링크가 복사되었어요',admin:'관리자',dayN:'{n}일차',
+ from:'기간',until:'~',loading:'불러오는 중…'
+},
+th:{
+ nameTitle:'กรอกชื่อ',namePh:'ชื่อของคุณ',start:'เริ่มเลย',
+ nameHelp:'กรอกชื่อแล้วเริ่มได้ทันที หากชื่อนี้ลงทะเบียนไว้แล้ว จะส่งรูปต่อจากเดิมได้ (ไม่แยกช่องว่างและตัวพิมพ์เล็ก/ใหญ่)',
+ existsQ:'ชื่อ "{name}" ลงทะเบียนไว้แล้ว\nต้องการใช้ชื่อนี้ส่งรูปต่อหรือไม่?\n(หากเป็นคนละคน ให้ยกเลิกและเติมเครื่องหมายต่อท้ายชื่อ)',
+ welcome:'ยินดีต้อนรับคุณ {name}! 🎉',switchName:'เปลี่ยนชื่อ · ออกจากระบบ',logoutQ:'ออกจากชื่อนี้แล้วเข้าด้วยชื่ออื่นหรือไม่?',badName:'กรุณากรอกชื่อ 1–30 ตัวอักษร',
+ today:'การยืนยันวันนี้',
+ reg:'ยืนยันการลงทะเบียนสมาชิก',regD:'ส่งภาพหน้าจอสมาชิกที่ลงทะเบียนใหม่วันนี้ (ส่งได้หลายรูป)',
+ pv:'ยืนยัน PV',pvD:'ส่งภาพหน้าจอที่แสดง PV วันนี้ถึง {pv} PV ขึ้นไป (ส่งได้หลายรูป)',
+ add:'📷 เพิ่มรูปภาพ (เลือกได้หลายรูป)',noteReg:'ชื่อสมาชิกที่ลงทะเบียน (ไม่บังคับ)',notePv:'คะแนน PV วันนี้ (ไม่บังคับ)',
+ multi:'ส่งรูปได้หลายครั้งจนถึงเที่ยงคืน ต้องมีการยืนยันครบทั้ง 2 อย่างจึงจะนับเป็น 1 วัน',
+ doneKind:'ยืนยันแล้ว',notYet:'ยังไม่ยืนยัน',cnt:'{n} รูป',
+ allDone:'ยืนยันครบแล้ววันนี้ 🎉',leftOne:'เหลืออีก 1 อย่างก็ครบวันนี้',leftBoth:'วันนี้ยังไม่ได้ยืนยัน',
+ prog:'ความคืบหน้าของฉัน',days:'ครบแล้ว {n} / {t} วัน',goal:'เกณฑ์ผ่าน {n} วัน',cal:'ปฏิทินการยืนยัน',
+ lg2:'ลงทะเบียน+PV ครบ',lg1:'ยืนยันบางส่วน',lg0:'ยังไม่ยืนยัน',
+ all:'สถานะของทุกคน',notStarted:'ชาเลนจ์ยังไม่เริ่ม',ended:'ชาเลนจ์สิ้นสุดแล้ว',noPeriod:'ยังไม่ได้กำหนดช่วงเวลาของชาเลนจ์',
+ delConfirm:'ต้องการลบรูปนี้หรือไม่?',uploading:'กำลังอัปโหลด… ({i}/{n})',uploaded:'บันทึกรูปยืนยันแล้ว ✅',fail:'อัปโหลดไม่สำเร็จ กรุณาลองใหม่',
+ copy:'คัดลอกลิงก์',copied:'คัดลอกลิงก์แล้ว',admin:'ผู้ดูแล',dayN:'วันที่ {n}',
+ from:'ช่วงเวลา',until:'ถึง',loading:'กำลังโหลด…'
+}};
+const KR_EMO={KR:'🇰🇷',TH:'🇹🇭'};
+
+let lang=(new URLSearchParams(location.search).get('lang')||localStorage.getItem('d1_lang')||'ko');
+if(!T[lang])lang='ko';
+let S=null,me=localStorage.getItem('d1_me')||'',myCerts=[],busy=false;
+let adminPw=sessionStorage.getItem('d1_admin')||'',adminData=null;
+let adminDay=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'}),adminDayData=null,adminOnlyMissing=false;
+const isAdmin=new URLSearchParams(location.search).has('admin');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const t=(k,v)=>{let s=(T[lang][k]||k);for(const x in (v||{}))s=s.replace('{'+x+'}',v[x]);return s};
+const pubUrl=p=>`${SB}/storage/v1/object/public/certs/${encodeURI(p)}`;
+
+async function rpc(fn,args){
+  const r=await fetch(`${SB}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify(args||{})});
+  const txt=await r.text();let j;try{j=JSON.parse(txt)}catch(e){j=txt}
+  if(!r.ok)throw new Error((j&&j.message)||String(txt));
+  return j;
+}
+function toast(m,ms=2400){const e=$('toast');e.textContent=m;e.classList.remove('hide');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.add('hide'),ms)}
+function compress(file){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);
+  img.onload=()=>{const s=Math.min(1,1600/Math.max(img.width,img.height));const w=Math.round(img.width*s),h=Math.round(img.height*s);
+    const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+    c.toBlob(b=>{URL.revokeObjectURL(u);b?res(b):rej(new Error('compress'))},'image/jpeg',.82)};
+  img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('image'))};img.src=u})}
+async function uploadBlob(pid,kind,blob){
+  const path=`${pid}/${kind}-${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+  const r=await fetch(`${SB}/storage/v1/object/certs/${path}`,{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'image/jpeg'},body:blob});
+  if(!r.ok)throw new Error('upload');return path;
+}
+function rangeDates(s,e){const out=[];let d=new Date(s+'T00:00:00Z');const E=new Date(e+'T00:00:00Z');while(d<=E&&out.length<150){out.push(d.toISOString().slice(0,10));d=new Date(d.getTime()+864e5)}return out}
+const fmt=d=>d?d.slice(5).replace('-','/'):'';
+/* 설정은 나라별(KR/TH)로 따로 저장돼요. 화면 언어 = 나라 */
+const cfg=c=>S&&S.settings?S.settings[c||(lang==='th'?'TH':'KR')]:null;
+const title=()=>{const x=cfg();return x?x.title:''};
+const tagline=()=>{const x=cfg();return x?x.tagline:''};
+
+function setLang(l){lang=l;localStorage.setItem('d1_lang',l);document.documentElement.lang=l;render()}
+function head(){
+  $('langBox').innerHTML=['ko','th'].map(l=>`<button class="${l===lang?'on':''}" onclick="setLang('${l}')">${l==='ko'?'한국어':'ไทย'}</button>`).join('');
+  const st=cfg();
+  $('hTitle').textContent=title()||'…';document.title=title()||'Challenge';
+  $('hTag').textContent=tagline();
+  $('hPeriod').textContent=st&&st.start_date&&st.end_date?`${st.start_date.replace(/-/g,'.')} ${t('until')} ${st.end_date.replace(/-/g,'.')}`:t('noPeriod');
+}
+async function load(){
+  S=await rpc('get_public_state');
+  if(me){
+    const m=await rpc('get_me',{p_id:me});
+    if(!m){me='';myCerts=[];localStorage.removeItem('d1_me')}
+    else{if(m.id!==me){me=m.id;localStorage.setItem('d1_me',me)}myCerts=await rpc('get_my_certs',{p_id:me})}
+  }
+}
+function periodState(country){
+  const st=cfg(country);if(!st||!st.start_date||!st.end_date)return 'noPeriod';
+  const d=S.today[country];if(d<st.start_date)return 'notStarted';if(d>st.end_date)return 'ended';return 'open';
+}
+function render(){
+  if(isAdmin){renderAdmin();return}
+  head();
+  const app=$('app');
+  if(!S){app.innerHTML=`<div class="card">${t('loading')}</div>`;return}
+  const keep=($('nameIn')||{}).value||'';
+  const mp=S.participants.find(p=>p.id===me);
+  let h='';
+  if(!mp)h+=`<div class="card"><h2>${t('nameTitle')}</h2><input type="text" id="nameIn" maxlength="30" autocomplete="off" placeholder="${esc(t('namePh'))}" onkeydown="if(event.key==='Enter'&&!event.isComposing)enterName()"><div style="height:8px"></div><button class="btn" id="nameBtn" onclick="enterName()">${t('start')}</button><div class="note">${t('nameHelp')}</div></div>`;
+  else h+=`<div class="card mebar"><span>👤 <b>${esc(mp.name)}</b></span><button class="btn sub sm" onclick="logout()">${t('switchName')}</button></div>`+myView(mp);
+  h+=allView();
+  app.innerHTML=h;
+  if($('nameIn'))$('nameIn').value=keep;
+  $('foot').innerHTML=`<a href="#" onclick="copyLink();return false">🔗 ${t('copy')}</a> · <a href="?admin=1">${t('admin')}</a>`;
+}
+function myView(mp){
+  const st=cfg(mp.country),ps=periodState(mp.country),today=S.today[mp.country];
+  const byDate={};myCerts.forEach(c=>{(byDate[c.challenge_date]=byDate[c.challenge_date]||{reg:0,pv:0})[c.kind]++});
+  const tr=myCerts.filter(c=>c.challenge_date===today&&c.kind==='reg'),tp=myCerts.filter(c=>c.challenge_date===today&&c.kind==='pv');
+  let h='';
+  if(ps!=='open')h+=`<div class="banner">${t(ps)}</div>`;
+  else{
+    const n=(tr.length?1:0)+(tp.length?1:0);
+    h+=`<div class="banner ${n===2?'ok-banner':''}">${n===2?t('allDone'):n===1?t('leftOne'):t('leftBoth')}</div>`;
+  }
+  h+=`<div class="card"><h2>${t('today')} <span class="chip">${fmt(today)}</span></h2><div class="kinds">`+
+     kindCard('reg',tr,ps==='open',st)+kindCard('pv',tp,ps==='open',st)+`</div><div class="note">${t('multi')}</div></div>`;
+  if(st&&st.start_date&&st.end_date){
+    const ds=rangeDates(st.start_date,st.end_date);
+    const need=st.required_days||ds.length;
+    const done=ds.filter(d=>byDate[d]&&byDate[d].reg&&byDate[d].pv).length;
+    h+=`<div class="card"><h2>${t('prog')}</h2><div class="stat"><span>${t('days',{n:done,t:ds.length})}</span><span>${st.required_days?t('goal',{n:st.required_days}):''}</span></div>
+    <div class="prog"><i style="width:${Math.min(100,Math.round(done/need*100))}%"></i></div>
+    <div class="cal">${ds.map((d,i)=>{const b=byDate[d];const c=b&&b.reg&&b.pv?'c2':b?'c1':'';return `<div class="${c} ${d===today?'today':''} ${d>today?'fut':''}">${+d.slice(8)}<small>${b?(b.reg?'🧾':'')+(b.pv?'📊':''):''}</small></div>`}).join('')}</div>
+    <div class="legend"><span><i style="background:var(--main)"></i>${t('lg2')}</span><span><i style="background:#fde7b0"></i>${t('lg1')}</span><span><i style="background:#edf5f9"></i>${t('lg0')}</span></div></div>`;
+  }
+  return h;
+}
+function kindCard(kind,items,open,st){
+  const ok=items.length>0,pv=st&&st.goal_pv?st.goal_pv:10000;
+  return `<div class="kind ${ok?'done':''}"><div class="hd"><span class="tt">${kind==='reg'?'🧾':'📊'} ${t(kind)}</span><span class="chip ${ok?'ok':''}">${ok?t('doneKind')+' · '+t('cnt',{n:items.length}):t('notYet')}</span></div>
+   <div class="ds">${kind==='reg'?t('regD'):t('pvD',{pv:pv.toLocaleString()})}</div>
+   ${ok?`<div class="thumbs">${items.map(c=>`<div class="th"><img loading="lazy" src="${esc(pubUrl(c.image_path))}" onclick="zoom('${esc(pubUrl(c.image_path))}')"><b onclick="delMine('${c.id}')">×</b></div>`).join('')}</div>`:''}
+   ${open?`<input type="text" id="note_${kind}" maxlength="60" placeholder="${kind==='reg'?t('noteReg'):t('notePv')}" style="margin-bottom:8px">
+   <button class="btn ${kind}" ${busy?'disabled':''} onclick="$('f_${kind}').click()">${t('add')}</button>
+   <input type="file" id="f_${kind}" accept="image/*" multiple class="hide" onchange="doUpload('${kind}',this)">`:''}</div>`;
+}
+function allView(){
+  const list=S.participants.filter(p=>p.country===(lang==='th'?'TH':'KR')).slice().sort((a,b)=>b.days-a.days||a.name.localeCompare(b.name));
+  if(!list.length)return '';
+  return `<div class="card"><h2>${t('all')}</h2>${list.map(p=>`<div class="row"><span class="nm">${esc(p.name)}</span><span class="dot ${p.today_reg?'on':''}">🧾</span><span class="dot ${p.today_pv?'on':''}">📊</span><span class="dy">${p.days}</span></div>`).join('')}</div>`;
+}
+async function enterName(){
+  if(busy)return;
+  const v=($('nameIn').value||'').trim();
+  if(!v||v.length>30){toast(t('badName'));return}
+  busy=true;$('nameBtn').disabled=true;
+  try{
+    const r=await rpc('enter_name',{p_name:v,p_country:lang==='th'?'TH':'KR'});
+    if(r.status==='exists'&&!confirm(t('existsQ',{name:r.name}))){busy=false;render();return}
+    me=r.id;localStorage.setItem('d1_me',me);
+    await load();busy=false;render();
+    if(r.status==='created')toast(t('welcome',{name:r.name}));
+  }catch(e){busy=false;toast(String(e.message).includes('bad_name')?t('badName'):t('fail'));render()}
+}
+function logout(){if(!confirm(t('logoutQ')))return;me='';myCerts=[];localStorage.removeItem('d1_me');render();window.scrollTo(0,0)}
+async function refresh(){await load();render()}
+async function doUpload(kind,input){
+  const files=[...input.files];if(!files.length||busy)return;busy=true;
+  const note=($('note_'+kind)||{}).value||'';let okc=0;
+  try{
+    for(let i=0;i<files.length;i++){
+      toast(t('uploading',{i:i+1,n:files.length}),60000);
+      const blob=await compress(files[i]);
+      const path=await uploadBlob(me,kind,blob);
+      await rpc('add_certification',{p_id:me,p_kind:kind,p_path:path,p_note:note||null});okc++;
+    }
+    toast(t('uploaded'));
+  }catch(e){
+    const m=String(e.message);
+    toast(['not_started','ended','period_not_set'].includes(m)?t(m==='period_not_set'?'noPeriod':m==='not_started'?'notStarted':'ended'):t('fail'),3500);
+  }
+  busy=false;input.value='';await refresh();
+}
+async function delMine(id){if(!confirm(t('delConfirm')))return;try{await rpc('delete_my_cert',{p_id:me,p_cert:id})}catch(e){toast(t('fail'))}await refresh()}
+function zoom(u){$('modalRoot').innerHTML=`<div class="modal" onclick="closeModal()"><img src="${u}" style="max-width:96%;max-height:90vh;margin:auto;border-radius:12px"></div>`}
+function closeModal(){$('modalRoot').innerHTML=''}
+function copyLink(){const u=location.origin+location.pathname+'?lang='+lang;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast(t('copied'))).catch(()=>prompt('URL',u))}
+
+/* ---------------- 관리자 ---------------- */
+let adminTab=sessionStorage.getItem('d1_tab')||'status',adminQ='',adminSel=new Set();
+let adminCountry=sessionStorage.getItem('d1_cty')==='TH'?'TH':'KR';
+const CTY={KR:'🇰🇷 한국',TH:'🇹🇭 태국'};
+const aps=()=>adminData.participants.filter(p=>p.country===adminCountry);
+const acfg=()=>(adminData.settings&&adminData.settings[adminCountry])||{};
+const todayOf=c=>new Date().toLocaleDateString('sv-SE',{timeZone:c==='TH'?'Asia/Bangkok':'Asia/Seoul'});
+adminDay=todayOf(adminCountry);
+const TABS=[['status','📊 현황'],['day','📸 일별 인증샷'],['done','🏅 완주자'],['people','👥 참가자 관리'],['set','⚙️ 설정']];
+const nk=s=>String(s||'').normalize('NFC').replace(/[\s ​-‍﻿　]+/g,'').toLowerCase();
+const nameOf=id=>{const p=adminData&&adminData.participants.find(x=>x.id===id);return p?p.name:''};
+function needDays(){
+  const st=adminData?acfg():{};if(!st.start_date||!st.end_date)return null;
+  const total=rangeDates(st.start_date,st.end_date).length;
+  return {total,need:st.required_days?Math.min(st.required_days,total):total};
+}
+function renderAdmin(){
+  $('langBox').innerHTML='';$('hTitle').textContent='관리자 · 1일 1등록 챌린지';$('hTag').textContent='현황 · 일별 인증샷 · 완주자 · 참가자 관리 · 설정';$('hPeriod').textContent='ADMIN';document.title='관리자';
+  $('foot').innerHTML='<a href="./">← 참가자 화면</a>';
+  if(!adminPw||!adminData){
+    $('app').innerHTML=`<div class="card"><h2>관리자 비밀번호</h2><input type="password" id="apw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')adminLogin()"><div style="height:8px"></div><button class="btn" onclick="adminLogin()">로그인</button></div>`;return;
+  }
+  $('app').innerHTML=`<div class="tabs" style="margin-top:6px">${['KR','TH'].map(c=>`<button class="btn sm ${c===adminCountry?'':'sub'}" style="flex:1" onclick="setCountry('${c}')">${CTY[c]}</button>`).join('')}</div><div class="note" style="margin:0 0 4px">한국과 태국은 기간·설정이 따로예요. 선택한 나라의 참가자와 설정만 보여요.</div><div class="tabs scroll">${TABS.map(([k,l])=>`<button class="btn sm ${k===adminTab?'':'sub'}" onclick="setTab('${k}')">${l}</button>`).join('')}</div><div id="tabBody"></div>`;
+  renderTab();
+}
+function setCountry(c){adminCountry=c;sessionStorage.setItem('d1_cty',c);adminSel.clear();adminQ='';adminDay=todayOf(c);adminDayData=null;renderAdmin()}
+function setTab(k){adminTab=k;sessionStorage.setItem('d1_tab',k);adminQ='';renderAdmin()}
+function renderTab(){
+  const f={status:tabStatus,day:tabDay,done:tabDone,people:tabPeople,set:tabSet}[adminTab]||tabStatus;
+  $('tabBody').innerHTML=f();
+  if(adminTab==='status')fillStatus();
+  if(adminTab==='day')adminLoadDay();
+  if(adminTab==='people'){fillPeople();fillSelBar()}
+}
+async function adminLogin(){
+  const pw=$('apw').value;
+  try{adminData=await rpc('admin_overview',{pw});adminPw=pw;sessionStorage.setItem('d1_admin',pw);renderAdmin()}
+  catch(e){toast('비밀번호가 맞지 않아요')}
+}
+async function adminReload(){try{adminData=await rpc('admin_overview',{pw:adminPw});renderAdmin()}catch(e){adminPw='';adminData=null;sessionStorage.removeItem('d1_admin');renderAdmin()}}
+
+/* --- 현황 --- */
+function tabStatus(){
+  const rows=aps(),nd=needDays();
+  const full=rows.filter(p=>p.today_reg&&p.today_pv).length,part=rows.filter(p=>(p.today_reg||p.today_pv)&&!(p.today_reg&&p.today_pv)).length;
+  const fin=nd?rows.filter(p=>p.days>=nd.need).length:'-',photos=rows.reduce((a,p)=>a+p.photos,0);
+  return `<div class="card"><h2>오늘 현황</h2><div class="stats"><div><b>${rows.length}</b><span>참가자</span></div><div><b>${full}</b><span>오늘 완료</span></div><div><b>${part}</b><span>오늘 일부</span></div><div><b>${fin}</b><span>완주</span></div></div>
+   <div class="note" style="margin:0">전체 사진 ${photos}장 · ${nd?`완주 기준 ${nd.need}일 (기간 ${nd.total}일)`:'기간을 저장하면 완주 기준이 계산돼요 (⚙️ 설정)'}</div></div>
+  <div class="card"><h2>참가자별 현황</h2><input type="text" id="adminQ" placeholder="이름 검색" value="${esc(adminQ)}" oninput="adminQ=this.value;fillStatus()"><div id="listBox"></div></div>`;
+}
+function fillStatus(){
+  const nd=needDays(),q=nk(adminQ);
+  const rows=aps().filter(p=>!q||nk(p.name).includes(q)).slice().sort((a,b)=>b.days-a.days||a.name.localeCompare(b.name));
+  $('listBox').innerHTML=rows.map(p=>`<div class="row"><span class="nm">${KR_EMO[p.country]} ${esc(p.name)}${p.is_winner?' 🏆':p.is_candidate?' ⭐':''}<div class="note" style="margin:0">완료 ${p.days}${nd?' / '+nd.need:''}일 · 🧾 ${p.reg_days}일 · 📊 ${p.pv_days}일 · 사진 ${p.photos}장</div></span><span class="dot ${p.today_reg?'on':''}">🧾</span><span class="dot ${p.today_pv?'on':''}">📊</span><button class="btn sub sm" onclick="adminPhotos('${p.id}')">사진</button></div>`).join('')||'<div class="note" style="margin-top:8px">참가자가 없어요. 참가자가 링크에서 이름을 입력하면 여기에 나타나요.</div>';
+}
+async function adminPhotos(id){
+  const name=nameOf(id),rows=await rpc('admin_get_certs',{pw:adminPw,p_id:id});
+  $('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet"><h2 style="margin-bottom:10px">${esc(name)} · 인증 사진 ${rows.length}장</h2><div class="photos">${rows.map(c=>`<figure><img loading="lazy" src="${esc(pubUrl(c.image_path))}" onclick="zoom('${esc(pubUrl(c.image_path))}')"><figcaption>${c.kind==='reg'?'🧾 등록':'📊 PV'} · ${fmt(c.challenge_date)}${c.note?'<br>'+esc(c.note):''}<br><a href="#" style="color:var(--bad)" onclick="adminDelC('${c.id}','${id}');return false">삭제</a></figcaption></figure>`).join('')||'<div class="note">아직 사진이 없어요</div>'}</div><div style="height:10px"></div><button class="btn sub" onclick="closeModal()">닫기</button></div></div>`;
+}
+async function adminDelC(cid,pid){if(!confirm('이 인증 사진을 삭제할까요?'))return;await rpc('admin_delete_cert',{pw:adminPw,p_cert:cid});adminData=await rpc('admin_overview',{pw:adminPw});renderAdmin();adminPhotos(pid)}
+
+/* --- 일별 인증샷 --- */
+function tabDay(){
+  return `<div class="card"><h2>📸 일별 인증샷</h2>
+   <div class="datebar"><button class="btn sub sm" onclick="shiftDay(-1)">◀</button><input type="date" id="d_date" value="${adminDay}" onchange="setAdminDay(this.value)"><button class="btn sub sm" onclick="shiftDay(1)">▶</button><button class="btn sub sm" onclick="goToday()">오늘</button></div>
+   <label class="chk"><input type="checkbox" id="d_miss" ${adminOnlyMissing?'checked':''} onchange="toggleMissing(this.checked)"> 미완료자만 보기</label>
+   <div id="dayBox"><div class="note">불러오는 중…</div></div></div>`;
+}
+function renderDay(){
+  const box=$('dayBox');if(!box)return;
+  if(!adminDayData){box.innerHTML='<div class="note">불러오는 중…</div>';return}
+  const rows=adminDayData.filter(p=>p.country===adminCountry).map(p=>{const r=p.certs.filter(c=>c.kind==='reg'),v=p.certs.filter(c=>c.kind==='pv');return Object.assign({},p,{r:r,v:v,st:(r.length&&v.length)?2:((r.length||v.length)?1:0)})});
+  const n2=rows.filter(x=>x.st===2).length,nr=rows.filter(x=>x.r.length).length,nv=rows.filter(x=>x.v.length).length;
+  const shown=adminOnlyMissing?rows.filter(x=>x.st<2):rows;
+  const stTxt=['미인증','일부 인증','완료'];
+  const th=(c,k)=>`<div class="th ${k}" title="${esc(c.note||'')}"><img loading="lazy" src="${esc(pubUrl(c.image_path))}" onclick="zoom('${esc(pubUrl(c.image_path))}')"><b onclick="adminDelDay('${c.id}')">×</b></div>`;
+  box.innerHTML=`<div class="sum"><span class="chip ok">완료 ${n2} / ${rows.length}명</span><span class="chip">🧾 등록 ${nr}명</span><span class="chip">📊 PV ${nv}명</span></div>`+
+   (shown.map(p=>`<div class="drow"><div class="hd"><span>${KR_EMO[p.country]} ${esc(p.name)}</span><span class="st st${p.st}">${stTxt[p.st]}</span></div>
+     ${p.certs.length?`<div class="thumbs">${p.r.map(c=>th(c,'reg')).join('')}${p.v.map(c=>th(c,'pv')).join('')}</div><div class="note" style="margin:0">🧾 ${p.r.length}장 · 📊 ${p.v.length}장${p.certs.filter(c=>c.note).map(c=>' · '+esc(c.note)).join('')}</div>`:''}</div>`).join('')||'<div class="note">표시할 참가자가 없어요</div>');
+}
+async function adminLoadDay(){try{adminDayData=await rpc('admin_day_view',{pw:adminPw,p_date:adminDay});renderDay()}catch(e){toast('일일 현황을 불러오지 못했어요')}}
+function setAdminDay(v){if(v){adminDay=v;adminDayData=null;renderDay();adminLoadDay()}}
+function shiftDay(n){const d=new Date(adminDay+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);adminDay=d.toISOString().slice(0,10);const i=$('d_date');if(i)i.value=adminDay;adminDayData=null;renderDay();adminLoadDay()}
+function goToday(){setAdminDay(todayOf(adminCountry));const i=$('d_date');if(i)i.value=adminDay}
+function toggleMissing(v){adminOnlyMissing=v;renderDay()}
+async function adminDelDay(cid){if(!confirm('이 인증 사진을 삭제할까요?'))return;try{await rpc('admin_delete_cert',{pw:adminPw,p_cert:cid});adminDayData=null;renderDay();adminData=await rpc('admin_overview',{pw:adminPw});adminLoadDay()}catch(e){toast('삭제에 실패했어요')}}
+
+/* --- 완주자 · 특별상 --- */
+function tabDone(){
+  const nd=needDays();
+  if(!nd)return `<div class="card"><h2>🏅 완주자</h2><div class="note">⚙️ 설정에서 시작일·종료일을 먼저 저장해 주세요.</div></div>`;
+  const all=aps(),rows=all.filter(p=>p.days>=nd.need).sort((a,b)=>b.days-a.days||a.name.localeCompare(b.name));
+  const win=all.filter(p=>p.is_winner),cand=all.filter(p=>p.is_candidate&&!p.is_winner);
+  return `<div class="card"><h2>🏅 완주자 (${rows.length}명)</h2>
+   <div class="note" style="margin:0 0 8px">완주 기준 ${nd.need}일 이상 · 기간 ${nd.total}일 · 참가자 ${all.length}명<br>하루 완료 = 같은 날 회원등록 인증 + PV 인증이 모두 있는 날. 기준 일수는 ⚙️ 설정에서 바꿀 수 있어요.</div>
+   <button class="btn sub sm" style="width:auto" onclick="downloadCsv()">⬇️ 전체 현황 CSV 내려받기</button><div style="height:6px"></div>
+   ${rows.map(p=>`<div class="row"><span class="nm">${KR_EMO[p.country]} ${esc(p.name)}<div class="note" style="margin:0">완료 ${p.days}일</div></span><button class="btn sm ${p.is_candidate?'':'sub'}" style="width:auto" onclick="toggleAward('${p.id}','c')">⭐ 후보</button><button class="btn sm ${p.is_winner?'':'sub'}" style="width:auto" onclick="toggleAward('${p.id}','w')">🏆 수상</button></div>`).join('')||'<div class="note">아직 완주자가 없어요</div>'}</div>
+  <div class="card"><h2>🎁 특별상</h2>
+   <div class="note" style="margin:0">🏆 수상 ${win.length}명${win.length?' · '+win.map(p=>esc(p.name)).join(', '):''}<br>⭐ 후보 ${cand.length}명${cand.length?' · '+cand.map(p=>esc(p.name)).join(', '):''}</div></div>`;
+}
+async function toggleAward(id,k){
+  const p=adminData.participants.find(x=>x.id===id);if(!p)return;
+  if(k==='c')p.is_candidate=!p.is_candidate;else p.is_winner=!p.is_winner;
+  renderTab();
+  try{await rpc('admin_set_award',{pw:adminPw,p_id:id,p_candidate:p.is_candidate,p_winner:p.is_winner})}catch(e){toast('저장에 실패했어요');adminReload()}
+}
+function downloadCsv(){
+  const nd=needDays(),q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const head=['이름','나라','완료일수','등록인증일수','PV인증일수','사진수','완주','특별상'];
+  const lines=[head.map(q).join(',')].concat(aps().slice().sort((a,b)=>b.days-a.days||a.name.localeCompare(b.name)).map(p=>[p.name,p.country==='TH'?'태국':'한국',p.days,p.reg_days,p.pv_days,p.photos,nd&&p.days>=nd.need?'완주':'',p.is_winner?'수상':p.is_candidate?'후보':''].map(q).join(',')));
+  const blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='1일1등록챌린지_현황_'+(adminCountry==='TH'?'태국':'한국')+'.csv';document.body.appendChild(a);a.click();a.remove();
+}
+
+/* --- 참가자 관리 --- */
+function tabPeople(){
+  return `<div class="card"><h2>👥 참가자 관리 · ${CTY[adminCountry]} (${aps().length}명)</h2>
+   <div class="note" style="margin:0 0 8px">참가자는 링크에서 직접 이름을 입력해 등록돼요. 같은 사람이 이름을 다르게 입력해 계정이 여러 개 생기면 선택해서 <b>합쳐</b> 주세요. 합쳐진 옛 이름·옛 링크로 들어와도 같은 계정으로 이어져요.</div>
+   <input type="text" id="adminQ" placeholder="이름 검색" value="${esc(adminQ)}" oninput="adminQ=this.value;fillPeople()">
+   <div class="bar"><button class="btn sub sm" onclick="selUnused()">사진 없는 참가자 선택</button><button class="btn sub sm" onclick="adminSel.clear();fillPeople();fillSelBar()">선택 해제</button></div>
+   <div id="selBar" class="bar"></div><div id="listBox"></div></div>`;
+}
+function fillPeople(){
+  const q=nk(adminQ),rows=aps().filter(p=>!q||nk(p.name).includes(q)).slice().sort((a,b)=>a.name.localeCompare(b.name));
+  $('listBox').innerHTML=rows.map(p=>`<div class="row"><input type="checkbox" ${adminSel.has(p.id)?'checked':''} onchange="togSel('${p.id}',this.checked)"><span class="nm">${KR_EMO[p.country]} ${esc(p.name)}<div class="note" style="margin:0">완료 ${p.days}일 · 사진 ${p.photos}장 · 등록 ${(p.created_at||'').slice(5,10).replace('-','/')}</div></span><button class="btn sub sm" onclick="adminRename('${p.id}')">이름 변경</button></div>`).join('')||'<div class="note" style="margin-top:8px">참가자가 없어요</div>';
+}
+function fillSelBar(){
+  const n=adminSel.size;
+  $('selBar').innerHTML=n?`<span class="note" style="margin:0;align-self:center">선택 ${n}명</span><button class="btn sm" onclick="adminMerge()" ${n<2?'disabled':''}>합치기</button><button class="btn red sm" onclick="adminDelSel()">삭제</button>`:'';
+}
+function togSel(id,on){if(on)adminSel.add(id);else adminSel.delete(id);fillSelBar()}
+function selUnused(){aps().forEach(p=>{if(!p.photos)adminSel.add(p.id)});fillPeople();fillSelBar()}
+async function adminRename(id){
+  const cur=nameOf(id),nn=prompt('새 이름',cur);if(nn==null||!nn.trim()||nn.trim()===cur)return;
+  try{await rpc('admin_rename_participant',{pw:adminPw,p_id:id,p_name:nn});toast('이름을 바꿨어요 ✅');await adminReload()}
+  catch(e){const m=String(e.message);toast(m.includes('name_taken')?'같은 이름(띄어쓰기·대소문자 무시)이 이미 있어요. 같은 사람이면 "합치기"를 쓰세요':m.includes('bad_name')?'이름을 1~30자로 입력해 주세요':'변경에 실패했어요',4200)}
+}
+function adminMerge(){
+  const ps=adminData.participants.filter(p=>adminSel.has(p.id));if(ps.length<2){toast('합칠 참가자를 2명 이상 선택해 주세요');return}
+  const best=ps.slice().sort((a,b)=>b.photos-a.photos)[0].id;
+  $('modalRoot').innerHTML=`<div class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet"><h2 style="margin-bottom:6px">참가자 합치기</h2><div class="note" style="margin:0 0 8px">남길 이름을 고르세요. 나머지 계정의 인증 사진·기록이 모두 그 계정으로 옮겨지고, 나머지 계정은 사라져요. (되돌릴 수 없어요)</div>${ps.map(p=>`<label class="chk"><input type="radio" name="mt" value="${p.id}" ${p.id===best?'checked':''}> <span>${KR_EMO[p.country]} ${esc(p.name)} <span class="note" style="margin:0">· 사진 ${p.photos}장 · 완료 ${p.days}일</span></span></label>`).join('')}<div style="height:10px"></div><button class="btn" onclick="doMerge()">합치기</button><div style="height:8px"></div><button class="btn sub" onclick="closeModal()">취소</button></div></div>`;
+}
+async function doMerge(){
+  const r=document.querySelector('input[name=mt]:checked');if(!r)return;
+  const target=r.value,src=[...adminSel].filter(i=>i!==target);
+  try{const j=await rpc('admin_merge_participants',{pw:adminPw,p_target:target,p_sources:src});closeModal();adminSel.clear();toast(`${j.merged}명을 합쳤어요 ✅ (사진 ${j.moved_photos}장 이동)`);await adminReload()}
+  catch(e){toast('합치기에 실패했어요')}
+}
+async function adminDelSel(){
+  const ps=adminData.participants.filter(p=>adminSel.has(p.id));if(!ps.length)return;
+  const ph=ps.reduce((a,p)=>a+p.photos,0);
+  if(!confirm(`선택한 ${ps.length}명(${ps.slice(0,5).map(p=>p.name).join(', ')}${ps.length>5?' 외':''})과 인증 사진 ${ph}장을 삭제할까요?\n되돌릴 수 없어요.`))return;
+  try{const n=await rpc('admin_delete_participants',{pw:adminPw,p_ids:ps.map(p=>p.id)});adminSel.clear();toast(n+'명을 삭제했어요');await adminReload()}
+  catch(e){toast('삭제에 실패했어요')}
+}
+
+/* --- 설정 --- */
+function tabSet(){
+  const st=acfg();
+  return `<div class="card"><h2>📅 기간 · 문구 설정 · ${CTY[adminCountry]}</h2>
+   <div class="note" style="margin:0 0 6px">${CTY[adminCountry]} 챌린지의 설정이에요. 위에서 나라를 바꾸면 그 나라의 설정을 따로 저장할 수 있어요.</div>
+   <div class="two"><div><label class="lbl">시작일</label><input type="date" id="s_start" value="${st.start_date||''}"></div><div><label class="lbl">종료일</label><input type="date" id="s_end" value="${st.end_date||''}"></div></div>
+   <div class="two"><div><label class="lbl">PV 목표</label><input type="number" id="s_pv" value="${st.goal_pv||10000}"></div><div><label class="lbl">완주 기준 일수(비우면 전체)</label><input type="number" id="s_req" value="${st.required_days||''}"></div></div>
+   <label class="lbl">제목 (${adminCountry==='TH'?'태국어':'한국어'})</label><input type="text" id="s_title" value="${esc(st.title)}">
+   <label class="lbl">소개 문구 (${adminCountry==='TH'?'태국어':'한국어'})</label><input type="text" id="s_tag" value="${esc(st.tagline)}">
+   <div style="height:10px"></div><button class="btn" onclick="adminSave()">${CTY[adminCountry]} 설정 저장</button>
+   <div class="note">하루 기준은 ${adminCountry==='TH'?'태국 시간':'한국 시간'} 자정까지예요. 기간을 저장하기 전에는 인증이 막혀요.</div></div>
+  <div class="card"><h2>🔑 비밀번호 변경</h2><input type="password" id="n_pw" placeholder="새 비밀번호 (6자 이상)"><div style="height:8px"></div><button class="btn sub" onclick="adminPw2()">변경</button><div class="note">관리자 비밀번호는 한국·태국 공통이에요.</div></div>`;
+}
+async function adminSave(){
+  try{await rpc('admin_save_country_settings',{pw:adminPw,p_country:adminCountry,p_start:$('s_start').value||null,p_end:$('s_end').value||null,p_title:$('s_title').value,p_tagline:$('s_tag').value,p_goal_pv:parseInt($('s_pv').value)||10000,p_required_days:parseInt($('s_req').value)||null});toast(CTY[adminCountry]+' 설정이 저장되었어요 ✅');await adminReload()}
+  catch(e){toast(String(e.message)==='bad_period'?'종료일이 시작일보다 빨라요':'저장에 실패했어요')}
+}
+async function adminPw2(){try{await rpc('admin_change_password',{pw:adminPw,new_pw:$('n_pw').value});adminPw=$('n_pw').value;sessionStorage.setItem('d1_admin',adminPw);$('n_pw').value='';toast('비밀번호가 변경되었어요 ✅')}catch(e){toast('6자 이상 입력해 주세요')}}
+
+/* ---------------- 시작 ---------------- */
+document.documentElement.lang=lang;
+if(isAdmin){if(adminPw)adminReload();else renderAdmin()}
+else{render();load().then(render).catch(()=>{$('app').innerHTML='<div class="card">⚠️ 연결에 실패했어요. 새로고침해 주세요.</div>'})}
+</script>
+</body>
+</html>

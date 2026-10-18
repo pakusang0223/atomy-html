@@ -10,6 +10,7 @@ const LANGS = [
 export default function Home() {
   return (
     <div style={{ fontFamily: 'system-ui,sans-serif', padding: 40, textAlign: 'center' }}>
+      <img src="/atomy-logo.png" alt="Atomy" style={{ height: 64, width: 'auto', marginBottom: 16 }} />
       <h1 style={{ fontSize: 20, marginBottom: 24 }}>Atomy Mart Change Calculator</h1>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 280, margin: '0 auto' }}>
         {LANGS.map((l) => (
@@ -17,7 +18,7 @@ export default function Home() {
             key={l.code}
             href={`/${l.code}`}
             style={{
-              display: 'block', padding: '14px', background: '#2563eb', color: '#fff',
+              display: 'block', padding: '14px', background: '#00B5EF', color: '#fff',
               borderRadius: 12, textDecoration: 'none', fontWeight: 700,
             }}
           >

@@ -65,7 +65,7 @@ export default function AdminPage() {
           />
           <button
             onClick={checkPw}
-            style={{ width: '100%', padding: 12, background: '#2563eb', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, cursor: 'pointer' }}
+            style={{ width: '100%', padding: 12, background: '#00B5EF', color: '#fff', border: 'none', borderRadius: 10, fontWeight: 700, cursor: 'pointer' }}
           >
             확인
           </button>

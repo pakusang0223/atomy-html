@@ -222,6 +222,10 @@ export default function Calculator({ locale }) {
     <>
       <link href={locale.fontLink} rel="stylesheet" />
       <style dangerouslySetInnerHTML={{ __html: locale.css }} />
+      <style dangerouslySetInnerHTML={{ __html: '.logo-bar{background:#fff;padding:14px 20px 12px;text-align:center;border-bottom:3px solid #00B5EF;}.logo-bar img{height:44px;width:auto;display:inline-block;}' }} />
+      <div className="logo-bar">
+        <img src="/atomy-logo.png" alt="Atomy" />
+      </div>
       <div className="header">
         <div className="badge">{locale.badge}</div>
         <h1 dangerouslySetInnerHTML={{ __html: locale.headlineHTML }} />

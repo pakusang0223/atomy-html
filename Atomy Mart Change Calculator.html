@@ -15,11 +15,11 @@ body.lang-th{font-family:'Noto Sans Thai',system-ui,sans-serif;}
 body.lang-bd{font-family:'Noto Sans Bengali',system-ui,sans-serif;}
 body.lang-ja{font-family:'Noto Sans JP',system-ui,sans-serif;}
 body.lang-zh{font-family:'Noto Sans SC',system-ui,sans-serif;}
-body.lang-en{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;}
+body.lang-en,body.lang-tr{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;}
 .logo-bar{background:#fff;text-align:center;padding:14px 16px 8px;}
 .logo-bar img{height:46px;width:auto;display:inline-block;}
-.lang-bar{background:#fff;padding:6px 16px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:600px;margin:0 auto;}
-.lang-btn{min-height:46px;padding:8px 6px;border:2px solid #b9cfe0;background:#fff;color:var(--primary-dk);border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;}
+.lang-bar{background:#fff;padding:6px 16px 14px;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:600px;margin:0 auto;}
+.lang-btn{min-height:46px;padding:8px 14px;border:2px solid #b9cfe0;background:#fff;color:var(--primary-dk);border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;}
 .lang-btn:hover{background:var(--soft);border-color:var(--primary);}
 .lang-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
 .header{background:var(--soft);color:var(--ink);padding:20px 16px 18px;text-align:center;border-top:4px solid var(--brand);}
@@ -114,6 +114,7 @@ body.lang-en{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
   <button class="lang-btn" data-lang="ja" onclick="setLang('ja')">🇯🇵 日本語</button>
   <button class="lang-btn" data-lang="zh" onclick="setLang('zh')">🇨🇳 中文</button>
   <button class="lang-btn" data-lang="bd" onclick="setLang('bd')">🇧🇩 বাংলা</button>
+  <button class="lang-btn" data-lang="tr" onclick="setLang('tr')">🇹🇷 Türkçe</button>
 </div>
 
 <div class="header">
@@ -420,6 +421,42 @@ const LANG_DATA={
       familyBanner:(f,m)=>{const l=['','১ জন','২ জন','৩ জন','৪ জন+'];return`👨‍👩‍👧‍👦 <strong>${l[f]} পরিবার</strong> নির্বাচিত → <strong>${m} মাস</strong> ভিত্তিক হিসাব`;},
       toastCopied:'✅ লিংক কপি হয়েছে! শেয়ার করুন 🎉',
       toastSelectFamily:'প্রথমে পরিবারের সদস্য সংখ্যা নির্বাচন করুন 😊'
+    }
+  },
+  /* ===== TURKEY ===== */
+  tr:{pvLabel:'PV',currency:'TL',threshold:300000,cashbackPerHit:0,showCashback:false,
+    halfCats:['tr_health','tr_cosmetics','tr_cook'],
+    ui:{
+      badge:'atom美 AZA · Mart Change',
+      headerTitle:'Ailenizin alışverişini <em>Atomy</em>\'ye taşırsanız<br>tahmini Cashback ne kadar olur? 💰',
+      headerDesc:'Günlük hayatta kullandığınız ürünleri işaretleyin.<br>Seçtiğiniz ürünlerin PV değerine göre tahmini Cashback\'i kolayca hesaplayın.',
+      pvNote:'💡 PV, Atomy ürünleri satın alındığında biriken puan değeridir',
+      steps:['Aile Boyutu','Ürün Seçimi','Sonuç'],
+      familyQ:'👨‍👩‍👧‍👦 Ailenizde kaç kişi var?',
+      infoNote:'📌 Hesaplama süresi aile boyutuna göre değişir.<br><strong>1–2 kişi → 6 aylık hesap &nbsp;|&nbsp; 3 ve üzeri → 12 aylık hesap</strong>',
+      fam:['','1 Kişilik Aile','2 Kişilik Aile','3 Kişilik Aile','4+ Kişilik Aile'],
+      famMonths:['','6 ay uygulanır','6 ay uygulanır','12 ay uygulanır','12 ay uygulanır'],
+      nextBtn:'Sonraki Adım → Ürünleri İşaretle',
+      checkTitle:'🛒 Günlük hayatta kullandığınız ürünleri işaretleyin',
+      catHint:'Kategoriye dokunarak açın ve ürünleri işaretleyin',
+      selectAll:'Tümünü Seç / Kaldır',
+      resultBtn:'✅ Sonucu Gör →',backBtn:'← Aile Boyutunu Değiştir',
+      resultTitle:'🎉 Tahmini Cashback Sonucu',
+      lblTotalPV:'Toplam PV',lblMonths:'Uygulanan Ay',lblCumulative:'Birikimli PV',lblTimes:'Başarı Sayısı',
+      cashbackLabel:'✨ Cashback Hak Kazanma Sayısı',
+      cashbackPerText:()=>`Her ${(300000).toLocaleString()} PV için 1 hak kazanılır`,
+      cashbackSlogan:'Alışverişi gelire dönüştürün! 🛒→💰',
+      copyBtn:'🔗 Sonuç Bağlantısını Kopyala',
+      recheckBtn:'← Ürünleri Yeniden Kontrol Et',resetBtn:'↺ Baştan Başla',
+      breakdownTitle:'📊 Kategoriye Göre PV Dökümü',
+      halfNote:'✂️ Her ay tüketilmeyen bazı ürünlerin PV değeri <strong>%50</strong> olarak hesaplanır.',
+      disc:['Bu sonuç, tüketim dönüşümüne dayalı tahmini bir hesaplamadır.','Gerçek ödeme; üyelik durumu, zamanlama ve şirket politikalarına göre değişebilir.','Bu sayfa yalnızca bilgilendirme ve danışmanlık amaçlıdır.'],
+      stickyLabel:'Şu anki seçim',stickyBtn:'Sonucu Gör →',pvLabelTop:'Toplam PV',
+      checkedCount:n=>n+' ürün seçildi',stickyCount:n=>n+' ürün',
+      monthUnit:n=>n+' ay',timesUnit:n=>n+' kez',
+      familyBanner:(f,m)=>{const l=['','1 kişilik','2 kişilik','3 kişilik','4+ kişilik'];return`👨‍👩‍👧‍👦 <strong>${l[f]} aile</strong> seçildi → <strong>${m} aylık</strong> hesap yapılır.`;},
+      toastCopied:'✅ Bağlantı kopyalandı! Paylaşabilirsiniz 🎉',
+      toastSelectFamily:'Lütfen önce aile boyutunu seçin 😊'
     }
   }
 };
@@ -817,6 +854,57 @@ const ZH_CATS=[
 ];
 
 /* ============================================================
+   TURKEY CATEGORIES — tr.atomy.com 기준
+============================================================ */
+const TR_CATS=[
+  {id:'tr_food',name:'🍵 Gıda & İçecek',items:[
+    {id:'tr_f01',name:'Cafe Arabica * 50 Adet',pv:2400},
+    {id:'tr_f02',name:'Cafe Arabica Black * 80 Adet',pv:6500},
+    {id:'tr_f03',name:'Atomy Pu\'er Tea',pv:15000}
+  ]},
+  {id:'tr_health',name:'💊 Takviye Edici Gıda',items:[
+    {id:'tr_h01',name:'Color Food Vitamin C',pv:13900},
+    {id:'tr_h02',name:'Atomy Inner Collagen',pv:23000},
+    {id:'tr_h03',name:'Probiotics',pv:19500},
+    {id:'tr_h04',name:'Psyllium Husk',pv:25900},
+    {id:'tr_h05',name:'Hongsamdan',pv:81300},
+    {id:'tr_h06',name:'Atomy Noni Pouch',pv:43000},
+    {id:'tr_h07',name:'Vegetable Algae Omega 3',pv:46200},
+    {id:'tr_h08',name:'Atomy Iron',pv:13000},
+    {id:'tr_h09',name:'Lutein',pv:29300},
+    {id:'tr_h10',name:'Atomy Lactium',pv:25500}
+  ]},
+  {id:'tr_personal',name:'🧴 Kişisel Bakım',items:[
+    {id:'tr_p01',name:'Rich Body Vücut Kremi',pv:8200},
+    {id:'tr_p02',name:'Bitkisel Vücut Temizleyici',pv:6500},
+    {id:'tr_p03',name:'Atomy Foot Scrub Ayak Yıkama Jeli',pv:5900}
+  ]},
+  {id:'tr_cosmetics',name:'💄 Yüz Maskeleri',items:[
+    {id:'tr_c01',name:'Daily Expert Maske 1 Nemlendirici * 10 Adet',pv:7500},
+    {id:'tr_c02',name:'Daily Expert Maske 2 Aydınlatıcı * 10 Adet',pv:7500},
+    {id:'tr_c03',name:'Marine Jel Maske (Aydınlatıcı & Sıkılaştırıcı) * 10 Adet',pv:26000},
+    {id:'tr_c04',name:'Marine Jel Maske (Nemlendirici & Yatıştırıcı) * 10 Adet',pv:26000}
+  ]},
+  {id:'tr_home',name:'🏠 Ev & Yaşam',items:[
+    {id:'tr_l01',name:'Atomy Bulaşık Süngeri',pv:1200},
+    {id:'tr_l02',name:'Atomy Yaprak Deterjan',pv:7300},
+    {id:'tr_l03',name:'Atomy Eco Kilitli Poşet',pv:500},
+    {id:'tr_l04',name:'Mutfak İçin Çok Amaçlı Temizleyici * 2 Adet',pv:5300},
+    {id:'tr_l05',name:'Banyo İçin Çok Amaçlı Temizleyici * 2 Adet',pv:5300},
+    {id:'tr_l06',name:'Hepsi Bir Arada Bulaşık Makinesi Tabletleri',pv:6500},
+    {id:'tr_l07',name:'Atomy Kapsül Çamaşır Deterjanı',pv:9300},
+    {id:'tr_l08',name:'Atomy Lateks Bulaşık Eldiveni (L) * 2 Çift',pv:1800},
+    {id:'tr_l09',name:'Atomy Eco Kesimli Streç Film',pv:2000}
+  ]},
+  {id:'tr_cook',name:'🍳 Mutfak Gereçleri (Medi-cook)',items:[
+    {id:'tr_k01',name:'Atomy Medi-cook Frying Pan 24cm',pv:21000},
+    {id:'tr_k02',name:'Atomy Medi-cook Ceramic Wok 28cm',pv:26000},
+    {id:'tr_k03',name:'Atomy Medi-cook Frying Pan 28cm',pv:23500},
+    {id:'tr_k04',name:'Atomy Medi-Cook Tava/Tencere Kapağı (28 cm)',pv:7500}
+  ]}
+];
+
+/* ============================================================
    ROUTING
 ============================================================ */
 function getCategories(){
@@ -826,6 +914,7 @@ function getCategories(){
     case 'en': return EN_CATS;
     case 'zh': return ZH_CATS;
     case 'bd': return KO_CATS;
+    case 'tr': return TR_CATS;
     default:   return KO_CATS;
   }
 }
@@ -1014,7 +1103,7 @@ function renderResults(){
   const breakdown=calcCatBreakdown();
   const box=document.getElementById('res-breakdown');
   if(!breakdown.length){box.innerHTML='';return;}
-  box.innerHTML=`<div style="font-size:16px;font-weight:800;color:#005A8C;margin-bottom:8px;">${ui.breakdownTitle}</div>${breakdown.map(b=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #e1eaf2;font-size:15px;"><span style="color:#10283f;flex:1;">${b.name.replace(/^[^\s]+\s/,'')}</span>${b.isHalf?`<span style="color:#3d5266;text-decoration:line-through;margin-right:6px;">${f(b.raw)} ${pvL}</span><span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL} <span style="font-size:13px;background:#e8f6fd;padding:1px 6px;border-radius:8px;">×½</span></span>`:`<span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL}</span>`}</div>`).join('')}<div style="margin-top:10px;font-size:14px;color:#3d5266;background:#fff;padding:9px 12px;border-radius:8px;line-height:1.6;">${ui.halfNote}</div>`;
+  box.innerHTML=`<div style="font-size:16px;font-weight:800;color:#005A8C;margin-bottom:8px;">${ui.breakdownTitle}</div>${breakdown.map(b=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2px 8px;padding:8px 0;border-bottom:1px solid #e1eaf2;font-size:15px;"><span style="color:#10283f;flex:1;min-width:150px;">${b.name.replace(/^[^\s]+\s/,'')}</span>${b.isHalf?`<span style="color:#3d5266;text-decoration:line-through;margin-right:6px;">${f(b.raw)} ${pvL}</span><span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL} <span style="font-size:13px;background:#e8f6fd;padding:1px 6px;border-radius:8px;">×½</span></span>`:`<span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL}</span>`}</div>`).join('')}<div style="margin-top:10px;font-size:14px;color:#3d5266;background:#fff;padding:9px 12px;border-radius:8px;line-height:1.6;">${ui.halfNote}</div>`;
 }
 
 /* ============================================================
@@ -1191,7 +1280,7 @@ function showToast(msg){
 function init(){
   const p=new URLSearchParams(window.location.search);
   const lang=p.get('lang');
-  if(['ko','en','th','ja','zh','bd'].includes(lang)){
+  if(['ko','en','th','ja','zh','bd','tr'].includes(lang)){
     currentLang=lang;document.documentElement.lang=lang;
     document.body.className='lang-'+lang;
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));

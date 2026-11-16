@@ -185,6 +185,8 @@ body:has(#section-1.active) .header-pv-note{background:rgba(255,255,255,.60);bor
 /* header intro lines in bold */
 .header-desc,.header-pv-note{font-weight:700;}
 body:has(#section-1.active) .header .header-badge{text-shadow:none;}
+/* step 2: hide only the description line ("...select products and we calculate your estimated PV"), which repeated the card title below */
+body:has(#section-2.active) .header-desc{display:none;}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
 </style>
 </head>

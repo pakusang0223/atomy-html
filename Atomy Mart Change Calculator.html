@@ -335,7 +335,8 @@ body:has(#section-2.active) .header-desc{display:none;}
 ============================================================ */
 const LANG_DATA={
   ko:{pvLabel:'PV',currency:'원',threshold:300000,cashbackPerHit:55000,showCashback:true,
-    halfCats:['health','cosmetics','living','appliance','overseas'],
+    halfCats:['health','living','appliance','overseas'],
+    ratioCats:{cosmetics:[2,3]},  /* 화장품: 약 1.5개월에 1회 사용 → 월 환산 PV÷1.5 (=×2/3) */
     ui:{
       badge:'마트체인지',
       headerTitle:'우리 가족 소비를 <em>애터미 마트</em>로 바꾸면<br>예상 캐시백은 얼마일까요?',
@@ -359,7 +360,7 @@ const LANG_DATA={
       copyBtn:'결과 링크 복사 (카카오톡 / LINE 공유)',
       recheckBtn:'← 항목 다시 체크하기',resetBtn:'↺ 처음부터 다시 계산하기',
       breakdownTitle:'카테고리별 PV 내역',
-      halfNote:'매달 소비되지 않는 일부 품목은 PV의 <strong>50%</strong>만 반영됩니다.',
+      halfNote:'매달 소비되지 않는 일부 품목은 PV의 <strong>50%</strong>만(팩 포함), 그 외 화장품은 약 1.5개월에 1회 사용하는 것으로 보고 PV의 <strong>약 67%(×⅔)</strong>만 반영됩니다.',
       disc:['본 결과는 소비 전환 기준의 예상 계산값입니다.','실제 지급 기준은 회원 자격, 시점, 운영 정책 등에 따라 달라질 수 있습니다.','본 페이지는 상담 및 안내용 참고 자료입니다.'],
       stickyLabel:'현재 선택',stickyBtn:'결과 보기 →',pvLabelTop:'총합 PV',
       checkedCount:n=>n+'개 선택됨',stickyCount:n=>n+'개 항목',
@@ -370,7 +371,8 @@ const LANG_DATA={
     }
   },
   en:{pvLabel:'PV',currency:'USD',threshold:300000,cashbackPerHit:0,showCashback:false,
-    halfCats:['ehealth','ecosmetics'],
+    halfCats:['ehealth'],
+    ratioCats:{ecosmetics:[2,3]},
     ui:{
       badge:'Mart Change',
       headerTitle:'Switch your family\'s shopping to <em>Atomy</em><br>and see your estimated cashback!',
@@ -395,7 +397,7 @@ const LANG_DATA={
       copyBtn:'Copy Result Link (Share via LINE)',
       recheckBtn:'← Re-check Items',resetBtn:'↺ Start Over',
       breakdownTitle:'PV Breakdown by Category',
-      halfNote:'Some items not purchased every month are counted at <strong>50%</strong> PV.',
+      halfNote:'Some items not purchased every month (including face masks) are counted at <strong>50%</strong> PV. Other cosmetics are assumed to be used about once every 1.5 months and are counted at about <strong>⅔ (67%)</strong> PV.',
       disc:['This result is an estimated calculation based on consumer spending conversion.','Actual cashback may vary by membership status, timing, and company policies.','This page is for reference and consultation purposes only.'],
       stickyLabel:'Current Selection',stickyBtn:'See Results →',pvLabelTop:'Total PV',
       checkedCount:n=>n+' items selected',stickyCount:n=>n+' items',
@@ -407,7 +409,8 @@ const LANG_DATA={
   },
   /* ===== THAILAND ===== */
   th:{pvLabel:'PV',currency:'บาท',threshold:300000,cashbackPerHit:2000,showCashback:true,
-    halfCats:['th_health','th_cosmetics'],
+    halfCats:['th_health'],
+    ratioCats:{th_cosmetics:[2,3]},
     ui:{
       badge:'มาร์ทเชนจ์',
       headerTitle:'เปลี่ยนการจับจ่ายของครอบครัว<br>มาที่ <em>Atomy</em> แล้วได้รับ Cashback เท่าไหร่?',
@@ -431,7 +434,7 @@ const LANG_DATA={
       copyBtn:'คัดลอกลิงก์ผลลัพธ์ (แชร์ผ่าน LINE)',
       recheckBtn:'← เลือกสินค้าใหม่',resetBtn:'↺ เริ่มต้นใหม่',
       breakdownTitle:'สรุป PV แยกตามหมวดหมู่',
-      halfNote:'สินค้าบางชนิดที่ไม่ได้ซื้อทุกเดือนจะนับ PV เพียง <strong>50%</strong>',
+      halfNote:'สินค้าบางชนิดที่ไม่ได้ซื้อทุกเดือน (รวมมาร์ก) จะนับ PV เพียง <strong>50%</strong> ส่วนเครื่องสำอางอื่นๆ คำนวณจากการใช้ประมาณ 1.5 เดือนต่อครั้ง จึงนับ PV ประมาณ <strong>⅔ (67%)</strong>',
       disc:['ผลลัพธ์นี้เป็นการประมาณการตามการเปลี่ยนพฤติกรรมการซื้อสินค้า','Cashback จริงอาจแตกต่างกันตามสถานะสมาชิก เวลา และนโยบายบริษัท','หน้านี้มีไว้เพื่อการอ้างอิงและให้คำปรึกษาเท่านั้น'],
       stickyLabel:'ที่เลือกไว้',stickyBtn:'ดูผลลัพธ์ →',pvLabelTop:'PV รวม',
       checkedCount:n=>'เลือกไว้ '+n+' รายการ',stickyCount:n=>n+' รายการ',
@@ -443,7 +446,8 @@ const LANG_DATA={
   },
   /* ===== JAPAN ===== */
   ja:{pvLabel:'PV',currency:'円',threshold:300000,cashbackPerHit:6000,showCashback:true,
-    halfCats:['ja_health','ja_cosmetics'],
+    halfCats:['ja_health'],
+    ratioCats:{ja_cosmetics:[2,3]},  /* 化粧品: 約1.5ヶ月に1回の使用 → 月換算 PV÷1.5 (=×2/3) */
     ui:{
       badge:'マートチェンジ',
       headerTitle:'家族の日用品を<em>アトミー</em>に切り替えたら<br>キャッシュバックはいくら？',
@@ -467,7 +471,7 @@ const LANG_DATA={
       copyBtn:'結果リンクをコピー（LINEで共有）',
       recheckBtn:'← 項目をチェックし直す',resetBtn:'↺ 最初からやり直す',
       breakdownTitle:'カテゴリ別PV内訳',
-      halfNote:'毎月消費されない一部の商品はPVの <strong>50%</strong> のみ反映されます。',
+      halfNote:'毎月消費されない一部の商品は、サプリメントとマスクはPVの <strong>50%</strong>、その他の化粧品は約1.5ヶ月に1回の使用を想定してPVの <strong>約67%（×⅔）</strong> のみ反映されます。',
       disc:['この結果は消費転換を基準とした予想計算値です。','実際の支払い基準は会員資格・時期・運営方針等により異なる場合があります。','このページは相談・案内用の参考資料です。'],
       stickyLabel:'現在の選択',stickyBtn:'結果を見る →',pvLabelTop:'合計PV',
       checkedCount:n=>n+'件選択中',stickyCount:n=>n+'件',
@@ -479,7 +483,8 @@ const LANG_DATA={
   },
   /* ===== CHINA — threshold 3,000艾分, cashback 315元 ===== */
   zh:{pvLabel:'艾分',currency:'元',threshold:3000,cashbackPerHit:315,showCashback:true,
-    halfCats:['zh_health','zh_beauty','zh_appliance'],
+    halfCats:['zh_health','zh_appliance'],
+    ratioCats:{zh_beauty:[2,3]},
     ui:{
       badge:'换购计划',
       headerTitle:'将家庭日常消费切换到<em>艾多美</em><br>预计可获得多少返利？',
@@ -503,7 +508,7 @@ const LANG_DATA={
       copyBtn:'复制结果链接（通过微信分享）',
       recheckBtn:'← 重新勾选商品',resetBtn:'↺ 重新开始计算',
       breakdownTitle:'各分类艾分明细',
-      halfNote:'部分非每月消费品仅计入 <strong>50%</strong> 艾分。',
+      halfNote:'部分非每月消费品（含面膜）仅计入 <strong>50%</strong> 艾分；其他美容护肤品按约1.5个月使用一次计算，仅计入约 <strong>⅔（67%）</strong>。',
       disc:['本结果为消费转换基准的预估计算值。','实际返利标准可能因会员资格、时间及运营政策等有所不同。','本页面仅供参考和咨询使用。'],
       stickyLabel:'当前选择',stickyBtn:'查看结果 →',pvLabelTop:'总艾分',
       checkedCount:n=>'已选择 '+n+' 件',stickyCount:n=>n+' 件',
@@ -514,7 +519,8 @@ const LANG_DATA={
     }
   },
   bd:{pvLabel:'PV',currency:'৳',threshold:300000,cashbackPerHit:55000,showCashback:true,
-    halfCats:['health','cosmetics','living','appliance','overseas'],
+    halfCats:['health','living','appliance','overseas'],
+    ratioCats:{cosmetics:[2,3]},  /* 화장품: 약 1.5개월에 1회 사용 → 월 환산 PV÷1.5 (=×2/3) */
     ui:{
       badge:'মার্ট চেঞ্জ',
       headerTitle:'পারিবারিক খরচ <em>Atomy Mart</em>-এ বদলালে<br>আনুমানিক ক্যাশব্যাক কত হবে?',
@@ -538,7 +544,7 @@ const LANG_DATA={
       copyBtn:'ফলাফল লিংক কপি করুন',
       recheckBtn:'← পণ্য আবার চেক করুন',resetBtn:'↺ আবার শুরু করুন',
       breakdownTitle:'বিভাগ অনুযায়ী PV বিবরণ',
-      halfNote:'প্রতি মাসে ব্যবহৃত না হওয়া কিছু পণ্যে PV-এর <strong>৫০%</strong> প্রযোজ্য।',
+      halfNote:'প্রতি মাসে ব্যবহৃত না হওয়া কিছু পণ্যে (ফেস প্যাক সহ) PV-এর <strong>৫০%</strong> প্রযোজ্য। অন্যান্য প্রসাধনী প্রায় ১.৫ মাসে একবার ব্যবহার ধরে PV-এর প্রায় <strong>⅔ (৬৭%)</strong> প্রযোজ্য।',
       disc:['এই ফলাফল ভোক্তা খরচ রূপান্তর ভিত্তিক আনুমানিক হিসাব।','প্রকৃত ক্যাশব্যাক সদস্যপদ, সময় ও নীতির উপর নির্ভর করে ভিন্ন হতে পারে।','এই পৃষ্ঠাটি শুধুমাত্র পরামর্শ ও তথ্যের জন্য।'],
       stickyLabel:'বর্তমান নির্বাচন',stickyBtn:'ফলাফল দেখুন →',pvLabelTop:'মোট PV',
       checkedCount:n=>n+'টি নির্বাচিত',stickyCount:n=>n+'টি পণ্য',
@@ -669,8 +675,8 @@ const KO_CATS=[
     {id:'c06',name:'스페셜 케어 (앰플 / 부스터)',pv:50000,note:'★ 피부샵 이용 고객은 체크'},
     {id:'c07',name:'클렌징 (폼 / 크림 / 비누타입)',pv:3000},
     {id:'c07b',name:'각질케어 (필링젤 / 필링패드)',pv:4000},
-    {id:'c08',name:'팩 (고무 / 겔 / 시트)',pv:2500},
-    {id:'c08b',name:'머드팩 (클레이 / 허니)',pv:8000},
+    {id:'c08',name:'팩 (고무 / 겔 / 시트)',pv:2500,half:true},
+    {id:'c08b',name:'머드팩 (클레이 / 허니)',pv:8000,half:true},
     {id:'c09',name:'선 (크림 / 스틱 / 쿠션)',pv:7400},
     {id:'c10',name:'메이크업 (페이스 / 립 / 섀도우)',pv:10000},
     {id:'c11',name:'파운데이션 (BB / 쿠션 / 팩트 / 파우더)',pv:10000},
@@ -702,7 +708,7 @@ const KO_CATS=[
 ============================================================ */
 const JA_CATS=[
   {id:'ja_food',name:'🍚 食品',items:[
-    {id:'ja_f01',name:'じゃがいもラーメン（辛ラーメン風）',pv:660},
+    {id:'ja_f01',name:'じゃがいもラーメン',type:'select',options:[{label:'辛ラーメン風',pv:660},{label:'マイルド',pv:660}]},
     {id:'ja_f02',name:'スパム（ハム類）',pv:1300},
     {id:'ja_f03',name:'カフェアラビカ ブラックコーヒー',pv:3000},
     {id:'ja_f04',name:'カフェアラビカ ミックスコーヒー',pv:1000},
@@ -721,36 +727,41 @@ const JA_CATS=[
     {id:'ja_h06',name:'プレミアムルテイン30（目の健康）',pv:20000},
     {id:'ja_h07',name:'オメガ3（DHA / EPA）',pv:20000},
     {id:'ja_h08',name:'カルシウム（歯と骨形成）',pv:15000},
-    {id:'ja_h09',name:'パインザイム（酵素）',pv:9700},
+    {id:'ja_h09',name:'ファインザイム（酵素）',pv:9700},
     {id:'ja_h10',name:'プーアール茶（中性脂肪）',pv:13000},
     {id:'ja_h11',name:'スピルリナ（基礎栄養素）',pv:9000},
     {id:'ja_h12',name:'ミルクシスル（肝機能）',pv:9700},
     {id:'ja_h13',name:'イソフラボン（更年期）',pv:21000},
     {id:'ja_h14',name:'プラズマα（記憶維持）',pv:20000},
-    {id:'ja_h15',name:'オーソーパルメット（男性前立腺）',pv:8300},
     {id:'ja_h16',name:'グリーンプロポリス スプレー',pv:9100},
     {id:'ja_h17',name:'サイリウムハスク（植物繊維）',pv:20000},
     {id:'ja_h18',name:'鉄分',pv:11400},
     {id:'ja_h19',name:'GMZ（黒ニンニク / マカ / 亜鉛）',pv:20000},
     {id:'ja_h20',name:'ノニジュース',type:'select',options:[{label:'レギュラー',pv:30000},{label:'大容量',pv:33000}]},
-    {id:'ja_h21',name:'コラーゲンパウダー',pv:30000}
+    {id:'ja_h21',name:'コラーゲンパウダー',pv:30000},
+    {id:'ja_h22',name:'ゴーヤー（血糖値ケア）',pv:30000}
   ]},
   {id:'ja_cosmetics',name:'💄 化粧品',items:[
-    {id:'ja_c01',name:'美容液 / プレステージ',pv:65000},
-    {id:'ja_c02',name:'A-化粧水 / 乳液',pv:20800},
-    {id:'ja_c03',name:'A-エッセンス / セーラム',pv:23400},
-    {id:'ja_c04',name:'A-アイクリーム / 保湿クリーム',type:'select',options:[{label:'アイクリーム',pv:20000},{label:'保湿クリーム',pv:18000}]},
-    {id:'ja_c05',name:'化粧水 / 乳液 / アイクリーム / クリーム（セット）',pv:9900},
-    {id:'ja_c06',name:'エッセンス / 美白エッセンス',type:'select',options:[{label:'エッセンス',pv:10600},{label:'美白エッセンス',pv:23400}]},
-    {id:'ja_c07',name:'メイク落し / 洗顔 / 角質 / パック',pv:3300},
+    {id:'ja_c02',name:'化粧水',pv:20800},
+    {id:'ja_c03',name:'美容液 / エッセンス',pv:20800},
+    {id:'ja_c01',name:'スペシャルケア（エステサロン）',pv:65000},
+    {id:'ja_c20',name:'セラム',pv:23400},
+    {id:'ja_c21',name:'乳液 / ローション',pv:20800},
+    {id:'ja_c22',name:'アイクリーム',pv:23400},
+    {id:'ja_c04',name:'栄養 / 保湿クリーム',pv:20800},
+    {id:'ja_c06',name:'美白ケア',pv:24700},
+    {id:'ja_c23',name:'敏感肌用化粧品',pv:44300},
+    {id:'ja_c24',name:'ニキビケア',pv:42700},
+    {id:'ja_c25',name:'洗顔 / フォーム',pv:3300},
+    {id:'ja_c26',name:'角質ケア',pv:3300},
     {id:'ja_c08',name:'クレンジングウォーター / ティッシュ',type:'select',options:[{label:'クレンジングウォーター',pv:5300},{label:'ティッシュ',pv:800}]},
-    {id:'ja_c09',name:'デイリーマスク / ゲルマスク',type:'select',options:[{label:'デイリーマスク',pv:4480},{label:'ゲルマスク',pv:18000}]},
+    {id:'ja_c09',name:'デイリーマスク / ゲルマスク',half:true,type:'select',options:[{label:'デイリーマスク',pv:4480},{label:'ゲルマスク',pv:18000}]},
     {id:'ja_c10',name:'ミスト（オイル / ローズ / クリーム）',type:'select',options:[{label:'オイルミスト',pv:11700},{label:'ローズミスト',pv:3250},{label:'クリームミスト',pv:7980}]},
     {id:'ja_c11',name:'リフレッシュバーム',pv:8200},
     {id:'ja_c12',name:'日焼け止め',type:'select',options:[{label:'クリームタイプ',pv:4900},{label:'スティックタイプ',pv:3500}]},
     {id:'ja_c13',name:'メン・オールインワン',pv:14000},
     {id:'ja_c14',name:'メイクアップベース',pv:4200},
-    {id:'ja_c15',name:'BBクリーム（液体ファンデーション）',pv:5000},
+    {id:'ja_c15',name:'BBクリーム（液体ファンデーション）',pv:7000},
     {id:'ja_c16',name:'リップグロウ',pv:4100},
     {id:'ja_c17',name:'クッションファンデーション',pv:15000},
     {id:'ja_c18',name:'エアーパクト（パウダーコンパクト）',pv:8800},
@@ -759,7 +770,7 @@ const JA_CATS=[
   {id:'ja_hairbody',name:'🧴 ヘア & ボディ',items:[
     {id:'ja_hb01',name:'歯ブラシ / 歯磨き',pv:3900},
     {id:'ja_hb02',name:'植物シャンプー / リンス',pv:5000},
-    {id:'ja_hb03',name:'スカルプシャンプー / コンディショナー',pv:5500},
+    {id:'ja_hb03',name:'エイソルート シャンプー / コンディショナー',pv:5500},
     {id:'ja_hb04',name:'プロテインヘアケアセット（ダメージケア）',pv:20000},
     {id:'ja_hb05',name:'ヘアオイル / 脱毛トニック',type:'select',options:[{label:'ヘアオイル',pv:4000},{label:'脱毛トニック',pv:5000}]},
     {id:'ja_hb06',name:'ヘアカーリング・リペア / エッセンス',type:'select',options:[{label:'カーリングリペア',pv:5200},{label:'エッセンス',pv:6400}]},
@@ -817,7 +828,7 @@ const TH_CATS=[
       options:[{label:'50,000 PV',pv:50000},{label:'70,000 PV',pv:70000}],
       note:'★ สำหรับลูกค้าที่ใช้บริการสปา'},
     {id:'th_c07',name:'คลีนซิ่ง (ดีฟ / โฟม / พีลลิ่ง)',pv:2500},
-    {id:'th_c08',name:'มาร์ก (ฟิลออฟ / เจล / เดลลี่)',pv:2500},
+    {id:'th_c08',name:'มาร์ก (ฟิลออฟ / เจล / เดลลี่)',pv:2500,half:true},
     {id:'th_c09',name:'ซัน (ครีม / สติ๊ก / คุชั่น)',pv:2500},
     {id:'th_c10',name:'แต่งหน้า (ใบหน้า / ริมฝีปาก / ตา)',pv:10000},
     {id:'th_c11',name:'รองพื้น (บีบี / คุชั่น / ตลับ)',pv:10000}
@@ -894,7 +905,7 @@ const EN_CATS=[
     {id:'ec05',name:'Eye Cream',pv:16000},
     {id:'ec06',name:'Cleanser (Foam / Deep)',pv:3300},
     {id:'ec07',name:'Exfoliation Care\n(Peeling Gel / Pad / Peel-off Mask)',pv:2400},
-    {id:'ec08',name:'Face Mask (Sheet / Moisturizing)',pv:2400},
+    {id:'ec08',name:'Face Mask (Sheet / Moisturizing)',pv:2400,half:true},
     {id:'ec09',name:'Sun Care\n(Sunscreen White/Beige / BB Cream)',pv:3000},
     {id:'ec10',name:'Makeup (Air Glow Cushion / Lip Glow)',pv:10000}
   ]},
@@ -950,7 +961,7 @@ const ZH_CATS=[
     {id:'zh23',name:'营养霜 / 眼霜（润亮系列）',pv:190},
     {id:'zh24',name:'洁面产品（洁面慕斯 / 洁面护肤乳）',pv:47},
     {id:'zh25',name:'防晒产品',pv:35},
-    {id:'zh26',name:'面膜（保湿 / 滋颜 / 水凝胶）',pv:100},
+    {id:'zh26',name:'面膜（保湿 / 滋颜 / 水凝胶）',pv:100,half:true},
     {id:'zh27',name:'彩妆（气垫粉底 / 口红 / 腮红）',pv:155}
   ]},
   {id:'zh_personal',name:'🧴 美发个护',items:[
@@ -1161,7 +1172,7 @@ function buildCategories(){
       const noteHtml=item.note?`<span style="display:block;font-size:14px;font-weight:700;color:#005A8C;margin-top:4px;">${item.note}</span>`:'';
       if(item.type==='select'&&item.options){
         const defPv=selectedOpts[item.id]||item.options[0].pv;
-        const optsHtml=item.options.map(o=>`<option value="${o.pv}"${o.pv===defPv?' selected':''}>${o.label} (${o.pv.toLocaleString()} ${pvL})</option>`).join('');
+        const optsHtml=item.options.map((o,oi)=>`<option value="${o.pv}"${oi===item.options.findIndex(x=>x.pv===defPv)?' selected':''}>${o.label} (${o.pv.toLocaleString()} ${pvL})</option>`).join('');
         row.innerHTML=`<input type="checkbox" class="item-checkbox" id="chk-${item.id}" onchange="toggleItem('${item.id}',this.checked)"${checkedItems[item.id]?' checked':''}><div class="item-name-wrap"><label for="chk-${item.id}" class="item-name">${nameHtml}${noteHtml}</label><select class="item-select" id="sel-${item.id}" onchange="changeOpt('${item.id}',parseInt(this.value))"${checkedItems[item.id]?'':' disabled'}>${optsHtml}</select></div><span class="item-pv-badge" id="pv-${item.id}">${defPv.toLocaleString()} ${pvL}</span>`;
       } else {
         row.innerHTML=`<input type="checkbox" class="item-checkbox" id="chk-${item.id}" onchange="toggleItem('${item.id}',this.checked)"${checkedItems[item.id]?' checked':''}><div class="item-name-wrap" style="flex:1;"><label for="chk-${item.id}" class="item-name">${nameHtml}${noteHtml}</label></div><span class="item-pv-badge">${item.pv.toLocaleString()} ${pvL}</span>`;
@@ -1178,28 +1189,35 @@ function buildCategories(){
    PV CALC
 ============================================================ */
 function isHalfCat(id){return L().halfCats.includes(id);}
+/* 카테고리별 반영 비율(선택): LANG_DATA.xx.ratioCats={카테고리id:[분자,분모]} — 일본어 화장품 1.5개월 주기(×2/3) */
+function catRatio(id){const r=(L().ratioCats||{})[id];return r||null;}
+function applyCatPV(id,pv){const r=catRatio(id);return r?Math.floor(pv*r[0]/r[1]):(isHalfCat(id)?Math.floor(pv/2):pv);}
+/* 항목에 half:true 가 있으면(마스크/팩) 카테고리 비율과 상관없이 그 항목 PV 는 50% 만 반영 */
+function splitCatPV(cat){
+  let pv=0,hp=0;
+  cat.items.forEach(item=>{
+    if(!checkedItems[item.id]) return;
+    const v=item.type==='select'?(selectedOpts[item.id]||item.options[0].pv):item.pv;
+    if(item.half) hp+=v; else pv+=v;
+  });
+  return{pv,hp};
+}
 function calcTotalPV(){
   let grand=0;
   getCategories().forEach(cat=>{
-    let pv=0;
-    cat.items.forEach(item=>{
-      if(!checkedItems[item.id]) return;
-      pv+=item.type==='select'?(selectedOpts[item.id]||item.options[0].pv):item.pv;
-    });
-    grand+=isHalfCat(cat.id)?Math.floor(pv/2):pv;
+    const s=splitCatPV(cat);
+    grand+=applyCatPV(cat.id,s.pv)+Math.floor(s.hp/2);
   });
   return grand;
 }
 function calcCatBreakdown(){
   return getCategories().map(cat=>{
-    let pv=0;
-    cat.items.forEach(item=>{
-      if(!checkedItems[item.id]) return;
-      pv+=item.type==='select'?(selectedOpts[item.id]||item.options[0].pv):item.pv;
-    });
-    if(!pv) return null;
-    const half=isHalfCat(cat.id);
-    return{name:cat.name,raw:pv,applied:half?Math.floor(pv/2):pv,isHalf:half};
+    const s=splitCatPV(cat);
+    if(!s.pv&&!s.hp) return null;
+    const half=isHalfCat(cat.id),ratio=catRatio(cat.id),marks=[];
+    if(s.pv){if(ratio) marks.push('×⅔'); else if(half) marks.push('×½');}
+    if(s.hp) marks.push('×½');
+    return{name:cat.name,raw:s.pv+s.hp,applied:applyCatPV(cat.id,s.pv)+Math.floor(s.hp/2),isHalf:marks.length>0,mark:[...new Set(marks)].join('・')};
   }).filter(Boolean);
 }
 
@@ -1239,7 +1257,7 @@ function renderResults(){
   const breakdown=calcCatBreakdown();
   const box=document.getElementById('res-breakdown');
   if(!breakdown.length){box.innerHTML='';return;}
-  box.innerHTML=`<div style="font-size:16px;font-weight:800;color:#005A8C;margin-bottom:8px;">${ui.breakdownTitle}</div>${breakdown.map(b=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2px 8px;padding:8px 0;border-bottom:1px solid #e1eaf2;font-size:15px;"><span style="color:#10283f;flex:1;min-width:150px;">${b.name.replace(/^[^\s]+\s/,'')}</span>${b.isHalf?`<span style="color:#3d5266;text-decoration:line-through;margin-right:6px;">${f(b.raw)} ${pvL}</span><span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL} <span style="font-size:13px;background:#e8f6fd;padding:1px 6px;border-radius:8px;">×½</span></span>`:`<span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL}</span>`}</div>`).join('')}<div style="margin-top:10px;font-size:14px;color:#3d5266;background:#fff;padding:9px 12px;border-radius:8px;line-height:1.6;">${ui.halfNote}</div>`;
+  box.innerHTML=`<div style="font-size:16px;font-weight:800;color:#005A8C;margin-bottom:8px;">${ui.breakdownTitle}</div>${breakdown.map(b=>`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:2px 8px;padding:8px 0;border-bottom:1px solid #e1eaf2;font-size:15px;"><span style="color:#10283f;flex:1;min-width:150px;">${b.name.replace(/^[^\s]+\s/,'')}</span>${b.isHalf?`<span style="color:#3d5266;text-decoration:line-through;margin-right:6px;">${f(b.raw)} ${pvL}</span><span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL} <span style="font-size:13px;background:#e8f6fd;padding:1px 6px;border-radius:8px;">${b.mark}</span></span>`:`<span style="color:#005A8C;font-weight:800;">${f(b.applied)} ${pvL}</span>`}</div>`).join('')}<div style="margin-top:10px;font-size:14px;color:#3d5266;background:#fff;padding:9px 12px;border-radius:8px;line-height:1.6;">${ui.halfNote}</div>`;
 }
 
 /* ============================================================
